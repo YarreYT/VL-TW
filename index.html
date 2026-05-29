@@ -16267,7 +16267,8 @@ function toggleEasterTheme() {
   }
 
   /* ── Inline modal: показать сниппеты ── */
-  var _dtCmCodes = []; /* глобальный массив кодов для Copy All */
+  var _dtCmCodes  = []; /* глобальный массив кодов для Copy All */
+  var _dtCmLabels = []; /* параллельный массив заголовков (label) */
 
   function _dtOpenCodeWindow(snippets) {
     var body  = document.getElementById('dt-cm-body');
@@ -16275,7 +16276,8 @@ function toggleEasterTheme() {
     if (!body || !modal) return;
 
     body.innerHTML = '';
-    _dtCmCodes = [];
+    _dtCmCodes  = [];
+    _dtCmLabels = [];
 
     var footer = modal.querySelector('.dt-cm-footer');
 
@@ -16287,6 +16289,7 @@ function toggleEasterTheme() {
 
       snippets.forEach(function(s, i) {
         _dtCmCodes.push(s.code);
+        _dtCmLabels.push(s.label);
 
         var block = document.createElement('div');
         block.className = 'dt-cm-block';
@@ -16309,7 +16312,8 @@ function toggleEasterTheme() {
         btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
         btn.onclick = (function(idx, b) {
           return function() {
-            navigator.clipboard.writeText(_dtCmCodes[idx]).then(function() {
+            var fullText = '// ' + _dtCmLabels[idx] + '\n' + _dtCmCodes[idx];
+            navigator.clipboard.writeText(fullText).then(function() {
               b.classList.add('ok');
               b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 6"/></svg>';
               setTimeout(function() {
@@ -16346,7 +16350,10 @@ function toggleEasterTheme() {
 
   window.dtCmCopyAll = function() {
     if (!_dtCmCodes.length) return;
-    navigator.clipboard.writeText(_dtCmCodes.join('\n')).then(function() {
+    var blocks = _dtCmCodes.map(function(code, i) {
+      return '// ' + _dtCmLabels[i] + '\n' + code;
+    });
+    navigator.clipboard.writeText(blocks.join('\n\n')).then(function() {
       var btn = document.getElementById('dt-cm-copy-all');
       if (!btn) return;
       var orig = btn.textContent;
