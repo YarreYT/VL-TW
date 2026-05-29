@@ -33,7 +33,7 @@
   });
 })();
 </script>
-<title>Values & Trading Website — (Birthday!)</title>
+<title>Values & Trading Website - (Birthday!)</title>
 <link rel="icon" type="image/webp" href="images/chromas/og_phantom.webp">
 <!-- ── EARLY THEME: применяем класс темы ДО рендера страницы, без мигания ── -->
 <script>
@@ -11416,13 +11416,18 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
       if (typeof window.dtCards === 'undefined') return base;
       return base.map(function(item) {
         var _ov = window.dtCards[item.id];
-        if (!_ov) return item;
-        var _it = _ov.item;
+        var _it = _ov ? _ov.item : null;
+        /* _vlRarityOverrides — источник правды для редкости (как у elements) */
+        var _rarOv = window._vlRarityOverrides && window._vlRarityOverrides[item.id];
+        var _resolvedRarity = (_rarOv && _rarOv.current !== undefined)
+          ? _rarOv.current
+          : (_it && _it.rarity !== undefined) ? _it.rarity : item.rarity;
+        if (!_ov && !_rarOv) return item;
         return {
           id: item.id, baseId: item.baseId, imgId: item.imgId,
           name: item.name, subtype: item.subtype,
-          rarity: _it.rarity !== undefined ? _it.rarity : item.rarity,
-          status: _it.status !== undefined ? _it.status : item.status,
+          rarity: _resolvedRarity,
+          status: _it && _it.status !== undefined ? _it.status : item.status,
         };
       });
     }
@@ -11434,12 +11439,17 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
       /* Merge dtCards overrides for rarity/status */
       var _ov = window.dtCards && window.dtCards[compositeId];
       var _it = _ov ? _ov.item : null;
+      /* _vlRarityOverrides хранит редкость по baseId — источник правды для всех вариаций */
+      var _rarOv = window._vlRarityOverrides && window._vlRarityOverrides[item.id];
+      var _resolvedRarity = (_rarOv && _rarOv.current !== undefined)
+        ? _rarOv.current
+        : (_it && _it.rarity !== undefined) ? _it.rarity : item.rarity;
       return {
         id:      compositeId,
         baseId:  item.id,
         imgId:   item.imgId,
         name:    item.name,
-        rarity:  (_it && _it.rarity !== undefined) ? _it.rarity : item.rarity,
+        rarity:  _resolvedRarity,
         subtype: item.subtype,
         status:  (_it && _it.status !== undefined) ? _it.status : item.status,
       };
@@ -16912,19 +16922,35 @@ function toggleEasterTheme() {
   function dtGetList(cat) {
     if (cat === 'gear') {
       var base = window.VL_DB.gear || [];
-      if (dtGearVariant === 'normal') return base;
+      if (dtGearVariant === 'normal') {
+        /* Normal: учитываем _vlRarityOverrides и _vlStatusOverrides */
+        return base.map(function(item) {
+          var _rarOv = window._vlRarityOverrides && window._vlRarityOverrides[item.id];
+          var _statOv = window._vlStatusOverrides && window._vlStatusOverrides[item.id];
+          if (!_rarOv && !_statOv) return item;
+          return {
+            id: item.id, baseId: item.baseId, imgId: item.imgId,
+            name: item.name, subtype: item.subtype,
+            rarity: (_rarOv && _rarOv.current !== undefined) ? _rarOv.current : item.rarity,
+            status: (_statOv && 'current' in _statOv) ? _statOv.current : item.status,
+          };
+        });
+      }
       /* Corrupted: только предметы у которых есть corrupted-ролл */
       return base.map(function(item) {
         var rolls = window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[item.id];
         if (!rolls || !rolls.corrupted) return null;
+        /* Учитываем _vlRarityOverrides и _vlStatusOverrides по baseId */
+        var _rarOv = window._vlRarityOverrides && window._vlRarityOverrides[item.id];
+        var _statOv = window._vlStatusOverrides && window._vlStatusOverrides[item.id];
         return {
           id:      'corrupted:' + item.id,
           baseId:  item.id,
           imgId:   item.imgId,
           name:    item.name,
-          rarity:  item.rarity,
+          rarity:  (_rarOv && _rarOv.current !== undefined) ? _rarOv.current : item.rarity,
           subtype: item.subtype,
-          status:  item.status,
+          status:  (_statOv && 'current' in _statOv) ? _statOv.current : item.status,
         };
       }).filter(Boolean);
     }
