@@ -10582,7 +10582,7 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
         </div><!-- /bot-main-col -->
         <!-- Stats только для мобиля (десктоп видит stats-col снаружи) -->
         <div class="stats-col-mobile">
-          <div class="stat-chip"><span class="stat-num">30.05.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+          <div class="stat-chip"><span class="stat-num">31.05.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
           <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
           <div class="stat-chip"><span class="stat-num">29</span><span class="stat-lbl" data-i18n="stat_elements">Elements</span></div>
           <div class="stat-chip"><span class="stat-num">21</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
@@ -10592,7 +10592,7 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
         </div>
       </div>
       <div class="stats-col">
-        <div class="stat-chip"><span class="stat-num">30.05.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+        <div class="stat-chip"><span class="stat-num">31.05.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
         <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
         <div class="stat-chip"><span class="stat-num">29</span><span class="stat-lbl" data-i18n="stat_elements">Elements</span></div>
         <div class="stat-chip"><span class="stat-num">21</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
@@ -15832,7 +15832,7 @@ function toggleEasterTheme() {
               var dbLine = "{ id:'" + baseId + "',\t\tname:'" + it.name + "',\t\t"
                 + "rarity:'" + it.rarity + "',\t\t"
                 + "demand:" + fd(it.demand) + ",\tvalue:" + fv(it.value) + ",\t\t"
-                + "status:" + fs(it.status) + " }";
+                + "status:" + fs(it.status) + " },";
               src = replaceLine(src, "id:'" + baseId + "'", dbLine);
             } else {
               /* Строка в VL_VARIANTS_DB[variant][baseId] */
@@ -15860,7 +15860,7 @@ function toggleEasterTheme() {
                   + " rarity:'" + it.rarity + "',"
                   + " imgId:'" + (gEntry.imgId || baseId) + "',"
                   + " subtype:'" + (gEntry.subtype || 'weapon') + "',"
-                  + " status:" + fs(it.status) + " }";
+                  + " status:" + fs(it.status) + " },";
                 src = replaceLine(src, "id:'" + baseId + "'", gLine);
               }
             }
@@ -15885,7 +15885,7 @@ function toggleEasterTheme() {
                   if (changedMap[rn]) return '{v:' + changedMap[rn].v + ',d:' + changedMap[rn].d + '}';
                   return r ? '{v:' + r.v + ',d:' + r.d + '}' : 'null';
                 });
-                var rollLine = rollVariant + ": [ " + parts.join(',') + " ]";
+                var rollLine = rollVariant + ": [ " + parts.join(',') + " ]" + (rollVariant === 'regular' ? ',' : '');
                 /* Внутри блока baseId: */
                 src = replaceLineInBlock(src, '  ' + baseId + ': {', rollVariant + ':', rollLine);
               }
@@ -15909,7 +15909,7 @@ function toggleEasterTheme() {
             + (flat.category ? " category:'" + flat.category + "'," : '')
             + " status:" + fs(it.status) + ","
             + " value:" + fv(it.value) + ","
-            + " demand:" + fd(it.demand) + " }";
+            + " demand:" + fd(it.demand) + " },";
           src = replaceLine(src, "id:'" + baseId + "'", flatLine);
         });
 
