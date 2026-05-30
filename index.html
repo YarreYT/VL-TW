@@ -15842,6 +15842,17 @@ function toggleEasterTheme() {
                 + " status:" + fs(it.status) + " },";
               /* Блок варианта: ищем "  variant: {" */
               src = replaceLineInBlock(src, '  ' + variant + ': {', baseId + ':', vLine);
+              /* Если редкость изменилась — обновляем также строку VL_DB.elements */
+              if (rarChanged) {
+                var baseEntry = (window.VL_DB.elements || []).filter(function(e){ return e.id === baseId; })[0];
+                if (baseEntry) {
+                  var baseDbLine = "{ id:'" + baseId + "',\t\tname:'" + baseEntry.name + "',\t\t"
+                    + "rarity:'" + it.rarity + "',\t\t"
+                    + "demand:" + fd(baseEntry.demand) + ",\tvalue:" + fv(baseEntry.value) + ",\t\t"
+                    + "status:" + fs(baseEntry.status) + " },";
+                  src = replaceLine(src, "id:'" + baseId + "'", baseDbLine);
+                }
+              }
             }
             return;
           }
