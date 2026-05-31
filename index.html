@@ -15490,7 +15490,7 @@ function toggleEasterTheme() {
         (window.VL_DB.elements || []).forEach(function(e) { if (e.id === baseId) dbEntry = e; });
         if (dbEntry) {
           /* Собираем строку с оригинальными value/demand/status из VL_DB, но новой rarity */
-          var dbLine = "{ id:'" + baseId + "',\t\tname:'" + it.name + "',\t\t"
+          var dbLine = "{ id:'" + baseId + "',\t\tname:\"" + it.name + "\",\t\t"
             + "rarity:'" + it.rarity + "',\t\t"
             + "demand:" + _dtFmtDem(dbEntry.demand) + ", value:" + _dtFmtVal(dbEntry.value) + ",\t\t"
             + "status:" + _dtFmtStatus(dbEntry.status) + " }";
@@ -15501,7 +15501,7 @@ function toggleEasterTheme() {
       if (vdsChanged) {
         if (variant === 'regular') {
           /* regular: данные хранятся прямо в VL_DB.elements */
-          var dbLine2 = "{ id:'" + baseId + "',\t\tname:'" + it.name + "',\t\t"
+          var dbLine2 = "{ id:'" + baseId + "',\t\tname:\"" + it.name + "\",\t\t"
             + "rarity:'" + it.rarity + "',\t\t"
             + "demand:" + _dtFmtDem(it.demand) + ", value:" + _dtFmtVal(it.value) + ",\t\t"
             + "status:" + _dtFmtStatus(it.status) + " }";
@@ -15829,7 +15829,7 @@ function toggleEasterTheme() {
 
             if (variant === 'regular') {
               /* Строка в VL_DB.elements */
-              var dbLine = "{ id:'" + baseId + "',\t\tname:'" + it.name + "',\t\t"
+              var dbLine = "{ id:'" + baseId + "',\t\tname:\"" + it.name + "\",\t\t"
                 + "rarity:'" + it.rarity + "',\t\t"
                 + "demand:" + fd(it.demand) + ",\tvalue:" + fv(it.value) + ",\t\t"
                 + "status:" + fs(it.status) + " },";
@@ -15846,7 +15846,7 @@ function toggleEasterTheme() {
               if (rarChanged) {
                 var baseEntry = (window.VL_DB.elements || []).filter(function(e){ return e.id === baseId; })[0];
                 if (baseEntry) {
-                  var baseDbLine = "{ id:'" + baseId + "',\t\tname:'" + baseEntry.name + "',\t\t"
+                  var baseDbLine = "{ id:'" + baseId + "',\t\tname:\"" + baseEntry.name + "\",\t\t"
                     + "rarity:'" + it.rarity + "',\t\t"
                     + "demand:" + fd(baseEntry.demand) + ",\tvalue:" + fv(baseEntry.value) + ",\t\t"
                     + "status:" + fs(baseEntry.status) + " },";
