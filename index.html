@@ -10582,7 +10582,7 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
         </div><!-- /bot-main-col -->
         <!-- Stats только для мобиля (десктоп видит stats-col снаружи) -->
         <div class="stats-col-mobile">
-          <div class="stat-chip"><span class="stat-num">31.05.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+          <div class="stat-chip"><span class="stat-num">02.06.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
           <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
           <div class="stat-chip"><span class="stat-num">29</span><span class="stat-lbl" data-i18n="stat_elements">Elements</span></div>
           <div class="stat-chip"><span class="stat-num">21</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
@@ -10592,7 +10592,7 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
         </div>
       </div>
       <div class="stats-col">
-        <div class="stat-chip"><span class="stat-num">31.05.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+        <div class="stat-chip"><span class="stat-num">02.06.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
         <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
         <div class="stat-chip"><span class="stat-num">29</span><span class="stat-lbl" data-i18n="stat_elements">Elements</span></div>
         <div class="stat-chip"><span class="stat-num">21</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
@@ -11012,6 +11012,59 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
   /* VL_GEAR_ROLLS загружается из items_data.js */
   var VL_GEAR_ROLLS = window.VL_GEAR_ROLLS;
 
+  /* Динамически вычисляет regular-массив из corrupted по формуле:
+     regular.value  = corrupted.value / 1.025
+     regular.demand = max(0, corrupted.demand - 0.5) */
+  function _vlRegularFromCorrupted(corrArr) {
+    if (!corrArr) return null;
+    return corrArr.map(function(r) {
+      if (!r) return null;
+      return {
+        v: Math.round(r.v / 1.025),
+        d: Math.max(0, Math.round((r.d - 0.5) * 100) / 100)
+      };
+    });
+  }
+
+  /* При изменении corrupted-ролла в DT — перестраивает regular-карточку в VL если она открыта.
+     vlGetRollsForItem теперь сам читает DT-оверрайды corrupted и применяет формулу,
+     поэтому достаточно обновить _vlRollState и пересобрать карточку. */
+  function _vlSyncRegularRollState(corrKey, corrRollNum, corrV, corrD) {
+    var regKey = corrKey.replace(/^corrupted_/, '');
+    if (regKey === corrKey) return;
+
+    /* Находим regular-карточку в vlOpenCards */
+    var regEntry = null;
+    for (var _oi = 0; _oi < vlOpenCards.length; _oi++) {
+      if (vlOpenCards[_oi].id.replace(/[^a-zA-Z0-9_\-]/g, '_') === regKey) { regEntry = vlOpenCards[_oi]; break; }
+    }
+    if (!regEntry) return;
+
+    /* Обновляем value/demand для текущего выбранного ролла, не трогая rollNum */
+    if (typeof _vlRollState !== 'undefined' && _vlRollState[regKey]) {
+      var regRollNum = _vlRollState[regKey].rollNum;
+      var freshRolls = vlGetRollsForItem(regEntry.item);
+      if (freshRolls) {
+        for (var _fi = 0; _fi < freshRolls.length; _fi++) {
+          if (freshRolls[_fi].rollNum === regRollNum) {
+            _vlRollState[regKey].value  = freshRolls[_fi].data.v;
+            _vlRollState[regKey].demand = freshRolls[_fi].data.d;
+            break;
+          }
+        }
+      }
+    }
+
+    /* Перестраиваем DOM regular-карточки */
+    var regCardWrap = null;
+    document.querySelectorAll('.vl-card-wrap').forEach(function(w) {
+      if ((w.dataset.cardId || '').replace(/[^a-zA-Z0-9_\-]/g, '_') === regKey) regCardWrap = w;
+    });
+    if (!regCardWrap) return;
+    var newWrap = vlBuildCard(regEntry.item);
+    regCardWrap.parentNode.replaceChild(newWrap, regCardWrap);
+  }
+
   /* Получить данные роллов для предмета (с учётом corrupted) */
   function vlGetRollsForItem(item) {
     var baseId = item.baseId || item.id;
@@ -11021,38 +11074,85 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
     }
     /* Wooden Sword — исключение: только ролл 11 (индекс 10) */
     if (baseId === 'woodenv2') {
-      var isCorr = (item.id && typeof item.id === 'string' && item.id.indexOf('corrupted:') !== -1)
-        || (vlGearVariant === 'corrupted');
-      /* Деревянный меч V2 — показываем только ролл 11 */
+      var isCorr = (item.id && typeof item.id === 'string' && item.id.indexOf('corrupted:') !== -1);
       var rollData = VL_GEAR_ROLLS['woodenv2'];
       if (!rollData) return null;
-      var variant = isCorr ? 'corrupted' : 'regular';
-      /* Только последний элемент (ролл 11) */
-      var arr = rollData[variant];
-      if (!arr || !arr[10]) return null;
-      return [{ rollNum: 11, data: arr[10] }];
+      var _wsDtKey = item.id.replace(/[^a-zA-Z0-9_\-]/g, '_');
+      var _wsDtRolls = (window._dtRollState && window._dtRollState[_wsDtKey] && window._dtRollState[_wsDtKey].rolls)
+        ? window._dtRollState[_wsDtKey].rolls : null;
+      var _wsCorrDtKey = 'corrupted_woodenv2';
+      var _wsDtCorrRolls = (!isCorr && window._dtRollState && window._dtRollState[_wsCorrDtKey] && window._dtRollState[_wsCorrDtKey].rolls)
+        ? window._dtRollState[_wsCorrDtKey].rolls : null;
+      var rawArr = rollData['corrupted'];
+      if (!rawArr || !rawArr[10]) return null;
+      var wsRawBase = rawArr[10];
+      var wsData;
+      if (isCorr) {
+        /* Corrupted: применяем DT-оверрайд если есть */
+        wsData = (_wsDtRolls && _wsDtRolls[11])
+          ? { v: _wsDtRolls[11].v !== undefined ? _wsDtRolls[11].v : wsRawBase.v,
+              d: _wsDtRolls[11].d !== undefined ? _wsDtRolls[11].d : wsRawBase.d }
+          : wsRawBase;
+      } else {
+        /* Regular: применяем DT-оверрайд на corrupted базу, потом формулу */
+        var wsCorrBase = (_wsDtCorrRolls && _wsDtCorrRolls[11])
+          ? { v: _wsDtCorrRolls[11].v !== undefined ? _wsDtCorrRolls[11].v : wsRawBase.v,
+              d: _wsDtCorrRolls[11].d !== undefined ? _wsDtCorrRolls[11].d : wsRawBase.d }
+          : wsRawBase;
+        wsData = {
+          v: Math.round(wsCorrBase.v / 1.025),
+          d: Math.max(0, Math.round((wsCorrBase.d - 0.5) * 100) / 100),
+        };
+      }
+      return [{ rollNum: 11, data: wsData }];
     }
     var rolls = VL_GEAR_ROLLS[baseId];
     if (!rolls) return null;
-    var isCorr2 = (item.id && typeof item.id === 'string' && item.id.indexOf('corrupted:') !== -1)
-      || (vlGearVariant === 'corrupted' && !item.baseId);
+    var isCorr2 = (item.id && typeof item.id === 'string' && item.id.indexOf('corrupted:') !== -1);
     var variantKey = isCorr2 ? 'corrupted' : 'regular';
-    var arr2 = rolls[variantKey];
-    if (!arr2) return null;
-    /* Lookup DT custom roll overrides for this item (keyed by sanitised item.id) */
+    /* Lookup DT custom roll overrides.
+       Corrupted: keyed by corrupted_baseId in _dtRollState.
+       Regular:   DT stores overrides under corrupted key — apply formula. */
     var _dtKey = item.id.replace(/[^a-zA-Z0-9_\-]/g, '_');
     var _dtRolls = (window._dtRollState && window._dtRollState[_dtKey] && window._dtRollState[_dtKey].rolls)
       ? window._dtRollState[_dtKey].rolls : null;
+    /* For regular gear: also check the corrupted DT key and apply formula */
+    var _dtCorrRolls = null;
+    if (!isCorr2) {
+      var _corrDtKey2 = 'corrupted_' + baseId.replace(/[^a-zA-Z0-9_\-]/g, '_');
+      _dtCorrRolls = (window._dtRollState && window._dtRollState[_corrDtKey2] && window._dtRollState[_corrDtKey2].rolls)
+        ? window._dtRollState[_corrDtKey2].rolls : null;
+    }
+    /* Build the base array: for regular, start from raw corrupted and apply formula per-roll
+       incorporating any DT overrides on the corrupted side before the formula */
     var result = [];
-    for (var i = 0; i < arr2.length; i++) {
-      if (arr2[i] !== null) {
+    var rawCorr = rolls['corrupted'];
+    if (!rawCorr) return null;
+    for (var i = 0; i < rawCorr.length; i++) {
+      if (rawCorr[i] !== null) {
         var rollNum = i + 1;
-        var baseData = arr2[i];
-        /* If DT has custom data for this specific roll number, apply it */
-        if (_dtRolls && _dtRolls[rollNum]) {
+        var baseData;
+        if (isCorr2) {
+          /* Corrupted: use raw value, apply DT override if present */
+          baseData = rawCorr[i];
+          if (_dtRolls && _dtRolls[rollNum]) {
+            baseData = {
+              v: _dtRolls[rollNum].v !== undefined ? _dtRolls[rollNum].v : baseData.v,
+              d: _dtRolls[rollNum].d !== undefined ? _dtRolls[rollNum].d : baseData.d,
+            };
+          }
+        } else {
+          /* Regular: apply DT corrupted override first, then formula */
+          var corrBase = rawCorr[i];
+          if (_dtCorrRolls && _dtCorrRolls[rollNum]) {
+            corrBase = {
+              v: _dtCorrRolls[rollNum].v !== undefined ? _dtCorrRolls[rollNum].v : corrBase.v,
+              d: _dtCorrRolls[rollNum].d !== undefined ? _dtCorrRolls[rollNum].d : corrBase.d,
+            };
+          }
           baseData = {
-            v: _dtRolls[rollNum].v !== undefined ? _dtRolls[rollNum].v : baseData.v,
-            d: _dtRolls[rollNum].d !== undefined ? _dtRolls[rollNum].d : baseData.d,
+            v: Math.round(corrBase.v / 1.025),
+            d: Math.max(0, Math.round((corrBase.d - 0.5) * 100) / 100),
           };
         }
         result.push({ rollNum: rollNum, data: baseData });
@@ -11071,15 +11171,15 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
     if (baseId === 'woodenv2') {
       var _rdWs = VL_GEAR_ROLLS['woodenv2'];
       if (!_rdWs) return null;
-      var _isCorr = (item.id && typeof item.id === 'string' && item.id.indexOf('corrupted:') !== -1) || (vlGearVariant === 'corrupted');
-      var _arrWs = _rdWs[_isCorr ? 'corrupted' : 'regular'];
+      var _isCorr = (item.id && typeof item.id === 'string' && item.id.indexOf('corrupted:') !== -1);
+      var _arrWs = _isCorr ? _rdWs['corrupted'] : _vlRegularFromCorrupted(_rdWs['corrupted']);
       if (!_arrWs || !_arrWs[10]) return null;
       return { rollNum: 11, data: _arrWs[10] };
     }
     var _rolls = VL_GEAR_ROLLS[baseId];
     if (!_rolls) return null;
-    var _isCorr2 = (item.id && typeof item.id === 'string' && item.id.indexOf('corrupted:') !== -1) || (vlGearVariant === 'corrupted' && !item.baseId);
-    var _arr = _rolls[_isCorr2 ? 'corrupted' : 'regular'];
+    var _isCorr2 = (item.id && typeof item.id === 'string' && item.id.indexOf('corrupted:') !== -1);
+    var _arr = _isCorr2 ? _rolls['corrupted'] : _vlRegularFromCorrupted(_rolls['corrupted']);
     if (!_arr) return null;
     for (var _i = 0; _i < _arr.length; _i++) {
       if (_arr[_i] !== null) return { rollNum: _i + 1, data: _arr[_i] };
@@ -11144,7 +11244,7 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
     }
     var rolls = VL_GEAR_ROLLS[baseId];
     if (!rolls) return 0;
-    var arr = rolls[vlGearVariant] || rolls['regular'];
+    var arr = (vlGearVariant === 'corrupted') ? rolls['corrupted'] : _vlRegularFromCorrupted(rolls['corrupted']);
     if (!arr) return 0;
     var max = 0;
     for (var i = 0; i < arr.length; i++) {
@@ -11161,7 +11261,7 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
     }
     var rolls = VL_GEAR_ROLLS[baseId];
     if (!rolls) return 0;
-    var arr = rolls[vlGearVariant] || rolls['regular'];
+    var arr = (vlGearVariant === 'corrupted') ? rolls['corrupted'] : _vlRegularFromCorrupted(rolls['corrupted']);
     if (!arr) return 0;
     var max = 0;
     for (var i = 0; i < arr.length; i++) {
@@ -11724,11 +11824,21 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
   function _vlRefreshOpenCards() {
     if (!vlOpenCards.length) return;
 
-    /* Build a fresh lookup of all items across all categories, keyed by item.id */
+    /* Build a fresh lookup of all items across all categories, keyed by item.id.
+       Для gear строим freshMap для ОБОИХ вариантов (regular + corrupted) —
+       иначе если vlGearVariant='regular', corrupted-карточки не попадут в freshMap
+       и их _vlRollState не будет синхронизирован при заходе на VL. */
     var freshMap = {};
-    ['elements','gear','cosmetic','chromas','gamepasses','other'].forEach(function(cat) {
+    ['elements','cosmetic','chromas','gamepasses','other'].forEach(function(cat) {
       vlGetList(cat).forEach(function(item) { freshMap[item.id] = item; });
     });
+    /* Gear: явно строим оба варианта независимо от vlGearVariant */
+    var _savedGearVariant = vlGearVariant;
+    vlGearVariant = 'regular';
+    vlGetList('gear').forEach(function(item) { freshMap[item.id] = item; });
+    vlGearVariant = 'corrupted';
+    vlGetList('gear').forEach(function(item) { freshMap[item.id] = item; });
+    vlGearVariant = _savedGearVariant;
 
     /* Update each open card's item data with fresh (DT-merged) values */
     vlOpenCards.forEach(function(c) {
@@ -11746,16 +11856,34 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
         /* Gear: синхронизируем _vlRollState из _dtRollState чтобы VL видел
            изменённые данные (value/demand) без ручного выбора ролла */
         var _gCid = c.item.id.replace(/[^a-zA-Z0-9_\-]/g, '_');
+        var _isRegularGear = c.item.id.indexOf('corrupted:') === -1;
         if (typeof _dtRollState !== 'undefined' && _dtRollState[_gCid]) {
-          var _gDts = _dtRollState[_gCid];
-          var _gRn  = _gDts.rollNum;
-          var _gRd  = _gDts.rolls && _gDts.rolls[_gRn];
-          if (_gRd) {
-            _vlRollState[_gCid] = { rollNum: _gRn, value: _gRd.v, demand: _gRd.d };
+          /* Corrupted card with DT entry — обновляем value/demand для ролла выбранного
+             пользователем в VL, не перезаписываем rollNum */
+          var _userRn = (_vlRollState[_gCid] && _vlRollState[_gCid].rollNum !== undefined)
+            ? _vlRollState[_gCid].rollNum
+            : _dtRollState[_gCid].rollNum;
+          var _freshRolls = vlGetRollsForItem(c.item);
+          var _freshRd = null;
+          if (_freshRolls) {
+            for (var _fri = 0; _fri < _freshRolls.length; _fri++) {
+              if (_freshRolls[_fri].rollNum === _userRn) { _freshRd = _freshRolls[_fri].data; break; }
+            }
           }
+          if (_freshRd) {
+            _vlRollState[_gCid] = { rollNum: _userRn, value: _freshRd.v, demand: _freshRd.d };
+            _vlSyncRegularRollState(_gCid, _userRn, _freshRd.v, _freshRd.d);
+          }
+        } else if (_isRegularGear) {
+          /* Regular gear — never delete its roll state (user may have chosen a roll).
+             If there's a corrupted DT entry for the same baseId, update value/demand via formula. */
+          var _corrGCid = 'corrupted_' + _gCid;
+          if (typeof _dtRollState !== 'undefined' && _dtRollState[_corrGCid]) {
+            _vlSyncRegularRollState(_corrGCid, null, null, null);
+          }
+          /* else: no DT changes at all — leave _vlRollState as-is so user's roll choice is preserved */
         } else {
-          /* DT карточки нет — сбрасываем _vlRollState чтобы VL показал оригинал */
-          delete _vlRollState[_gCid];
+          /* Corrupted gear, no DT entry — leave _vlRollState as-is so user's roll choice is preserved */
         }
       }
     });
@@ -11830,8 +11958,15 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
     /* Берём сохранённый ролл или минимальный по умолчанию */
     var saved = _vlRollState[cardId];
     var initRoll = saved ? saved.rollNum : rolls[0].rollNum;
-    var initValue = saved ? saved.value  : rolls[0].data.v;
-    var initDemand = saved ? saved.demand : rolls[0].data.d;
+    /* value/demand всегда берём из свежего rolls — там уже учтены DT-оверрайды.
+       saved.value/demand может быть устаревшим если DT изменил другой ролл. */
+    var _initRollData = null;
+    for (var _ird = 0; _ird < rolls.length; _ird++) {
+      if (rolls[_ird].rollNum === initRoll) { _initRollData = rolls[_ird].data; break; }
+    }
+    if (!_initRollData) _initRollData = rolls[0].data;
+    var initValue  = _initRollData.v;
+    var initDemand = _initRollData.d;
 
     /* Сохраняем состояние сразу */
     _vlRollState[cardId] = { rollNum: initRoll, value: initValue, demand: initDemand };
@@ -11946,7 +12081,25 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
 
   window.vlSelectRoll = function(e, cardId, rollNum, value, demand) {
     e.stopPropagation();
-    /* Сохраняем выбранный ролл */
+    /* Сохраняем выбранный ролл.
+       Берём свежие value/demand из vlGetRollsForItem — HTML кнопок дропдауна может быть
+       устаревшим если DT изменил данные после последнего рендера карточки. */
+    var openEntry = null;
+    for (var _oi = 0; _oi < vlOpenCards.length; _oi++) {
+      if (vlOpenCards[_oi].id.replace(/[^a-zA-Z0-9_\-]/g, '_') === cardId) { openEntry = vlOpenCards[_oi]; break; }
+    }
+    if (openEntry) {
+      var _freshRolls = vlGetRollsForItem(openEntry.item);
+      if (_freshRolls) {
+        for (var _fri = 0; _fri < _freshRolls.length; _fri++) {
+          if (_freshRolls[_fri].rollNum === rollNum) {
+            value  = _freshRolls[_fri].data.v;
+            demand = _freshRolls[_fri].data.d;
+            break;
+          }
+        }
+      }
+    }
     _vlRollState[cardId] = { rollNum: rollNum, value: value, demand: demand };
     /* Закрываем дропдаун */
     _vlCloseAllRollDropdowns();
@@ -11957,10 +12110,6 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
       if ((w.dataset.cardId || '').replace(/[^a-zA-Z0-9_\-]/g, '_') === cardId) cardWrap = w;
     });
     if (!cardWrap) return;
-    var openEntry = null;
-    for (var _oi = 0; _oi < vlOpenCards.length; _oi++) {
-      if (vlOpenCards[_oi].id.replace(/[^a-zA-Z0-9_\-]/g, '_') === cardId) { openEntry = vlOpenCards[_oi]; break; }
-    }
     if (!openEntry) return;
     var newWrap = vlBuildCard(openEntry.item);
     cardWrap.parentNode.replaceChild(newWrap, cardWrap);
@@ -12099,9 +12248,13 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
         }
       }
 
-      /* 2. Status / value / demand — только если карточка открыта в DT */
+      /* 2. Status / value / demand — только если карточка открыта в DT.
+            Для regular Gear: также проверяем DT-запись corrupted варианта,
+            т.к. regular значения пересчитываются из corrupted по формуле. */
       if (!_isEdited) {
-        var _dtEntry = window.dtCards && (window.dtCards[item.id] || window.dtCards[cardId]);
+        var _corrDtId = 'corrupted:' + (item.baseId || item.id);
+        var _dtEntry = window.dtCards && (window.dtCards[item.id] || window.dtCards[cardId]
+          || window.dtCards[_corrDtId]);
         if (_dtEntry && _dtEntry.origData) {
           var _orig = _dtEntry.origData;
           /* Status (non-gear only — gear статус обрабатывается через _vlStatusOverrides выше) */
@@ -12126,8 +12279,26 @@ body:has(#fb-view-modal.visible) #fb-list .fb-sticker-rendered { display: none !
               if (_saved) {
                 var _gBaseId = item.baseId || item.id.replace('corrupted:', '');
                 var _isCorr  = item.id.indexOf('corrupted:') !== -1;
-                var _origArr = VL_GEAR_ROLLS[_gBaseId] ? VL_GEAR_ROLLS[_gBaseId][_isCorr ? 'corrupted' : 'regular'] : null;
-                var _origR   = (_origArr && _saved) ? _origArr[_saved.rollNum - 1] : null;
+                /* Для corrupted: сравниваем с сырыми VL_GEAR_ROLLS данными.
+                   Для regular: VL_GEAR_ROLLS не содержит 'regular' массива —
+                   используем _vlGetOrigDefaultRoll который применяет формулу к сырым corrupted,
+                   получая оригинальное regular значение без DT-оверрайдов. */
+                var _origR = null;
+                if (_isCorr) {
+                  var _origArr = VL_GEAR_ROLLS[_gBaseId] ? VL_GEAR_ROLLS[_gBaseId]['corrupted'] : null;
+                  _origR = (_origArr && _saved) ? _origArr[_saved.rollNum - 1] : null;
+                } else {
+                  /* Regular: ищем оригинальный ролл через _vlGetOrigDefaultRoll-подобную логику
+                     но для конкретного rollNum, не только дефолтного */
+                  var _rawCorrArr = VL_GEAR_ROLLS[_gBaseId] ? VL_GEAR_ROLLS[_gBaseId]['corrupted'] : null;
+                  if (_rawCorrArr && _rawCorrArr[_saved.rollNum - 1]) {
+                    var _rawCorr = _rawCorrArr[_saved.rollNum - 1];
+                    _origR = {
+                      v: Math.round(_rawCorr.v / 1.025),
+                      d: Math.max(0, Math.round((_rawCorr.d - 0.5) * 100) / 100)
+                    };
+                  }
+                }
                 if (_origR) {
                   _isEdited = (String(_saved.value)  !== String(_origR.v))
                            || (String(_saved.demand) !== String(_origR.d));
@@ -16184,16 +16355,16 @@ function toggleEasterTheme() {
       var rollData = window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS['woodenv2'];
       if (!rollData) return null;
       var isCorr = (item.id && item.id.indexOf('corrupted:') !== -1);
-      var variant = isCorr ? 'corrupted' : 'regular';
-      var arr = rollData[variant];
+      var arr = isCorr
+        ? rollData['corrupted']
+        : _vlRegularFromCorrupted(rollData['corrupted']);
       if (!arr || !arr[10]) return null;
       return [{ rollNum: 11, data: arr[10] }];
     }
     var rolls = window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId];
     if (!rolls) return null;
     var isCorr2 = (item.id && item.id.indexOf('corrupted:') !== -1);
-    var variantKey = isCorr2 ? 'corrupted' : (dtGearVariant === 'corrupted' && !item.baseId ? 'corrupted' : 'regular');
-    var arr2 = rolls[variantKey];
+    var arr2 = isCorr2 ? rolls['corrupted'] : _vlRegularFromCorrupted(rolls['corrupted']);
     if (!arr2) return null;
     var result = [];
     for (var i = 0; i < arr2.length; i++) {
@@ -16369,6 +16540,7 @@ function toggleEasterTheme() {
     if (typeof _vlRollState !== 'undefined') {
       var _vlKeyR = cardId.replace(/[^a-zA-Z0-9_\-]/g, '_');
       _vlRollState[_vlKeyR] = { rollNum: rollNum, value: value, demand: demand };
+      _vlSyncRegularRollState(_vlKeyR, rollNum, value, demand);
     }
 
     /* Обновляем карточку: value input + overlay + gold + stars */
@@ -16434,7 +16606,7 @@ function toggleEasterTheme() {
     }
     var rolls = window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId];
     if (!rolls) return 0;
-    var arr = rolls[dtGearVariant] || rolls['regular'];
+    var arr = (dtGearVariant === 'corrupted') ? rolls['corrupted'] : _vlRegularFromCorrupted(rolls['corrupted']);
     if (!arr) return 0;
     var max = 0;
     for (var i = 0; i < arr.length; i++) {
@@ -16451,7 +16623,7 @@ function toggleEasterTheme() {
     }
     var rolls = window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId];
     if (!rolls) return 0;
-    var arr = rolls[dtGearVariant] || rolls['regular'];
+    var arr = (dtGearVariant === 'corrupted') ? rolls['corrupted'] : _vlRegularFromCorrupted(rolls['corrupted']);
     if (!arr) return 0;
     var max = 0;
     for (var i = 0; i < arr.length; i++) {
@@ -16915,6 +17087,38 @@ function toggleEasterTheme() {
       it.status = orig.status;
       delete dtCards[id];
 
+      /* Очищаем roll state ДО перестройки VL карточек — иначе _vlBuildCard
+         прочитает старые overridden данные из _vlRollState и покажет их.
+         Для corrupted: не удаляем _vlRollState полностью (пользователь мог выбрать ролл),
+         а обновляем value/demand из оригинальных данных, сохраняя rollNum. */
+      delete _dtRollState[domId];
+      if (typeof _vlRollState !== 'undefined') {
+        var _isCorrDom = domId.indexOf('corrupted_') === 0;
+        if (_isCorrDom && _vlRollState[domId]) {
+          /* Corrupted: сохраняем rollNum пользователя, обновляем value/demand из оригинала */
+          var _corrUserRn = _vlRollState[domId].rollNum;
+          var _corrItem = it; /* it уже восстановлен к orig данным выше */
+          var _corrFreshRolls = (typeof vlGetRollsForItem === 'function') ? vlGetRollsForItem(_corrItem) : null;
+          var _corrFreshRd = null;
+          if (_corrFreshRolls) {
+            for (var _cfi = 0; _cfi < _corrFreshRolls.length; _cfi++) {
+              if (_corrFreshRolls[_cfi].rollNum === _corrUserRn) { _corrFreshRd = _corrFreshRolls[_cfi].data; break; }
+            }
+          }
+          if (_corrFreshRd) {
+            _vlRollState[domId] = { rollNum: _corrUserRn, value: _corrFreshRd.v, demand: _corrFreshRd.d };
+          } else {
+            /* Ролл больше не существует в оригинале — сбрасываем */
+            delete _vlRollState[domId];
+          }
+        } else if (!_isCorrDom) {
+          delete _vlRollState[domId];
+        }
+        /* Regular-карточку под baseId без префикса тоже сбрасываем */
+        var _regKey = domId.replace(/^corrupted_/, '');
+        if (_regKey !== domId) delete _vlRollState[_regKey];
+      }
+
       /* Проверяем: остались ли ещё DT карточки с тем же baseId.
          Если нет — сбрасываем _vlRarityOverrides и синхронизируем все VL карточки. */
       var _baseId = it.baseId || it.id;
@@ -16968,11 +17172,6 @@ function toggleEasterTheme() {
         }
       }
     }
-    /* Очищаем roll state ДО перестройки VL карточки — важно для Gear,
-       чтобы VL видел сброшенные данные а не изменённые */
-    delete _dtRollState[domId];
-    if (typeof _vlRollState !== 'undefined') delete _vlRollState[domId];
-
     /* Перестраиваем VL карточку Gear если она открыта — на случай если изменялся
        только demand (без rarity/status), и блок _anyLeft выше её не перестроил */
     if (it.category === 'gear' && window._vlOpenCards && window._vlBuildCard) {
@@ -17647,6 +17846,9 @@ function toggleEasterTheme() {
           if (typeof _vlRollState !== 'undefined') {
             if (!_vlRollState[_vlKey]) _vlRollState[_vlKey] = { rollNum: _dtRollState[cid].rollNum, value: num, demand: it.demand };
             else { _vlRollState[_vlKey].value = num; _vlRollState[_vlKey].rollNum = _dtRollState[cid].rollNum; }
+            _vlSyncRegularRollState(_vlKey, _dtRollState[cid].rollNum, num,
+              (_dtRollState[cid].rolls && _dtRollState[cid].rolls[_dtRollState[cid].rollNum])
+                ? _dtRollState[cid].rolls[_dtRollState[cid].rollNum].d : it.demand);
           }
         }
       }
@@ -17716,6 +17918,9 @@ function toggleEasterTheme() {
       var _vlKey2 = id.replace(/[^a-zA-Z0-9_\-]/g, '_');
       if (!_vlRollState[_vlKey2]) _vlRollState[_vlKey2] = { rollNum: _dtRollState[cid].rollNum, value: dtCards[id].item.value, demand: val };
       else { _vlRollState[_vlKey2].demand = val; _vlRollState[_vlKey2].rollNum = _dtRollState[cid].rollNum; }
+      var _corrV2 = (_dtRollState[cid].rolls && _dtRollState[cid].rolls[_dtRollState[cid].rollNum])
+        ? _dtRollState[cid].rolls[_dtRollState[cid].rollNum].v : dtCards[id].item.value;
+      _vlSyncRegularRollState(_vlKey2, _dtRollState[cid].rollNum, _corrV2, val);
     }
     /* Для Gear звёзды внутри .vl-roll-stars-row (нет dt-stars-id),
        для остальных — по id. Зеркало логики из dtSelectRoll. */
@@ -17837,7 +18042,9 @@ function toggleEasterTheme() {
       } else {
         varBtn.style.display = '';
         if (dtCat === 'gear') {
-          varBtn.onclick = function(e){ dtToggleGearVariant(e); };
+          varBtn.onclick = null; /* gear variant locked to corrupted — no toggle */
+          varBtn.style.cursor = 'default';
+          varBtn.title = 'Gear variant is locked to Corrupted';
           _dtSyncGearBtn();
         } else {
           varBtn.onclick = function(e){ dtToggleVariantPopup(e); };
