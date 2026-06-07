@@ -414,6 +414,7 @@ window.VL_VARIANTS_DB = {
 
   mutated: {
     nightmare:{ value:450000, demand:4,   status:'rising' },
+    astra:    { value:280000, demand:3.25,status:null     },
     bunny:    { value:155000, demand:3.5, status:null     },
     time:     { value:90000,  demand:3,   status:null     },
     krampus:  { value:100000, demand:2,   status:null     },
