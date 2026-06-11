@@ -13196,11 +13196,16 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
                  Если _vlRollState ещё не заполнен (карточка открыта в VL без
                  предварительного выбора ролла), инициализируем из _dtRollState. */
               var _saved = _vlRollState[cardId];
-              if (!_saved && typeof _dtRollState !== 'undefined' && _dtRollState[cardId]) {
-                var _dts = _dtRollState[cardId];
-                var _rn  = _dts.rollNum;
-                var _rd  = _dts.rolls && _dts.rolls[_rn];
-                _saved = { rollNum: _rn, value: _rd ? _rd.v : _rolls[0].data.v, demand: _rd ? _rd.d : _rolls[0].data.d };
+              if (!_saved && typeof _dtRollState !== 'undefined') {
+                /* Для Regular: cardId = baseId (без corrupted_-префикса).
+                   В _dtRollState запись лежит под corrupted_baseId — ищем по нему. */
+                var _corrStateKey = 'corrupted_' + (item.baseId || item.id).replace(/[^a-zA-Z0-9_\-]/g, '_');
+                var _dts = _dtRollState[cardId] || _dtRollState[_corrStateKey];
+                if (_dts) {
+                  var _rn  = _dts.rollNum;
+                  var _rd  = _dts.rolls && _dts.rolls[_rn];
+                  _saved = { rollNum: _rn, value: _rd ? _rd.v : _rolls[0].data.v, demand: _rd ? _rd.d : _rolls[0].data.d };
+                }
               }
               if (_saved) {
                 var _gBaseId = item.baseId || item.id.replace('corrupted:', '');
