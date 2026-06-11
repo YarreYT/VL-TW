@@ -18325,6 +18325,9 @@ function toggleEasterTheme() {
          Для corrupted: не удаляем _vlRollState полностью (пользователь мог выбрать ролл),
          а обновляем value/demand из оригинальных данных, сохраняя rollNum. */
       delete _dtRollState[domId];
+      /* При следующем navigateTo('valuelist') VL перестроит открытые карточки
+         с оригинальными данными — на случай если пользователь удаляет с DT-страницы */
+      window._vlNeedsRefresh = true;
       if (typeof _vlRollState !== 'undefined') {
         var _isCorrDom = domId.indexOf('corrupted_') === 0;
         if (_isCorrDom && _vlRollState[domId]) {
@@ -18407,7 +18410,7 @@ function toggleEasterTheme() {
     }
     /* Перестраиваем VL карточку Gear если она открыта — на случай если изменялся
        только demand (без rarity/status), и блок _anyLeft выше её не перестроил */
-    if (it.category === 'gear' && window._vlOpenCards && window._vlBuildCard) {
+    if ((it.category === 'gear' || it.cat === 'gear') && window._vlOpenCards && window._vlBuildCard) {
       var _gVlArea = document.getElementById('vl-detail-area');
       var _gVlWrap = _gVlArea && _gVlArea.querySelector('.vl-cards-wrap');
       if (_gVlWrap) {
