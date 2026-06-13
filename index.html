@@ -101,8 +101,7 @@
 <script type="module">
 /* === Firebase Realtime Database === */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, remove, query, orderByChild, limitToLast, set,
-         onDisconnect, serverTimestamp }
+import { getDatabase, ref, set, onValue, remove, onDisconnect, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
 const _fbApp = initializeApp({
@@ -116,13 +115,6 @@ const _fbApp = initializeApp({
 });
 window._fbDB  = getDatabase(_fbApp);
 window._fbRef = (path) => ref(window._fbDB, path);
-window._fbPush    = push;
-window._fbOnValue = onValue;
-window._fbRemove  = remove;
-window._fbSetVal  = set;
-window._fbQuery   = query;
-window._fbOrderByChild = orderByChild;
-window._fbLimitToLast  = limitToLast;
 
 /* stubs для legacy-кода, который использует старый window.firebase / window.consoleRef */
 window.db = window._fbDB;
@@ -4945,6 +4937,14 @@ body.lang-ru .value-list-btn{
 .az-card:has(.vl-roll-dropdown[style*="flex"]),
 .vl-card-wrap:has(.vl-status-tooltip.show) {
   z-index: 100;
+}
+/* VALUE CHANGES panel: снимаем overflow clip когда dropdown роллов открыт */
+.updates-body:has(.vl-roll-dropdown[style*="flex"]) {
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+}
+.updates-panel:has(.vl-roll-dropdown[style*="flex"]) {
+  overflow: visible !important;
 }
 .vl-card-wrap .vl-detail-card {
   width: 100%;
@@ -12965,24 +12965,41 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     e.stopPropagation();
     var drop = document.getElementById('rolldrop-' + cardId);
     if (!drop) return;
-    var isOpen = drop.style.display === 'flex';
+    var isOpen = drop._teleported ? drop.style.display === 'flex' : drop.style.display === 'flex';
     _vlCloseAllRollDropdowns();
     if (isOpen) return;
 
     var btn = document.getElementById('rollbtn-' + cardId) || e.currentTarget || e.target;
 
-    /* Оставляем дропдаун внутри карточки — position:absolute следует при скролле */
-    drop.style.cssText = 'display:flex; pointer-events:auto;';
-    /* Если снизу не хватает места — открываем вверх */
-    requestAnimationFrame(function() {
+    /* Телепортируем dropdown в <body> чтобы вырваться из overflow:hidden предков */
+    drop._origParent = drop.parentNode;
+    drop._origNextSibling = drop.nextSibling;
+    drop._teleported = true;
+    drop._anchorBtn = btn;
+    document.body.appendChild(drop);
+
+    function _vlPositionRollDrop() {
       var btnRect = btn.getBoundingClientRect();
       var dropH = drop.offsetHeight;
       var spaceBelow = window.innerHeight - btnRect.bottom;
-      if (spaceBelow < dropH + 8) {
-        drop.style.top = 'auto';
-        drop.style.bottom = 'calc(100% + 4px)';
-      }
-    });
+      var topVal = (spaceBelow < dropH + 8)
+        ? (btnRect.top - dropH - 4)
+        : (btnRect.bottom + 4);
+      drop.style.top  = topVal + 'px';
+      drop.style.left = (btnRect.left + btnRect.width / 2) + 'px';
+    }
+
+    drop.style.cssText = [
+      'display:flex',
+      'pointer-events:auto',
+      'position:fixed',
+      'z-index:99',
+      'transform:translateX(-50%)'
+    ].join(';');
+
+    requestAnimationFrame(_vlPositionRollDrop);
+    drop._scrollHandler = _vlPositionRollDrop;
+    window.addEventListener('scroll', _vlPositionRollDrop, { capture: true, passive: true });
 
     setTimeout(function() {
       document.addEventListener('click', _vlRollOutsideClick);
@@ -12999,6 +13016,23 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     document.querySelectorAll('.vl-roll-dropdown').forEach(function(d) {
       if (d.style.display === 'flex') {
         d.style.display = 'none';
+        /* Снимаем scroll listener */
+        if (d._scrollHandler) {
+          window.removeEventListener('scroll', d._scrollHandler, true);
+          d._scrollHandler = null;
+        }
+        /* Возвращаем на исходное место если был телепортирован */
+        if (d._teleported && d._origParent) {
+          if (d._origNextSibling) {
+            d._origParent.insertBefore(d, d._origNextSibling);
+          } else {
+            d._origParent.appendChild(d);
+          }
+          d._teleported = false;
+          d._origParent = null;
+          d._origNextSibling = null;
+          d._anchorBtn = null;
+        }
       }
     });
     document.removeEventListener('click', _vlRollOutsideClick);
