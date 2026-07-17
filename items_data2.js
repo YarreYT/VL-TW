@@ -604,6 +604,11 @@ window.VL_VARIANTS_DB = {
     time:    { value:215000,  demand:4.25, status:'inprocess'},
   },
 
+  nuclear: {
+    ice:     { value:8000,    demand:2.75, status:'inprocess'},
+    lava:    { value:21000,   demand:2.5,  status:'inprocess'},
+    air:     { value:4000,    demand:1.5,  status:'inprocess'},
+  },
 };
 
 
