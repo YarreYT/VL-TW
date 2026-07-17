@@ -80,7 +80,7 @@ window.VL_DB = {
     { id:'cupidfury',     name:"Cupid's Fury",                 rarity:'ascended',  imgId:'cupidfury',      subtype:'weapon', status:null },
     { id:'cupidwrath',    name:"Cupid's Wrath",                rarity:'secret',    imgId:'cupidwrath',     subtype:'weapon', status:null },
     { id:'tlconqblade',   name:"Timelost Conqueror's Blade",   rarity:'mythic',    imgId:'tlconqblade',    subtype:'weapon', status:null },
-    { id:'tlconqbladele', name:"Timelost Conqueror's Blade LE",rarity:'mythic',    imgId:'tlconqblade',    subtype:'weapon', status:null },
+    { id:'tlconqbladele', name:"Timelost Conqueror's Blade LE", rarity:'mythic', imgId:'tlconqblade', subtype:'weapon', status:'inprocess' },
     { id:'glitchedstaff', name:"Glitched Staff",               rarity:'secret',    imgId:'glitchedstaff',  subtype:'weapon', status:null },
     { id:'viltronstaff',  name:"Viltron Staff",                rarity:'ascended',  imgId:'glitchedstaff',  subtype:'weapon', status:null },
     { id:'seriously',     name:"Serious Staff",                rarity:'secret',    imgId:'seriously',      subtype:'weapon', status:null },
@@ -122,6 +122,7 @@ window.VL_DB = {
     { id:'lunar_neckalce',      name:"Lunar Neckalce",       rarity:'uncommon',  imgId:'lunarnecklace',     subtype:'relic',  status:null },
     { id:'vitalis_necklace',    name:"Vitalis Necklace",     rarity:'legendary', imgId:'vitalisnecklace',   subtype:'relic',  status:null },
     { id:'reapers_ring',        name:"Reaper's Ring",        rarity:'mythic',    imgId:'reapersring',       subtype:'relic',  status:null },
+      { id:'lionels_war_blade', name:"Lionel's War Blade", rarity:'mythic', imgId:'tlconqblade', subtype:'weapon', status:'inprocess' },
   ],
 
   cosmetic: [
@@ -664,7 +665,7 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:1300,d:0.2},{v:1300,d:0.2},{v:1300,d:0.2},{v:1300,d:0.2},{v:1300,d:0.2},{v:1600,d:0.3},{v:1600,d:0.3},{v:1600,d:0.3},{v:1750,d:0.5},{v:2000,d:0.6},{v:2500,d:0.65} ]
   },
   tlconqbladele: {
-    corrupted: [ {v:18000,d:1.5},{v:20000,d:1.5},{v:22000,d:1.5},{v:24000,d:1.5},{v:26000,d:1.75},{v:30000,d:2},{v:32000,d:2},{v:34000,d:2},{v:37500,d:2.5},{v:40000,d:2.5},{v:42500,d:3} ]
+    corrupted: [ {v:6000,d:1.5},{v:7250,d:1.5},{v:8250,d:1.5},{v:9250,d:1.5},{v:10500,d:1.75},{v:11500,d:2},{v:12000,d:2},{v:12500,d:2},{v:13000,d:2.5},{v:13500,d:2.5},{v:14000,d:3} ]
   },
   glitchedstaff: {
     corrupted: [ null,null,null,null,null,{v:800,d:1},{v:860,d:1},{v:920,d:1.2},{v:1000,d:1.3},{v:1200,d:1.5},{v:1500,d:1.5} ]
@@ -678,7 +679,6 @@ window.VL_GEAR_ROLLS = {
   easterstaff: {
     corrupted: [ null,null,null,null,null,{v:600,d:0.5},{v:650,d:1},{v:710,d:1},{v:780,d:1.2},{v:850,d:1.3},{v:1000,d:1.5} ]
   },
-  /* ── Armor ── */
   fzset: {
     corrupted: [ {v:1000,d:0.5},{v:1100,d:0.5},{v:1200,d:0.5},{v:1300,d:0.5},{v:1400,d:0.5},{v:1500,d:0.75},{v:1600,d:0.75},{v:1700,d:0.75},{v:1800,d:1},{v:1900,d:1},{v:2000,d:1} ]
   },
@@ -694,8 +694,6 @@ window.VL_GEAR_ROLLS = {
   heroickronax: {
     corrupted: [ {v:2000,d:1},{v:2120,d:1},{v:2240,d:1},{v:2360,d:1.2},{v:2480,d:1.3},{v:2600,d:1.5},{v:2720,d:1.5},{v:2840,d:1.7},{v:3000,d:2},{v:3500,d:2},{v:4000,d:2} ]
   },
-
-  /* ── New Gear Rolls ── */
   viltron_set: {
     corrupted: [ {v:300,d:0},{v:300,d:0.25},{v:350,d:0.25},{v:400,d:0.25},{v:425,d:0.25},{v:450,d:0.5},{v:500,d:0.5},{v:525,d:0.5},{v:550,d:0.75},{v:575,d:0.75},{v:600,d:0.75} ]
   },
@@ -779,6 +777,9 @@ window.VL_GEAR_ROLLS = {
   },
   reapers_ring: {
     corrupted: [ {v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:50,d:0.75} ]
+  },
+  lionels_war_blade: {
+    corrupted: [ {v:2500,d:2.25},{v:3000,d:2.25},{v:3500,d:2.25},{v:4000,d:2.5},{v:4500,d:2.5},{v:5000,d:2.5},{v:5500,d:2.5},{v:6000,d:2.5},{v:6500,d:2.75},{v:7000,d:2.75},{v:7500,d:2.75} ]
   },
 };
 
