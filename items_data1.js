@@ -26,41 +26,41 @@ window.VL_DB = {
 
   elements: [
     /* ── Rare ── */
-    { id:'earth',          name:"Earth",          rarity:'rare',      demand:1,   value:1,     status:null      },
-    { id:'water',          name:"Water",          rarity:'rare',      demand:1,   value:1,     status:null      },
-    { id:'nature',         name:"Nature",         rarity:'rare',      demand:1.5, value:1,     status:null      },
-    { id:'fire',           name:"Fire",           rarity:'rare',      demand:1.2, value:1,     status:null      },
-    { id:'sand',           name:"Sand",           rarity:'rare',      demand:1,   value:1,     status:null      },
-    { id:'air',            name:"Air",            rarity:'rare',      demand:0.8, value:1,     status:null      },
+    { id:'earth',          name:"Earth",          rarity:'rare', imgId:'earth',      demand:1,   value:1,     status:null      },
+    { id:'water',          name:"Water",          rarity:'rare', imgId:'water',      demand:1,   value:1,     status:null      },
+    { id:'nature',         name:"Nature",         rarity:'rare', imgId:'nature',      demand:1.5, value:1,     status:null      },
+    { id:'fire',           name:"Fire",           rarity:'rare', imgId:'fire',      demand:1.2, value:1,     status:null      },
+    { id:'sand',           name:"Sand",           rarity:'rare', imgId:'sand',      demand:1,   value:1,     status:null      },
+    { id:'air',            name:"Air",            rarity:'rare', imgId:'air',      demand:0.8, value:1,     status:null      },
     /* ── Epic ── */
-    { id:'lightning',      name:"Lightning",      rarity:'epic',      demand:2,   value:5,     status:null      },
-    { id:'light',          name:"Light",          rarity:'epic',      demand:1.5, value:3,     status:null      },
-    { id:'smoke',          name:"Smoke",          rarity:'epic',      demand:1,   value:3,     status:null      },
-    { id:'ice',            name:"Ice",            rarity:'epic',      demand:2,   value:5,     status:null      },
+    { id:'lightning',      name:"Lightning",      rarity:'epic', imgId:'lightning',      demand:2,   value:5,     status:null      },
+    { id:'light',          name:"Light",          rarity:'epic', imgId:'light',      demand:1.5, value:3,     status:null      },
+    { id:'smoke',          name:"Smoke",          rarity:'epic', imgId:'smoke',      demand:1,   value:3,     status:null      },
+    { id:'ice',            name:"Ice",            rarity:'epic', imgId:'ice',      demand:2,   value:5,     status:null      },
     /* ── Legendary ── */
-    { id:'dragon',         name:"Dragon",         rarity:'legendary', demand:2,   value:10,    status:null      },
-    { id:'gravity',        name:"Gravity",        rarity:'legendary', demand:2.5, value:15,    status:'hyped'   },
-    { id:'darkness',       name:"Darkness",       rarity:'legendary', demand:2,   value:10,    status:null      },
-    { id:'angel',          name:"Angel",          rarity:'legendary', demand:2,   value:10,    status:null      },
-    { id:'lava',           name:"Lava",           rarity:'legendary', demand:1.5, value:10,    status:null      },
+    { id:'dragon',         name:"Dragon",         rarity:'legendary', imgId:'dragon', demand:2,   value:10,    status:null      },
+    { id:'gravity',        name:"Gravity",        rarity:'legendary', imgId:'gravity', demand:2.5, value:15,    status:'hyped'   },
+    { id:'darkness',       name:"Darkness",       rarity:'legendary', imgId:'darkness', demand:2,   value:10,    status:null      },
+    { id:'angel',          name:"Angel",          rarity:'legendary', imgId:'angel', demand:2,   value:10,    status:null      },
+    { id:'lava',           name:"Lava",           rarity:'legendary', imgId:'lava', demand:1.5, value:10,    status:null      },
     /* ── Mythic ── */
-    { id:'reaper',         name:"Reaper",         rarity:'mythic',    demand:3,   value:60,    status:null      },
-    { id:'mech',           name:"Mech",           rarity:'mythic',    demand:2,   value:60,    status:null      },
-    { id:'galaxy',         name:"Galaxy",         rarity:'mythic',    demand:3.5, value:60,    status:null      },
-    { id:'kitsune',        name:"Kitsune",        rarity:'mythic',    demand:2.5, value:60,    status:null      },
+    { id:'reaper',         name:"Reaper",         rarity:'mythic', imgId:'reaper',    demand:3,   value:60,    status:null      },
+    { id:'mech',           name:"Mech",           rarity:'mythic', imgId:'mech',    demand:2,   value:60,    status:null      },
+    { id:'galaxy',         name:"Galaxy",         rarity:'mythic', imgId:'galaxy',    demand:3.5, value:60,    status:null      },
+    { id:'kitsune',        name:"Kitsune",        rarity:'mythic', imgId:'kitsune',    demand:2.5, value:60,    status:null      },
     /* ── Secret ── */
-    { id:'time',           name:"Time",           rarity:'secret',    demand:1.5, value:200,   status:null      },
+    { id:'time',           name:"Time",           rarity:'secret', imgId:'time',    demand:1.5, value:200,   status:null      },
     /* ── Mythic (extra) ── */
-    { id:'phantom',        name:"Phantom",        rarity:'mythic',    demand:5,   value:6000,  status:'rising'  },
-    { id:'nightmare',      name:"Nightmare",      rarity:'mythic',    demand:5,   value:5000,  status:'rising'  },
-    { id:'astra',          name:"Astra",          rarity:'mythic',    demand:4,   value:4000,  status:'rising'  },
-    { id:'infinity',       name:"Infinity",       rarity:'mythic',    demand:3.5, value:12750, status:null      },
-    { id:'solar',          name:"Solar",          rarity:'mythic',    demand:3,   value:18500, status:null      },
-    { id:'bunny',          name:"Bunny",          rarity:'mythic',    demand:3,   value:3250,  status:'rising'  },
-    { id:'krampus',        name:"Krampus",        rarity:'mythic',    demand:1.8, value:1000,  status:null      },
+    { id:'phantom',        name:"Phantom",        rarity:'mythic', imgId:'phantom',    demand:5,   value:6000,  status:'rising'  },
+    { id:'nightmare',      name:"Nightmare",      rarity:'mythic', imgId:'nightmare',    demand:5,   value:5000,  status:'rising'  },
+    { id:'astra',          name:"Astra",          rarity:'mythic', imgId:'astra',    demand:4,   value:4000,  status:'rising'  },
+    { id:'infinity',       name:"Infinity",       rarity:'mythic', imgId:'infinity',    demand:3.5, value:12750, status:null      },
+    { id:'solar',          name:"Solar",          rarity:'mythic', imgId:'solar',    demand:3,   value:18500, status:null      },
+    { id:'bunny',          name:"Bunny",          rarity:'mythic', imgId:'bunny',    demand:3,   value:3250,  status:'rising'  },
+    { id:'krampus',        name:"Krampus",        rarity:'mythic', imgId:'krampus',    demand:1.8, value:1000,  status:null      },
     /* ── Exclusive ── */
-    { id:'sunlar',         name:"Sunlar",         rarity:'exclusive', demand:4.5, value:2250,  status:null      },
-    { id:'fools_phantom',  name:"Fool's Phantom", rarity:'exclusive', demand:3,   value:13500, status:null      },
+    { id:'sunlar',         name:"Sunlar",         rarity:'exclusive', imgId:'sunlar', demand:4.5, value:2250,  status:null      },
+    { id:'fools_phantom',  name:"Fool's Phantom", rarity:'exclusive', imgId:'fools_phantom', demand:3,   value:13500, status:null      },
   ],
 
   gear: [
@@ -138,36 +138,40 @@ window.VL_DB = {
     { id:'violetbattleaxe',   name:"Violet Battleaxe",         rarity:'mythic',    imgId:'violetbattleaxe',   subtype:'weapon', status:null, value:45000, demand:1.5  },
     { id:'top3sword',         name:"Top 3 Sword",              rarity:'mythic',    imgId:'top3sword',         subtype:'weapon', status:null, value:18000, demand:2    },
     { id:'top10sword',        name:"Top 10 Sword",             rarity:'legendary', imgId:'top10sword',        subtype:'weapon', status:null, value:1000,  demand:0.5  },
+    { id:'dragonslayerblade', name:"Dragon Slayer Blade",      rarity:'mythic',    imgId:'dragonslayer',      subtype:'weapon', status:'rare', value:'2500-75000+',  demand:2  },
     /* ── Cosmetic Armor ── */
-    { id:'emberknightset',    name:"Ember Knight Set",         rarity:'mythic',    imgId:'emberknightset',    subtype:'armor',  status:'rising', value:85000, demand:3    },
-    { id:'redphantomset',     name:"Red Phantom Set",          rarity:'mythic',    imgId:'redphantomset',     subtype:'armor',  status:null, value:37500, demand:2    },
-    { id:'autumnspiritset',   name:"Autumn Spirit Set",        rarity:'mythic',    imgId:'autumnspiritset',   subtype:'armor',  status:null, value:15000,  demand:1.5  },
-    { id:'horsemanset',       name:"Horseman Set",             rarity:'mythic',    imgId:'horsemanset',       subtype:'armor',  status:null, value:7500,  demand:0.5  },
-    { id:'astralaegisset',    name:"Astral Aegis Set",         rarity:'mythic',    imgId:'astralaegisset',    subtype:'armor',  status:null, value:6000,  demand:1    },
+    { id:'emberknightset',    name:"Ember Knight Set",         rarity:'mythic',    imgId:'emberknightset',    subtype:'armor',  status:'rising', value:72500, demand:2    },
+    { id:'redphantomset',     name:"Red Phantom Set",          rarity:'mythic',    imgId:'redphantomset',     subtype:'armor',  status:null, value:34000, demand:0.75 },
+    { id:'autumnspiritset',   name:"Autumn Spirit Set",        rarity:'mythic',    imgId:'autumnspiritset',   subtype:'armor',  status:null, value:16500,  demand:2    },
+    { id:'horsemanset',       name:"Horseman Set",             rarity:'mythic',    imgId:'horsemanset',       subtype:'armor',  status:null, value:5500,  demand:1.5  },
+    { id:'astralaegisset',    name:"Astral Aegis Set",         rarity:'mythic',    imgId:'astralaegisset',    subtype:'armor',  status:null, value:5000,  demand:2    },
     { id:'towerkingset',      name:"Tower King Set",           rarity:'exclusive', imgId:'towerkingset',      subtype:'armor',  status:null, value:6000,  demand:0.75 },
-    { id:'vampireset',        name:"Vampire Set",              rarity:'mythic',    imgId:'vampireset',        subtype:'armor',  status:null, value:5000,  demand:0.5  },
-    { id:'krampusset',        name:"Krampus Set",              rarity:'mythic',    imgId:'krampusset',        subtype:'armor',  status:null, value:5000,  demand:0.5  },
-    { id:'chainedoverlordset',name:"Chained Overlord Set",     rarity:'mythic',    imgId:'chainedoverlordset',subtype:'armor',  status:null, value:3500,  demand:1    },
-    { id:'mummyset',          name:"Mummy Set",                rarity:'mythic',    imgId:'mummyset',          subtype:'armor',  status:null, value:3000,  demand:0.75 },
-    { id:'scorchguardset',    name:"Scorchguard Set",          rarity:'mythic',    imgId:'scorchguardset',    subtype:'armor',  status:null, value:3000,  demand:0.65 },
-    { id:'voltsentinelset',   name:"Volt Sentinel Set",        rarity:'mythic',    imgId:'voltsentinelset',   subtype:'armor',  status:null, value:5000,  demand:0.35 },
-    { id:'stormborneset',     name:"Stormborne Set",           rarity:'mythic',    imgId:'stormborneset',     subtype:'armor',  status:null, value:3000,  demand:0.75 },
-    { id:'tempestbreakerset', name:"Tempestbreaker Set",       rarity:'mythic',    imgId:'tempestbreakerset', subtype:'armor',  status:null, value:3000,  demand:0.75 },
-    { id:'brightcoreset',     name:"Brightcore Set",           rarity:'mythic',    imgId:'brightcoreset',     subtype:'armor',  status:null, value:2000,   demand:0.25 },
-    { id:'voidcoreset',       name:"Voidcore Set",             rarity:'mythic',    imgId:'voidcoreset',       subtype:'armor',  status:null, value:2000,   demand:0.25 },
-    { id:'betaset',           name:"Beta Set",                 rarity:'mythic',    imgId:'betaset',           subtype:'armor',  status:null, value:3000,  demand:1    },
-    { id:'darkknightset',     name:"Dark Knight Set",          rarity:'mythic',    imgId:'darkknightset',     subtype:'armor',  status:null, value:3000,  demand:0.75 },
+    { id:'vampireset',        name:"Vampire Set",              rarity:'mythic',    imgId:'vampireset',        subtype:'armor',  status:null, value:5000,  demand:0.25 },
+    { id:'krampusset',        name:"Krampus Set",              rarity:'mythic',    imgId:'krampusset',        subtype:'armor',  status:null, value:4750,  demand:1.25 },
+    { id:'chainedoverlordset',name:"Chained Overlord Set",     rarity:'mythic',    imgId:'chainedoverlordset',subtype:'armor',  status:null, value:3500,  demand:1.25 },
+    { id:'mummyset',          name:"Mummy Set",                rarity:'mythic',    imgId:'mummyset',          subtype:'armor',  status:null, value:3250,  demand:0.75 },
+    { id:'scorchguardset',    name:"Scorchguard Set",          rarity:'mythic',    imgId:'scorchguardset',    subtype:'armor',  status:null, value:3750,  demand:0.65 },
+    { id:'voltsentinelset',   name:"Volt Sentinel Set",        rarity:'mythic',    imgId:'voltsentinelset',   subtype:'armor',  status:null, value:4250,  demand:1.5  },
+    { id:'stormborneset',     name:"Stormborne Set",           rarity:'mythic',    imgId:'stormborneset',     subtype:'armor',  status:null, value:2000,  demand:0.75 },
+    { id:'tempestbreakerset', name:"Tempestbreaker Set",       rarity:'mythic',    imgId:'tempestbreakerset', subtype:'armor',  status:null, value:1750,  demand:0.75 },
+    { id:'brightcoreset',     name:"Brightcore Set",           rarity:'mythic',    imgId:'brightcoreset',     subtype:'armor',  status:null, value:1250,   demand:0.25 },
+    { id:'voidcoreset',       name:"Voidcore Set",             rarity:'mythic',    imgId:'voidcoreset',       subtype:'armor',  status:null, value:1250,   demand:0.25 },
+    { id:'betaset',           name:"Beta Set",                 rarity:'mythic',    imgId:'betaset',           subtype:'armor',  status:null, value:4000,  demand:1.75 },
+    { id:'darkknightset',     name:"Dark Knight Set",          rarity:'mythic',    imgId:'darkknightset',     subtype:'armor',  status:null, value:3250,  demand:1.25 },
     { id:'darknexusset',      name:"Dark Nexus Set",           rarity:'mythic',    imgId:'darknexusset',      subtype:'armor',  status:null, value:3000,  demand:0.75 },
-    { id:'ghastlyset',        name:"Ghastly Set",              rarity:'mythic',    imgId:'ghastlyset',        subtype:'armor',  status:null, value:2500,   demand:0.5  },
-    { id:'snowflakeset',      name:"Snowflake Set",            rarity:'mythic',    imgId:'snowflakeset',      subtype:'armor',  status:null, value:2000,   demand:0.35 },
-    { id:'gingerbreadset',    name:"Gingerbread Guardian Set", rarity:'mythic',    imgId:'gingerbreadset',    subtype:'armor',  status:null, value:2000,   demand:0.25 },
-    { id:'frostskinset',      name:"Frostskin Set",            rarity:'mythic',    imgId:'frostskinset',      subtype:'armor',  status:null, value:2000,   demand:0.25 },
-    { id:'phantomknightset',  name:"Phantom Knight Set",       rarity:'mythic',    imgId:'phantomknightset',  subtype:'armor',  status:null, value:1500,   demand:0.25 },
+    { id:'ghastlyset',        name:"Ghastly Set",              rarity:'mythic',    imgId:'ghastlyset',        subtype:'armor',  status:null, value:2500,   demand:0.25 },
+    { id:'snowflakeset',      name:"Snowflake Set",            rarity:'mythic',    imgId:'snowflakeset',      subtype:'armor',  status:null, value:3000,   demand:0.75 },
+    { id:'gingerbreadset',    name:"Gingerbread Guardian Set", rarity:'mythic',    imgId:'gingerbreadset',    subtype:'armor',  status:null, value:2000,   demand:0.5  },
+    { id:'frostskinset',      name:"Frostskin Set",            rarity:'mythic',    imgId:'frostskinset',      subtype:'armor',  status:null, value:2000,   demand:0.5  },
+    { id:'phantomknightset',  name:"Phantom Knight Set",       rarity:'mythic',    imgId:'phantomknightset',  subtype:'armor',  status:null, value:1000,   demand:0.25 },
     { id:'aresset',           name:"Ares Set",                 rarity:'mythic',    imgId:'aresset',           subtype:'armor',  status:null, value:1500,   demand:0.25 },
-    { id:'plaguedoctorset',   name:"Plague Doctor Set",        rarity:'mythic',    imgId:'plaguedoctorset',   subtype:'armor',  status:null, value:1000,   demand:0.25 },
+    { id:'plaguedoctorset',   name:"Plague Doctor Set",        rarity:'mythic',    imgId:'plaguedoctorset',   subtype:'armor',  status:null, value:1500,   demand:0.25 },
     { id:'spectralset',       name:"Spectral Set",             rarity:'mythic',    imgId:'spectralset',       subtype:'armor',  status:null, value:240,    demand:0    },
     { id:'witchset',          name:"Witch Set",                rarity:'mythic',    imgId:'witchset',          subtype:'armor',  status:null, value:240,    demand:0    },
     { id:'spookyamethystset', name:"Spooky Amethyst Set",      rarity:'mythic',    imgId:'spookyamethystset', subtype:'armor',  status:null, value:180,    demand:0    },
+    { id:'dragonslayerset',   name:"Dragon Slayer Set",        rarity:'mythic',    imgId:'dragonslayerset',   subtype:'armor',  status:'rare', value:'3250-80000+', demand:1.5   },
+    { id:'eggshellset',       name:"Eggshell Set",             rarity:'mythic',    imgId:'eggshellset',       subtype:'armor',  status:null, value:'850', demand:0.5    },
+    { id:'viltronset',        name:"Viltron Set",              rarity:'mythic',    imgId:'viltronset',        subtype:'armor',  status:null, value:'1000', demand:0.5   },
   ],
 
   gamepasses: [
@@ -181,56 +185,56 @@ window.VL_DB = {
   ],
 
   chromas: [
-    { id:'candy_nightmare',   name:"Candy Nightmare",   rarity:'legendary', demand:3,   value:'6500',        status:'rising', category:'chromas' },
-    { id:'spooky_galaxy',     name:"Spooky Galaxy",     rarity:'mythic',    demand:3.5, value:'5000',        status:'rising', category:'chromas' },
-    { id:'candy_reaper',      name:"Candy Reaper",      rarity:'legendary', demand:2,   value:'2000',        status:null,     category:'chromas' },
-    { id:'turkey_mech',       name:"Turkey Mech",       rarity:'exclusive', demand:2.5, value:'1250',        status:null,     category:'chromas' },
-    { id:'og_phantom',        name:"OG Phantom",        rarity:'rare',      demand:3,   value:'1000',        status:null,     category:'chromas' },
-    { id:'santa_reaper',      name:"Santa Reaper",      rarity:'exclusive', demand:2,   value:'5000-80000',  status:null,     category:'chromas' },
-    { id:'santa_mech',        name:"Santa Mech",        rarity:'exclusive', demand:2.5, value:'5000-80000',  status:null,     category:'chromas' },
-    { id:'toxic_dragon',      name:"Toxic Dragon",      rarity:'mythic',    demand:2,   value:'240',         status:null,     category:'chromas' },
-    { id:'blood_darkness',    name:"Blood Darkness",    rarity:'mythic',    demand:1,   value:'600',         status:null,     category:'chromas' },
-    { id:'amber_lightning',   name:"Amber Lightning",   rarity:'legendary', demand:2,   value:'1000',        status:null,     category:'chromas' },
-    { id:'blood_kitsune',     name:"Blood Kitsune",     rarity:'mythic',    demand:2,   value:'600',         status:null,     category:'chromas' },
-    { id:'emerald_lightning', name:"Emerald Lightning", rarity:'legendary', demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'pumpkin_phantom',   name:"Pumpkin Phantom",   rarity:'mythic',    demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'nightmare_dragon',  name:"Nightmare Dragon",  rarity:'mythic',    demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'bone_reaper',       name:"Bone Reaper",       rarity:'mythic',    demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'festive_astra',     name:"Festive Astra",     rarity:'mythic',    demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'candy_lava',        name:"Candy Lava",        rarity:'legendary', demand:2,   value:'1000',        status:null,     category:'chromas' },
-    { id:'spectral_light',    name:"Spectral Light",    rarity:'legendary', demand:2,   value:'1000',        status:null,     category:'chromas' },
-    { id:'evil_krampus',      name:"Evil Krampus",      rarity:'legendary', demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'celestial_krampus', name:"Celestial Krampus", rarity:'mythic',    demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'afterimage_time',   name:"Afterimage Time",   rarity:'secret',    demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'frosted_krampus',   name:"Frosted Krampus",   rarity:'mythic',    demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'ethereal_angel',    name:"Ethereal Angel",    rarity:'mythic',    demand:1,   value:'60',          status:null,     category:'chromas' },
-    { id:'love_dragon',       name:"Love Dragon",       rarity:'exclusive', demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'cupids_angel',      name:"Cupid Angel",       rarity:'mythic',    demand:4,   value:'25000',       status:'rising', category:'chromas' },
-    { id:'love_kitsune',      name:"Love Kitsune",      rarity:'exclusive', demand:3.5, value:'7500',        status:'rising', category:'chromas' },
-    { id:'candy_heart_ice',   name:"Candy-Heart Ice",   rarity:'legendary', demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'golden_bunny',      name:"Golden Bunny",      rarity:'mythic',    demand:1,   value:'240',         status:null,     category:'chromas' },
+    { id:'candy_nightmare',   name:"Candy Nightmare",   rarity:'legendary', imgId:'candy_nightmare', demand:3,   value:'6500',        status:'rising', category:'chromas' },
+    { id:'spooky_galaxy',     name:"Spooky Galaxy",     rarity:'mythic', imgId:'spooky_galaxy',    demand:3.5, value:'5000',        status:'rising', category:'chromas' },
+    { id:'candy_reaper',      name:"Candy Reaper",      rarity:'legendary', imgId:'candy_reaper', demand:2,   value:'2000',        status:null,     category:'chromas' },
+    { id:'turkey_mech',       name:"Turkey Mech",       rarity:'exclusive', imgId:'turkey_mech', demand:2.5, value:'1250',        status:null,     category:'chromas' },
+    { id:'og_phantom',        name:"OG Phantom",        rarity:'rare', imgId:'og_phantom',      demand:3,   value:'1000',        status:null,     category:'chromas' },
+    { id:'santa_reaper',      name:"Santa Reaper",      rarity:'exclusive', imgId:'santa_reaper', demand:2,   value:'3500-75000+',  status:'rare',     category:'chromas' },
+    { id:'santa_mech',        name:"Santa Mech",        rarity:'exclusive', imgId:'santa_mech', demand:2.5, value:'3500-85000+',  status:'rare',     category:'chromas' },
+    { id:'toxic_dragon',      name:"Toxic Dragon",      rarity:'mythic', imgId:'toxic_dragon',    demand:2,   value:'240',         status:null,     category:'chromas' },
+    { id:'blood_darkness',    name:"Blood Darkness",    rarity:'mythic', imgId:'blood_darkness',    demand:1,   value:'600',         status:null,     category:'chromas' },
+    { id:'amber_lightning',   name:"Amber Lightning",   rarity:'legendary', imgId:'amber_lightning', demand:2,   value:'1000',        status:null,     category:'chromas' },
+    { id:'blood_kitsune',     name:"Blood Kitsune",     rarity:'mythic', imgId:'blood_kitsune',    demand:2,   value:'600',         status:null,     category:'chromas' },
+    { id:'emerald_lightning', name:"Emerald Lightning", rarity:'legendary', imgId:'emerald_lightning', demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'pumpkin_phantom',   name:"Pumpkin Phantom",   rarity:'mythic', imgId:'pumpkin_phantom',    demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'nightmare_dragon',  name:"Nightmare Dragon",  rarity:'mythic', imgId:'nightmare_dragon',    demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'bone_reaper',       name:"Bone Reaper",       rarity:'mythic', imgId:'bone_reaper',    demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'festive_astra',     name:"Festive Astra",     rarity:'mythic', imgId:'festive_astra',    demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'candy_lava',        name:"Candy Lava",        rarity:'legendary', imgId:'candy_lava', demand:2,   value:'1000',        status:null,     category:'chromas' },
+    { id:'spectral_light',    name:"Spectral Light",    rarity:'legendary', imgId:'spectral_light', demand:2,   value:'1000',        status:null,     category:'chromas' },
+    { id:'evil_krampus',      name:"Evil Krampus",      rarity:'legendary', imgId:'evil_krampus', demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'celestial_krampus', name:"Celestial Krampus", rarity:'mythic', imgId:'celestial_krampus',    demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'afterimage_time',   name:"Afterimage Time",   rarity:'secret', imgId:'afterimage_time',    demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'frosted_krampus',   name:"Frosted Krampus",   rarity:'mythic', imgId:'frosted_krampus',    demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'ethereal_angel',    name:"Ethereal Angel",    rarity:'mythic', imgId:'ethereal_angel',    demand:1,   value:'60',          status:null,     category:'chromas' },
+    { id:'love_dragon',       name:"Love Dragon",       rarity:'exclusive', imgId:'love_dragon', demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'cupids_angel',      name:"Cupid Angel",       rarity:'mythic', imgId:'cupids_angel',    demand:4,   value:'25000',       status:'rising', category:'chromas' },
+    { id:'love_kitsune',      name:"Love Kitsune",      rarity:'exclusive', imgId:'love_kitsune', demand:3.5, value:'7500',        status:'rising', category:'chromas' },
+    { id:'candy_heart_ice',   name:"Candy-Heart Ice",   rarity:'legendary', imgId:'candy_heart_ice', demand:0,   value:'60',          status:null,     category:'chromas' },
+    { id:'golden_bunny',      name:"Golden Bunny",      rarity:'mythic', imgId:'golden_bunny',    demand:1,   value:'240',         status:null,     category:'chromas' },
   ],
 
   other: [
     /* ── Cases ── */
-    { id:'phantom_case',    name:"Phantom Case",    rarity:'mythic',    demand:2, value:8500,  status:null },
-    { id:'winter_case',     name:"Winter Case",     rarity:'mythic',    demand:2, value:12000, status:null },
-    { id:'halloween_case',  name:"Halloween Case",  rarity:'mythic',    demand:2, value:2500,  status:null },
-    { id:'spooky_case',     name:"Spooky Case",     rarity:'mythic',    demand:2, value:2000,  status:null },
-    { id:'nightmare_case',  name:"Nightmare Case",  rarity:'mythic',    demand:2, value:1200,  status:null },
-    { id:'christmas_case',  name:"Christmas Case",  rarity:'mythic',    demand:2, value:800,   status:null },
-    { id:'easter_case',     name:"Easter Case",     rarity:'legendary', demand:0, value:180,   status:null },
-    { id:'raid_case',       name:"Raid Case",       rarity:'legendary', demand:0, value:25,    status:null },
-    { id:'christmas_gift',  name:"Christmas Gift",  rarity:'legendary', demand:0, value:240,   status:null },
+    { id:'phantom_case',    name:"Phantom Case",    rarity:'mythic', imgId:'phantom_case',    demand:2, value:8500,  status:null },
+    { id:'winter_case',     name:"Winter Case",     rarity:'mythic', imgId:'winter_case',    demand:2, value:12000, status:null },
+    { id:'halloween_case',  name:"Halloween Case",  rarity:'mythic', imgId:'halloween_case',    demand:2, value:2500,  status:null },
+    { id:'spooky_case',     name:"Spooky Case",     rarity:'mythic', imgId:'spooky_case',    demand:2, value:2000,  status:null },
+    { id:'nightmare_case',  name:"Nightmare Case",  rarity:'mythic', imgId:'nightmare_case',    demand:2, value:1200,  status:null },
+    { id:'christmas_case',  name:"Christmas Case",  rarity:'mythic', imgId:'christmas_case',    demand:2, value:800,   status:null },
+    { id:'easter_case',     name:"Easter Case",     rarity:'legendary', imgId:'easter_case', demand:0, value:180,   status:null },
+    { id:'raid_case',       name:"Raid Case",       rarity:'legendary', imgId:'raid_case', demand:0, value:25,    status:null },
+    { id:'christmas_gift',  name:"Christmas Gift",  rarity:'legendary', imgId:'christmas_gift', demand:0, value:240,   status:null },
     /* ── Chromatica ── */
-    { id:'chromatic_cataclysm', name:"Chromatic Cataclysm", rarity:'ascended', demand:2, value:600, status:null },
-    { id:'chromatic_prism',     name:"Chromatic Prism",     rarity:'mythic',   demand:3, value:300, status:null },
-    { id:'dilation_schism',     name:"Dilation Schism",     rarity:'mythic',   demand:1, value:300, status:null },
+    { id:'chromatic_cataclysm', name:"Chromatic Cataclysm", rarity:'ascended', imgId:'chromatic_cataclysm', demand:2, value:600, status:null },
+    { id:'chromatic_prism',     name:"Chromatic Prism",     rarity:'mythic', imgId:'chromatic_prism',   demand:3, value:300, status:null },
+    { id:'dilation_schism',     name:"Dilation Schism",     rarity:'mythic', imgId:'dilation_schism',   demand:1, value:300, status:null },
     /* ── 2x EXP Boosts ── */
-    { id:'exp_12h', name:"12 Hours 2x EXP", rarity:'legendary', demand:2.5, value:1000,  status:null },
-    { id:'exp_6h',  name:"6 Hours 2x EXP",  rarity:'epic',      demand:2.5, value:750,  status:null },
-    { id:'exp_1h',  name:"1 Hour 2x EXP",   rarity:'rare',      demand:2.5, value:150,  status:null },
-    { id:'exp_15m', name:"15 Mins 2x EXP",  rarity:'common',    demand:2, value:60,   status:null },
+    { id:'exp_12h', name:"12 Hours 2x EXP", rarity:'legendary', imgId:'exp_12h', demand:2.5, value:1000,  status:null },
+    { id:'exp_6h',  name:"6 Hours 2x EXP",  rarity:'epic', imgId:'exp_6h',      demand:2.5, value:750,  status:null },
+    { id:'exp_1h',  name:"1 Hour 2x EXP",   rarity:'rare', imgId:'exp_1h',      demand:2.5, value:150,  status:null },
+    { id:'exp_15m', name:"15 Mins 2x EXP",  rarity:'common', imgId:'exp_15m',    demand:2, value:60,   status:null },
   ],
 
 };
@@ -414,6 +418,7 @@ window.VL_VARIANTS_DB = {
 
   mutated: {
     nightmare:{ value:450000, demand:4,   status:'rising' },
+    astra:    { value:280000, demand:3.25,status:null     },
     bunny:    { value:155000, demand:3.5, status:null     },
     time:     { value:90000,  demand:3,   status:null     },
     krampus:  { value:100000, demand:2,   status:null     },
@@ -500,14 +505,14 @@ window.VL_VARIANTS_DB = {
   },
 
   radiant: {
-    galaxy:       { value:180000, demand:5,   status:'hyped' },
-    reaper:       { value:170000, demand:5,   status:null    },
-    mech:         { value:170000, demand:5,   status:null    },
-    kitsune:      { value:160000, demand:5,   status:null    },
-    gravity:      { value:30000,  demand:5,   status:'hyped' },
+    galaxy:       { value:110000, demand:4.5, status:'hyped' },
+    reaper:       { value:100000, demand:4,   status:null    },
+    mech:         { value:90000,  demand:3,   status:null    },
+    kitsune:      { value:95000,  demand:3,   status:null    },
+    gravity:      { value:30000,  demand:4,   status:'hyped' },
     dragon:       { value:12500,  demand:3,   status:null    },
     darkness:     { value:25000,  demand:3.5, status:null    },
-    lightning:    { value:17500,  demand:3.5, status:null    },
+    lightning:    { value:6000,   demand:3,   status:null    },
     angel:        { value:3000,   demand:1,   status:null    },
     lava:         { value:3000,   demand:1,   status:null    },
     light:        { value:3000,   demand:2.5, status:null    },
@@ -574,7 +579,7 @@ window.VL_VARIANTS_DB = {
 window.VL_GEAR_ROLLS = {
   /* ── Weapons ── */
   conqblade: {
-    corrupted: [ {v:2900,d:1},{v:2910,d:1},{v:2920,d:1},{v:2930,d:1.25},{v:2940,d:1.25},{v:2950,d:1.25},{v:2960,d:1.25},{v:2970,d:1.5},{v:2980,d:1.5},{v:2990,d:1.5},{v:3000,d:2} ]
+    corrupted: [ {v:500,d:1},{v:550,d:1},{v:600,d:1},{v:650,d:1.25},{v:700,d:1.25},{v:750,d:1.25},{v:800,d:1.25},{v:850,d:1.5},{v:900,d:1.5},{v:950,d:1.5},{v:1000,d:2} ]
   },
   poseidtrident: {
     corrupted: [ {v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75} ]
@@ -592,16 +597,16 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25} ]
   },
   abysstrident: {
-    corrupted: [ null,null,null,null,null,{v:3000,d:1},{v:3150,d:1},{v:3300,d:1.1},{v:3450,d:1.1},{v:3750,d:1.25},{v:4200,d:1.25} ]
+    corrupted: [ null,null,null,null,null,{v:1200,d:1},{v:1250,d:1},{v:1300,d:1.2},{v:1500,d:1.2},{v:1750,d:1.5},{v:2000,d:1.5} ]
   },
   ascdaggers: {
-    corrupted: [ null,null,null,null,null,{v:3000,d:0.25},{v:3150,d:0.3},{v:3300,d:0.5},{v:3450,d:0.5},{v:3750,d:0.75},{v:4200,d:1} ]
+    corrupted: [ null,null,null,null,null,{v:900,d:0.25},{v:1000,d:0.3},{v:1100,d:0.5},{v:1150,d:0.5},{v:1250,d:0.75},{v:1300,d:1} ]
   },
   magmaedgev2: {
-    corrupted: [ null,null,null,null,null,{v:3000,d:0.5},{v:3150,d:0.75},{v:3300,d:1},{v:3450,d:1.2},{v:3750,d:1.5},{v:4200,d:1.65} ]
+    corrupted: [ null,null,null,null,null,{v:1000,d:0.5},{v:1050,d:0.75},{v:1150,d:1},{v:1250,d:1.2},{v:1400,d:1.5},{v:1500,d:1.65} ]
   },
   lightkatanav2: {
-    corrupted: [ null,null,null,null,null,{v:3300,d:1},{v:3450,d:1},{v:3600,d:1.2},{v:3750,d:1.2},{v:4050,d:1.5},{v:4500,d:1.5} ]
+    corrupted: [ null,null,null,null,null,{v:1200,d:1},{v:1250,d:1},{v:1300,d:1.2},{v:1500,d:1.2},{v:1750,d:1.5},{v:2000,d:1.5} ]
   },
   mentav2: {
     corrupted: [ null,null,null,null,null,{v:3500,d:1.5},{v:3750,d:1.5},{v:4000,d:1.5},{v:4500,d:1.5},{v:5000,d:1.75},{v:6000,d:2} ]
@@ -661,6 +666,7 @@ window.VL_GEAR_ROLLS = {
 ══════════════════════════════════════════════ */
 window.RARITY_CFG = {
   common:    { label:'Common',    color:'#8a8a8a', glow:'rgba(138,138,138,0.15)', cls:'rarity-common'    },
+  uncommon:  { label:'Uncommon',  color:'#2ecc71', glow:'rgba(46,204,113,0.20)',  cls:'rarity-uncommon'  },
   rare:      { label:'Rare',      color:'#70a1ff', glow:'rgba(112,161,255,0.20)', cls:'rarity-rare'      },
   epic:      { label:'Epic',      color:'#c56cf0', glow:'rgba(197,108,240,0.20)', cls:'rarity-epic'      },
   legendary: { label:'Legendary', color:'#e8b84b', glow:'rgba(232,184,75,0.20)',  cls:'rarity-legendary' },
@@ -675,7 +681,9 @@ window.STATUS_CFG = {
   lowering: { label:'Lowering', color:'#ff5555' },
   hyped:    { label:'Hyped',    color:'#6ec6f5' },
   inflated: { label:'Inflated', color:'#ffb730' },
-  unstable: { label:'Unstable', color:'#bd93f9' },
+  unstable:   { label:'Unstable',    color:'#bd93f9' },
+  rare:      { label:'Rare',       color:'#40e0c0' },
+  inprocess: { label:'In Process', color:'#8899aa' },
 };
 
 window.STATUS_DESC = {
@@ -683,5 +691,7 @@ window.STATUS_DESC = {
   lowering: "This status applies when an item shows a conditional value decrease — usually because of its excessive quantity, a re-release, or because the developers nerfed its capabilities.",
   inflated: "This status applies when an item suddenly becomes hyped and traded among influential players. A rather rare and isolated case, since it doesn't always happen the way the devs intended.",
   hyped:    "This status applies when an item has incredible growth potential due to upcoming events such as a related update, balance changes, or it becoming a community favorite. A fairly rare case.",
-  unstable: "This status applies when an item has an uncertain fate. The devs may release it one way today and rework it completely the next. Very rare — devs aren't usually high enough to let this happen, haha."
+  unstable:   "This status applies when an item has an uncertain fate. The devs may release it one way today and rework it completely the next. Very rare — devs aren't usually high enough to let this happen, haha.",
+  rare:      "This status applies if the exclusive item is incredibly rare. Items with serial numbers, where numbers from 1 to 10 are the most valuable in the entire game, are considered rare. These items typically don't have a maximum value. Often, it's set to \"value at the owner's discretion.\"",
+  inprocess: "This status applies if the item was previously added to the site for implementation and the price was subsequently changed. This means that the price changes are completely irrelevant, and there's no need to stare at them with longing eyes."
 };
