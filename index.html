@@ -18013,6 +18013,18 @@ function toggleEasterTheme() {
     var cat     = it.cat || dtCat;
     var baseId  = it.baseId || it.id;
 
+    /* Кастомные предметы (созданные через DT "Create Custom Item") полностью
+       описываются в _edBuildCustomItemSnippets() — та функция берёт данные
+       из актуального rec (включая уже пересчитанный rec._realBaseId после
+       приклеивания к существующему предмету по имени, см. edFinalizeCreate).
+       Если не выйти отсюда раньше, эта функция ниже соберёт ВТОРОЙ,
+       устаревший сниппет по старому DOM/composite id карточки (например,
+       ещё под 'nuclear:custom_xxxx', до переименования на 'nuclear:astra'),
+       и в Code Snippets попадут два дублирующих блока для одного и того же
+       предмета — один правильный (с реальным id), другой "призрачный" с
+       custom_-идентификатором. См. историю бага "двойная запись Astra". */
+    if (it.isCustom) return null;
+
     /* Определяем вариант карточки */
     var variant = 'regular';
     if (it.id && it.id.indexOf(':') !== -1) {
@@ -19585,6 +19597,7 @@ function toggleEasterTheme() {
         value:  v.value,
         demand: v.demand,
         status: v.status,
+        isCustom: !!(item.isCustom || v.isCustom),
       });
     });
     return result;
