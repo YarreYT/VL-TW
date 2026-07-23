@@ -293,7 +293,7 @@ window.VL_VARIANTS_DB = {
     kitsune:  { value:1000,  demand:0.5, status:null       },
     time:     { value:2000,  demand:2,   status:null       },
     krampus:  { value:12000, demand:3, status:null       },
-    bunny:    { value:15000, demand:3, status:'unstable' },
+    bunny:                { value:15000, demand:3, status:null },
     dragon:   { value:60,    demand:0.5, status:null       },
     gravity:  { value:60,    demand:0.5, status:null       },
     angel:    { value:60,    demand:0.5, status:null       },
@@ -306,13 +306,13 @@ window.VL_VARIANTS_DB = {
     phantom:   { value:150000, demand:3.5, status:null       },
     nightmare: { value:100000, demand:3.5, status:null       },
     astra:     { value:120000, demand:3,   status:null       },
-    time:      { value:12000,  demand:2.5, status:null       },
-    bunny:     { value:70000,  demand:3,   status:'rising'   },
+    time:                 { value:10000, demand:2.5, status:'lowering' },
+    bunny:                { value:75000, demand:3, status:null },
     krampus:   { value:10000,  demand:2.5, status:null       },
-    reaper:    { value:1000,   demand:3,   status:null       },
-    galaxy:    { value:1200,   demand:3.5, status:null       },
-    mech:      { value:1000,   demand:2,   status:null       },
-    kitsune:   { value:1000,   demand:2.5, status:null       },
+    reaper:               { value:1000, demand:3, status:'lowering' },
+    galaxy:               { value:1000, demand:3.5, status:'lowering' },
+    mech:                 { value:1000, demand:2, status:'lowering' },
+    kitsune:              { value:1000, demand:2.5, status:'lowering' },
     gravity:   { value:200,    demand:3,   status:null       },
     dragon:    { value:160,    demand:2,   status:null       },
     darkness:  { value:140,    demand:2,   status:null       },
@@ -455,10 +455,10 @@ window.VL_VARIANTS_DB = {
 
   mutated: {
     nightmare: { value:450000, demand:5,   status:'rising' },
-    astra:     { value:280000, demand:3.5, status:'unstable' },
+    astra:                { value:250000, demand:3.5, status:'lowering' },
     bunny:     { value:150000, demand:3.5, status:null },
     krampus:   { value:100000, demand:2.5, status:null },
-    time:      { value:25000,  demand:2.5, status:'inprocess'},
+    time:                 { value:17500, demand:2.5, status:null },
     galaxy:    { value:10000,  demand:3.5, status:'lowering' },
     reaper:    { value:9000,   demand:3,   status:'lowering' },
     kitsune:   { value:8500,   demand:2.5, status:'lowering' },
@@ -540,20 +540,20 @@ window.VL_VARIANTS_DB = {
   },
 
   radiant: {
-    time:         { value:115000, demand:3.75, status:'inprocess' },
+    time:                 { value:100000, demand:3.75, status:null },
     galaxy:       { value:70000, demand:4, status:null },
     reaper:       { value:60000, demand:3,   status:null    },
     mech:         { value:55000,  demand:3,   status:null    },
     kitsune:      { value:60000,  demand:3,   status:null    },
-    gravity:      { value:22000,  demand:3.5,   status:null },
+    gravity:              { value:22500, demand:3.5, status:null },
     dragon:       { value:18000,  demand:3,   status:null    },
     darkness:     { value:20000,  demand:3.5, status:null    },
     lightning:    { value:2500,   demand:3,   status:null    },
-    angel:        { value:15000,   demand:2,   status:null    },
-    lava:         { value:12000,   demand:2,   status:null    },
+    angel:                { value:10000, demand:1, status:null },
+    lava:                 { value:8000, demand:2, status:null },
     light:        { value:1000,   demand:2.5, status:null    },
-    smoke:        { value:800,   demand:2, status:null    },
-    ice:          { value:800,   demand:2, status:null    },
+    smoke:                { value:500, demand:2, status:null },
+    ice:                  { value:500, demand:2, status:null },
     nature:       { value:300,   demand:2.5, status:null    },
     earth:        { value:220,    demand:2,   status:null    },
     water:        { value:220,    demand:2,   status:null    },
@@ -564,11 +564,11 @@ window.VL_VARIANTS_DB = {
   },
 
   timelost: {
-    kitsune:       { value:6000, demand:3.5,   status:'null' },
+    kitsune:              { value:10000, demand:3.5, status:'hyped' },
     fools_phantom: { value:80000, demand:2, status:null    },
-    mech:          { value:50000, demand:3,   status:'rare'    },
+    mech:                 { value:25000, demand:3, status:null },
     galaxy:        { value:100000,  demand:4.5, status:'rare' },
-    angel:         { value:50000,  demand:4, status:null    },
+    angel:                { value:25000, demand:4, status:null },
     gravity:       { value:200,  demand:3.5, status:null },
     reaper:        { value:2000,  demand:2,   status:null    },
     darkness:      { value:180,   demand:2,   status:null    },
@@ -592,7 +592,7 @@ window.VL_VARIANTS_DB = {
   },
 
   cupid: {
-    angel:        { value:20000, demand:4, status:null },
+    angel:                { value:17500, demand:4, status:null },
   },
 
   runic: {
@@ -604,11 +604,11 @@ window.VL_VARIANTS_DB = {
   },
 
   viltron: {
-    galaxy:  { value:185000,  demand:3.5, status:'inprocess'},
+    galaxy:               { value:135000, demand:4.5, status:null },
   },
 
   kronax: {
-    time:    { value:215000,  demand:4.25, status:'inprocess'},
+    time:                 { value:125000, demand:4, status:null },
   },
 
   nuclear: {
