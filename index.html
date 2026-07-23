@@ -11217,7 +11217,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div><!-- /bot-main-col -->
         <!-- Stats только для мобиля (десктоп видит stats-col снаружи) -->
         <div class="stats-col-mobile">
-          <div class="stat-chip"><span class="stat-num">17.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+          <div class="stat-chip"><span class="stat-num">23.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
           <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-weapons-m">0</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-armor-m">0</span><span class="stat-lbl" data-i18n="stat_armor">Armor</span></div>
@@ -11228,7 +11228,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div>
       </div>
       <div class="stats-col">
-        <div class="stat-chip"><span class="stat-num">17.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+        <div class="stat-chip"><span class="stat-num">23.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
         <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
         <div class="stat-chip"><span class="stat-num"><span id="stat-num-elements">0</span><span class="stat-num-sep">/</span><span id="stat-num-variants">0</span></span><span class="stat-lbl" data-i18n="stat_elements">Elements / Variants</span></div>
         <div class="stat-chip"><span class="stat-num" id="stat-num-cosmetics">0</span><span class="stat-lbl" data-i18n="stat_cosmetics">Cosmetics</span></div>
@@ -11751,7 +11751,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       rollsTitle.textContent = 'ROLLS';
       rollsBlock.appendChild(rollsTitle);
 
-      itemMeta.rollsDiff.forEach(function(rd){
+      itemMeta.rollsDiff.slice().reverse().forEach(function(rd){
         var row = document.createElement('div');
         row.className = 'vc-diff-roll-row' + (rd.changed === false ? ' vc-diff-roll-row--unchanged' : '');
 
@@ -11787,13 +11787,13 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
             var txt = fmtVal(val);
             /* Для single-значения (New/Deleted роллы) statusа "new" может не быть —
                тогда используем oldStatus, иначе иконка статуса пропадает у Deleted. */
-            var sc = isOld ? _scOldG : (_scNewG || _scOldG);
+            var sc = isOld ? _scOldG : (isSingle ? (_scNewG || _scOldG) : _scNewG);
             if (sc) {
               s.style.color = sc.color;
               if (isOld) {
                 s.innerHTML = _statusIconFnG(itemMeta.oldStatus) + txt;
               } else {
-                var _statusForIconG = _scNewG ? itemMeta.newStatus : itemMeta.oldStatus;
+                var _statusForIconG = isSingle ? (_scNewG ? itemMeta.newStatus : itemMeta.oldStatus) : itemMeta.newStatus;
                 s.innerHTML = txt + _statusIconFnG(_statusForIconG);
               }
             } else if (_rc3.gradient) {
@@ -11807,7 +11807,8 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
           }
 
 
-          if (_valChangedR && _hasOldV && _hasNewV) {
+          var _rollStatusChangedR = itemMeta && (itemMeta.oldStatus || null) !== (itemMeta.newStatus || null);
+          if ((_valChangedR || _rollStatusChangedR) && _hasOldV && _hasNewV) {
             var oS = _mkRollVal(rd.oldValue, true, false);
             var nS = _mkRollVal(rd.newValue, false, false);
             valWrap.appendChild(oS);
@@ -11905,7 +11906,8 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       var valRow = document.createElement('div');
       valRow.className = 'vc-diff-value-row';
 
-      if (_valChanged && _hasOld && _hasNew) {
+      var _statusChangedV = (itemMeta.oldStatus || null) !== (itemMeta.newStatus || null);
+      if ((_valChanged || _statusChangedV) && _hasOld && _hasNew) {
         var oldSpanV = _makeValSpan(itemMeta.oldValue, _scOld, true);
         var newSpanV = _makeValSpan(itemMeta.newValue, _scNew, false);
         valRow.appendChild(oldSpanV);
@@ -12217,7 +12219,8 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       }
       var lines = [];
       var _rarityChanged = changed(a.rarity, b.rarity);
-      if (changed(a.status, b.status)) lines.push('Status: ' + fmtStatus(a.status) + ' → ' + fmtStatus(b.status));
+      var _rollStatusChanged = changed(a.status, b.status);
+      if (_rollStatusChanged) lines.push('Status: ' + fmtStatus(a.status) + ' → ' + fmtStatus(b.status));
       var rolls1 = (gr1 && gr1[id] && gr1[id].corrupted) || [];
       var rolls2 = (gr2 && gr2[id] && gr2[id].corrupted) || [];
       var maxLen = Math.max(rolls1.length, rolls2.length);
@@ -12234,17 +12237,20 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         gearFieldCount += (vChg ? 1 : 0) + (dChg ? 1 : 0);
         if (vChg || dChg) _hasRollChange = true;
         /* Показываем ВСЕ роллы, а не только изменённые.
-           Неизменённые рендерятся как single (oldValue === newValue) — обычный серый текст. */
+           Неизменённые рендерятся как single (oldValue === newValue) — обычный серый текст.
+           Статусное изменение (без смены цены/спроса) тоже считается "изменением":
+           такие роллы не должны затемняться, иначе переход статуса выглядит
+           как неважный/призрачный текст. */
         rollsDiff.push({
           rollNum: i + 1,
           oldValue: r1 ? r1.v : null,
           newValue: r2 ? r2.v : null,
           oldDemand: r1 ? r1.d : null,
           newDemand: r2 ? r2.d : null,
-          changed: (vChg || dChg)
+          changed: (vChg || dChg || _rollStatusChanged)
         });
       }
-      if (_hasRollChange || _rarityChanged) cards.push(buildCard(b.name, lines, gearValDiff, gearFieldCount, {rarity:b.rarity,origRarity:a.rarity,category:'gear',imgId:b.imgId||b.baseId||b.id,itemId:(b.subtype==='relic'?b.id:'corrupted:'+b.id),name:b.name,rollsDiff:rollsDiff,oldStatus:a.status||null,newStatus:b.status||null}, (b.subtype==='relic'?'':'corrupted')));
+      if (_hasRollChange || _rarityChanged || lines.length) cards.push(buildCard(b.name, lines, gearValDiff, gearFieldCount, {rarity:b.rarity,origRarity:a.rarity,category:'gear',imgId:b.imgId||b.baseId||b.id,itemId:(b.subtype==='relic'?b.id:'corrupted:'+b.id),name:b.name,rollsDiff:rollsDiff,oldStatus:a.status||null,newStatus:b.status||null}, (b.subtype==='relic'?'':'corrupted')));
     });
 
     /* ── Gear: удалённые (были в старой базе, отсутствуют в новой) ── */
@@ -18024,6 +18030,8 @@ function toggleEasterTheme() {
        предмета — один правильный (с реальным id), другой "призрачный" с
        custom_-идентификатором. См. историю бага "двойная запись Astra". */
     if (it.isCustom) return null;
+    if (typeof window._edIsCustomItem === 'function' && window._edIsCustomItem(baseId)) return null;
+
 
     /* Определяем вариант карточки */
     var variant = 'regular';
@@ -19530,6 +19538,7 @@ function toggleEasterTheme() {
             name: item.name, subtype: item.subtype,
             rarity: (_rarOv && _rarOv.current !== undefined) ? _rarOv.current : item.rarity,
             status: (_statOv && 'current' in _statOv) ? _statOv.current : item.status,
+            isCustom: !!item.isCustom,
           };
         });
       }
@@ -19546,6 +19555,7 @@ function toggleEasterTheme() {
             name: item.name, subtype: item.subtype,
             rarity: (_rarOvR && _rarOvR.current !== undefined) ? _rarOvR.current : item.rarity,
             status: (_statOvR && 'current' in _statOvR) ? _statOvR.current : item.status,
+            isCustom: !!item.isCustom,
           };
         }
         var rolls = window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[item.id];
@@ -19561,6 +19571,7 @@ function toggleEasterTheme() {
           rarity:  (_rarOv && _rarOv.current !== undefined) ? _rarOv.current : item.rarity,
           subtype: item.subtype,
           status:  (_statOv && 'current' in _statOv) ? _statOv.current : item.status,
+          isCustom: !!item.isCustom,
         };
       }).filter(Boolean);
     }
