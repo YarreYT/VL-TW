@@ -72,10 +72,10 @@ window.VL_DB = {
     { id:'diamondcrack',  name:"Diamond Cracker",              rarity:'legendary', imgId:'diamondcrack',   subtype:'weapon', status:null },
     { id:'abysstrident',  name:"Abyssal Trident",              rarity:'ascended',  imgId:'abysstrident',   subtype:'weapon', status:null },
     { id:'ascdaggers',    name:"Ascended Daggers",             rarity:'ascended',  imgId:'ascdaggers',     subtype:'weapon', status:null },
-    { id:'magmaedgev2',   name:"Magma's Edge V2",              rarity:'ascended',  imgId:'magmaedgev2',    subtype:'weapon', status:null },
+    { id:'magmaedgev2',   name:"Ascended Magma's Edge",        rarity:'ascended',  imgId:'magmaedgev2',    subtype:'weapon', status:null },
     { id:'lightkatanav2', name:"Lightning Katana V2",          rarity:'ascended',  imgId:'lightkatanav2',  subtype:'weapon', status:null },
     { id:'mentav2',       name:"Menta Blade V2",               rarity:'ascended',  imgId:'mentav2',        subtype:'weapon', status:null },
-    { id:'woodenv2',      name:"Wooden Sword V2",              rarity:'ascended',  imgId:'woodenv2',       subtype:'weapon', status:null },
+    { id:'woodenv2',      name:"Ascended Wooden Sword",        rarity:'ascended',  imgId:'woodenv2',       subtype:'weapon', status:null },
     { id:'ascvoidblade',  name:"Ascended Voidblade",           rarity:'ascended',  imgId:'ascvoidblade',   subtype:'weapon', status:null },
     { id:'cupidfury',     name:"Cupid's Fury",                 rarity:'ascended',  imgId:'cupidfury',      subtype:'weapon', status:null },
     { id:'cupidwrath',    name:"Cupid's Wrath",                rarity:'secret',    imgId:'cupidwrath',     subtype:'weapon', status:null },
@@ -106,14 +106,14 @@ window.VL_DB = {
     { id:'viltron_set', name:"Viltron Set", rarity:'mythic', imgId:'viltronset', subtype:'armor', status:null },
     { id:'heroic_viltron_set', name:"Heroic Viltron Set", rarity:'mythic', imgId:'viltronset', subtype:'armor', status:null },
     /* ── New Relics ── */
-    { id:'lord_prisma_ring', name:"Lord Prisma Ring", rarity:'secret', imgId:'lordprismaring', subtype:'relic', status:null },
-    { id:'lucky_banner_charm', name:"Lucky Banner Charm", rarity:'mythic', imgId:'luckybannercharm', subtype:'relic', status:null },
-    { id:'easter_ring', name:"Easter Ring", rarity:'mythic', imgId:'easterring', subtype:'relic', status:'inprocess' },
+    { id:'lord_prisma_ring',    name:"Lord Prisma Ring", rarity:'secret', imgId:'lordprismaring', subtype:'relic', status:null },
+    { id:'lucky_banner_charm',  name:"Lucky Banner Charm", rarity:'mythic', imgId:'luckybannercharm', subtype:'relic', status:null },
+    { id:'easter_ring',         name:"Easter Ring", rarity:'mythic', imgId:'easterring', subtype:'relic', status:'inprocess' },
     { id:'celestial_ring',      name:"Celestial Ring",       rarity:'legendary', imgId:'celestialring',     subtype:'relic',  status:null },
-    { id:'torrential_aspect', name:"Torrential Aspect", rarity:'secret', imgId:'torrentialaspect', subtype:'relic', status:null },
+    { id:'torrential_aspect',   name:"Torrential Aspect", rarity:'secret', imgId:'torrentialaspect', subtype:'relic', status:null },
     { id:'skyborne_runes',      name:"Skyborne Runes",       rarity:'legendary', imgId:'skybornerunes',     subtype:'relic',  status:null },
-    { id:'graviton_ring', name:"Graviton Ring", rarity:'secret', imgId:'gravitonring', subtype:'relic', status:null },
-    { id:'fission_ring', name:"Fission Ring", rarity:'secret', imgId:'fissionring', subtype:'relic', status:null },
+    { id:'graviton_ring',       name:"Graviton Ring", rarity:'secret', imgId:'gravitonring', subtype:'relic', status:null },
+    { id:'fission_ring',        name:"Fission Ring", rarity:'secret', imgId:'fissionring', subtype:'relic', status:null },
     { id:'wise_necklace',       name:"Wise Necklace",        rarity:'uncommon',  imgId:'wisenecklace',      subtype:'relic',  status:null },
     { id:'dragonholy_pendant',  name:"Dragon/Holy Pendant",  rarity:'uncommon',  imgId:'dragonholypendant', subtype:'relic',  status:null },
     { id:'tranquil_necklace',   name:"Tranquil Necklace",    rarity:'rare',      imgId:'tranquilnecklace',  subtype:'relic',  status:null },
@@ -121,10 +121,11 @@ window.VL_DB = {
     { id:'ancient_runes',       name:"Ancient Runes",        rarity:'rare',      imgId:'ancientrunes',      subtype:'relic',  status:null },
     { id:'lunar_neckalce',      name:"Lunar Neckalce",       rarity:'uncommon',  imgId:'lunarnecklace',     subtype:'relic',  status:null },
     { id:'vitalis_necklace',    name:"Vitalis Necklace",     rarity:'legendary', imgId:'vitalisnecklace',   subtype:'relic',  status:null },
-    { id:'reapers_ring', name:"Reaper's Ring", rarity:'mythic', imgId:'reapersring', subtype:'relic', status:'inprocess' },
+    { id:'reapers_ring',        name:"Reaper's Ring", rarity:'mythic', imgId:'reapersring', subtype:'relic', status:'inprocess' },
       { id:'lionels_war_blade', name:"Lionel's War Blade", rarity:'mythic', imgId:'tlconqblade', subtype:'weapon', status:null },
-      { id:'hydromaxx_mini', name:"HydroMaxx MINI", rarity:'secret', imgId:'hydromaxxmini', subtype:'weapon', status:'hyped' },
-      { id:'hydromaxx_lrxl', name:"HydroMaxx LRXL", rarity:'secret', imgId:'hydromaxxlrxl', subtype:'weapon', status:'hyped' },
+      { id:'hydromaxx_mini',    name:"HydroMaxx MINI", rarity:'secret', imgId:'hydromaxxmini', subtype:'weapon', status:'hyped' },
+      { id:'hydromaxx_lrxl',    name:"HydroMaxx LRXL", rarity:'secret', imgId:'hydromaxxlrxl', subtype:'weapon', status:'hyped' },
+      { id:'ascendant_vanquisher', name:"Ascendant Vanquisher", rarity:'secret', imgId:'magmaedgev2', subtype:'weapon', status:'inprocess' },
   ],
 
   cosmetic: [
@@ -793,6 +794,9 @@ window.VL_GEAR_ROLLS = {
   },
   hydromaxx_lrxl: {
     corrupted: [ {v:50000,d:2},{v:52500,d:2.25},{v:55000,d:2.25},{v:57500,d:2.25},{v:60000,d:2.25},{v:62500,d:2.5},{v:65000,d:2.5},{v:67500,d:2.5},{v:68000,d:2.75},{v:69000,d:2.75},{v:70000,d:2.75} ]
+  },
+  ascendant_vanquisher: {
+    corrupted: [ {v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:3750,d:1.85},{v:4000,d:1.95},{v:4250,d:2},{v:4500,d:2.25},{v:4750,d:2.25},{v:5000,d:2.25} ]
   },
 };
 
