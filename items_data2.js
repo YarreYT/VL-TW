@@ -567,7 +567,6 @@ window.VL_VARIANTS_DB = {
     kitsune:              { value:10000, demand:3.5, status:'hyped' },
     fools_phantom: { value:80000, demand:2, status:null    },
     mech:                 { value:25000, demand:3, status:null },
-    galaxy:        { value:100000,  demand:4.5, status:'rare' },
     angel:                { value:25000, demand:4, status:null },
     gravity:       { value:200,  demand:3.5, status:null },
     reaper:        { value:2000,  demand:2,   status:null    },
