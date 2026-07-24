@@ -108,7 +108,7 @@ window.VL_DB = {
     /* ── New Relics ── */
     { id:'lord_prisma_ring',    name:"Lord Prisma Ring", rarity:'secret', imgId:'lordprismaring', subtype:'relic', status:null },
     { id:'lucky_banner_charm',  name:"Lucky Banner Charm", rarity:'mythic', imgId:'luckybannercharm', subtype:'relic', status:null },
-    { id:'easter_ring',         name:"Easter Ring", rarity:'mythic', imgId:'easterring', subtype:'relic', status:'inprocess' },
+    { id:'easter_ring', name:"Easter Ring", rarity:'mythic', imgId:'easterring', subtype:'relic', status:null },
     { id:'celestial_ring',      name:"Celestial Ring",       rarity:'legendary', imgId:'celestialring',     subtype:'relic',  status:null },
     { id:'torrential_aspect',   name:"Torrential Aspect", rarity:'secret', imgId:'torrentialaspect', subtype:'relic', status:null },
     { id:'skyborne_runes',      name:"Skyborne Runes",       rarity:'legendary', imgId:'skybornerunes',     subtype:'relic',  status:null },
@@ -121,7 +121,7 @@ window.VL_DB = {
     { id:'ancient_runes',       name:"Ancient Runes",        rarity:'rare',      imgId:'ancientrunes',      subtype:'relic',  status:null },
     { id:'lunar_neckalce',      name:"Lunar Neckalce",       rarity:'uncommon',  imgId:'lunarnecklace',     subtype:'relic',  status:null },
     { id:'vitalis_necklace',    name:"Vitalis Necklace",     rarity:'legendary', imgId:'vitalisnecklace',   subtype:'relic',  status:null },
-    { id:'reapers_ring',        name:"Reaper's Ring", rarity:'mythic', imgId:'reapersring', subtype:'relic', status:'inprocess' },
+    { id:'reapers_ring', name:"Reaper's Ring", rarity:'mythic', imgId:'reapersring', subtype:'relic', status:null },
       { id:'lionels_war_blade', name:"Lionel's War Blade", rarity:'mythic', imgId:'tlconqblade', subtype:'weapon', status:null },
       { id:'hydromaxx_mini',    name:"HydroMaxx MINI", rarity:'secret', imgId:'hydromaxxmini', subtype:'weapon', status:'hyped' },
       { id:'hydromaxx_lrxl',    name:"HydroMaxx LRXL", rarity:'secret', imgId:'hydromaxxlrxl', subtype:'weapon', status:'hyped' },
@@ -273,6 +273,7 @@ window.VL_DB = {
       { id:'viltron_crate', name:"Viltron Crate", rarity:'mythic', imgId:'viltron_crate', subtype:'other', status:null, value:150, demand:2.25 },
       { id:'kronax_crate', name:"Kronax Crate", rarity:'mythic', imgId:'kronax_crate', subtype:'other', status:null, value:100, demand:2.25 },
       { id:'heroic_viltron_crate', name:"Heroic Viltron Crate", rarity:'mythic', imgId:'viltron_crate', subtype:'other', status:null, value:400, demand:3.5 },
+      { id:'summer_chest', name:"Summer Chest", rarity:'mythic', imgId:'summer_chest', subtype:'other', status:null, value:15, demand:1.25 },
   ],
 
 };
