@@ -99,7 +99,7 @@ window.VL_DB = {
     { id:'terrablade_le', name:"Terrablade LE", rarity:'secret', imgId:'terrablade', subtype:'weapon', status:null },
     { id:'pool_noodle', name:"Pool Noodle", rarity:'legendary', imgId:'poolnoodle', subtype:'weapon', status:'lowering' },
     { id:'terrablade', name:"Terrablade", rarity:'mythic', imgId:'terrablade', subtype:'weapon', status:'lowering' },
-    { id:'hydromaxx_lr', name:"HydroMaxx LR", rarity:'secret', imgId:'hydromaxxlr', subtype:'weapon', status:'lowering' },
+    { id:'hydromaxx_lr', name:"HydroMaxx LR", rarity:'secret', imgId:'hydromaxxlr', subtype:'weapon', status:null },
     { id:'hydromaxx_cqb', name:"HydroMaxx CQB", rarity:'mythic', imgId:'hydromaxxcqb', subtype:'weapon', status:'lowering' },
     { id:'gubby_launcher', name:"Gubby Launcher", rarity:'secret', imgId:'gubbylauncher', subtype:'weapon', status:'rare' },
     /* ── New Armor ── */
@@ -332,10 +332,10 @@ window.VL_VARIANTS_DB = {
   },
 
   infernal: {
-    reaper:   { value:400,   demand:1,   status:null },
-    galaxy:   { value:400,   demand:1,   status:null },
-    mech:     { value:400,   demand:1.5, status:null },
-    kitsune:  { value:400,   demand:1.5, status:null },
+    reaper:   { value:50, demand:0.5, status:'lowering' },
+    galaxy:   { value:50, demand:0.5, status:'lowering' },
+    mech:     { value:50, demand:0.5, status:'lowering' },
+    kitsune:  { value:50, demand:0.5, status:'lowering' },
     krampus:  { value:3500,  demand:1,   status:null },
     astra:    { value:10000, demand:1.5, status:null },
     dragon:   { value:0,    demand:0, status:null },
@@ -734,7 +734,7 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:1500,d:1.25},{v:1550,d:1.25},{v:1600,d:1.25},{v:1650,d:1.5},{v:1700,d:1.5},{v:1750,d:1.75},{v:1800,d:1.75},{v:1850,d:1.75},{v:1900,d:2},{v:1950,d:2},{v:2000,d:2} ]
   },
   hydromaxx_lr: {
-    corrupted: [ {v:5000,d:1.75},{v:5500,d:1.75},{v:6000,d:1.75},{v:6500,d:2},{v:7000,d:2},{v:7500,d:2.25},{v:8000,d:2.25},{v:8500,d:2.25},{v:9000,d:2.5},{v:9500,d:2.5},{v:10000,d:2.5} ]
+    corrupted: [ {v:10000,d:1.75},{v:12500,d:1.75},{v:15000,d:1.75},{v:17500,d:2},{v:20000,d:2},{v:22500,d:2.25},{v:25000,d:2.25},{v:27500,d:2.25},{v:30000,d:2.5},{v:32500,d:2.5},{v:35000,d:2.5} ]
   },
   hydromaxx_cqb: {
     corrupted: [ {v:1000,d:1.5},{v:1050,d:1.5},{v:1100,d:1.5},{v:1150,d:1.5},{v:1200,d:1.5},{v:1250,d:1.75},{v:1300,d:1.75},{v:1350,d:1.75},{v:1400,d:2},{v:1450,d:2},{v:1500,d:2} ]
@@ -794,10 +794,10 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:2500,d:2.25},{v:3000,d:2.25},{v:3500,d:2.25},{v:4000,d:2.5},{v:4500,d:2.5},{v:5000,d:2.5},{v:5500,d:2.5},{v:6000,d:2.5},{v:6500,d:2.75},{v:7000,d:2.75},{v:7500,d:2.75} ]
   },
   hydromaxx_mini: {
-    corrupted: [ {v:50000,d:2},{v:51500,d:2.25},{v:53000,d:2.25},{v:55500,d:2.25},{v:57000,d:2.25},{v:58500,d:2.5},{v:60000,d:2.5},{v:62500,d:2.5},{v:64000,d:2.75},{v:65000,d:2.75},{v:66000,d:2.75} ]
+    corrupted: [ {v:50000,d:2},{v:52500,d:2.25},{v:55000,d:2.25},{v:57500,d:2.25},{v:60000,d:2.25},{v:65000,d:2.5},{v:70000,d:2.5},{v:75000,d:2.5},{v:80000,d:2.75},{v:85000,d:2.75},{v:90000,d:2.75} ]
   },
   hydromaxx_lrxl: {
-    corrupted: [ {v:48500,d:2},{v:50000,d:2.25},{v:51500,d:2.25},{v:53000,d:2.25},{v:54500,d:2.25},{v:56000,d:2.5},{v:58500,d:2.5},{v:60000,d:2.5},{v:61000,d:2.75},{v:62000,d:2.75},{v:63000,d:2.75} ]
+    corrupted: [ {v:20000,d:2},{v:22500,d:2.25},{v:25000,d:2.25},{v:27500,d:2.25},{v:30000,d:2.25},{v:32500,d:2.5},{v:35000,d:2.5},{v:37500,d:2.5},{v:40000,d:2.75},{v:42500,d:2.75},{v:45000,d:2.75} ]
   },
   ascendant_vanquisher: {
     corrupted: [ {v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:1500,d:1.85},{v:1550,d:1.95},{v:1600,d:2},{v:1650,d:2.25},{v:1700,d:2.25},{v:1750,d:2.25} ]
