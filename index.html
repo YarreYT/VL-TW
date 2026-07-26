@@ -11217,7 +11217,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div><!-- /bot-main-col -->
         <!-- Stats только для мобиля (десктоп видит stats-col снаружи) -->
         <div class="stats-col-mobile">
-          <div class="stat-chip"><span class="stat-num">23.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+          <div class="stat-chip"><span class="stat-num">26.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
           <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-weapons-m">0</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-armor-m">0</span><span class="stat-lbl" data-i18n="stat_armor">Armor</span></div>
@@ -11228,7 +11228,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div>
       </div>
       <div class="stats-col">
-        <div class="stat-chip"><span class="stat-num">23.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+        <div class="stat-chip"><span class="stat-num">26.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
         <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
         <div class="stat-chip"><span class="stat-num"><span id="stat-num-elements">0</span><span class="stat-num-sep">/</span><span id="stat-num-variants">0</span></span><span class="stat-lbl" data-i18n="stat_elements">Elements / Variants</span></div>
         <div class="stat-chip"><span class="stat-num" id="stat-num-cosmetics">0</span><span class="stat-lbl" data-i18n="stat_cosmetics">Cosmetics</span></div>
@@ -12230,7 +12230,9 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       var _hasRollChange = false;
       for (var i = 0; i < maxLen; i++) {
         var r1 = rolls1[i], r2 = rolls2[i];
-        if (!r1 && !r2) continue;
+        var _r1HasVal = !!(r1 && r1.v !== null && r1.v !== undefined && r1.v !== '');
+        var _r2HasVal = !!(r2 && r2.v !== null && r2.v !== undefined && r2.v !== '');
+        if (!_r1HasVal && !_r2HasVal) continue;
         var vChg = changed(r1 ? r1.v : null, r2 ? r2.v : null);
         var dChg = changed(r1 ? r1.d : null, r2 ? r2.d : null);
         if (vChg) gearValDiff += Math.abs((r2 ? r2.v : 0) - (r1 ? r1.v : 0));
@@ -12605,17 +12607,11 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   /* VL_GEAR_ROLLS загружается из items_data.js */
   var VL_GEAR_ROLLS = window.VL_GEAR_ROLLS;
 
-  /* Динамически вычисляет regular-массив из corrupted по формуле:
-     regular.value  = corrupted.value / 1.025
-     regular.demand = max(0, corrupted.demand - 0.5) */
   function _vlRegularFromCorrupted(corrArr) {
     if (!corrArr) return null;
     return corrArr.map(function(r) {
       if (!r) return null;
-      return {
-        v: Math.round(r.v / 1.025),
-        d: Math.max(0, Math.round((r.d - 0.5) * 100) / 100)
-      };
+      return { v: r.v, d: r.d };
     });
   }
 
@@ -12687,14 +12683,14 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
               d: _wsDtRolls[11].d !== undefined ? _wsDtRolls[11].d : wsRawBase.d }
           : wsRawBase;
       } else {
-        /* Regular: применяем DT-оверрайд на corrupted базу, потом формулу */
+        /* Regular: применяем DT-оверрайд на corrupted базу */
         var wsCorrBase = (_wsDtCorrRolls && _wsDtCorrRolls[11])
           ? { v: _wsDtCorrRolls[11].v !== undefined ? _wsDtCorrRolls[11].v : wsRawBase.v,
               d: _wsDtCorrRolls[11].d !== undefined ? _wsDtCorrRolls[11].d : wsRawBase.d }
           : wsRawBase;
         wsData = {
-          v: Math.round(wsCorrBase.v / 1.025),
-          d: Math.max(0, Math.round((wsCorrBase.d - 0.5) * 100) / 100),
+          v: wsCorrBase.v,
+          d: wsCorrBase.d,
         };
       }
       return [{ rollNum: 11, data: wsData }];
@@ -12749,7 +12745,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
            item.value (undefined для приклеенных вариаций) вместо 0. */
         if (!(_origRVl && _origRVl.v !== null && _origRVl.v !== undefined && _origRVl.v !== '')) continue;
       }
-      if (rawCorr[i] !== null) {
+      if (rawCorr[i] !== null && rawCorr[i].v !== null && rawCorr[i].v !== undefined) {
         var rollNum = i + 1;
         var baseData;
         if (isCorr2) {
@@ -12762,7 +12758,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
             };
           }
         } else {
-          /* Regular: apply DT corrupted override first, then formula */
+          /* Regular: apply DT corrupted override first */
           var corrBase = rawCorr[i];
           if (_dtCorrRolls && _dtCorrRolls[rollNum]) {
             corrBase = {
@@ -12771,8 +12767,8 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
             };
           }
           baseData = {
-            v: Math.round(corrBase.v / 1.025),
-            d: Math.max(0, Math.round((corrBase.d - 0.5) * 100) / 100),
+            v: corrBase.v,
+            d: corrBase.d,
           };
         }
         result.push({ rollNum: rollNum, data: baseData });
@@ -12802,7 +12798,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     var _arr = _isCorr2 ? _rolls['corrupted'] : _vlRegularFromCorrupted(_rolls['corrupted']);
     if (!_arr) return null;
     for (var _i = 0; _i < _arr.length; _i++) {
-      if (_arr[_i] !== null) return { rollNum: _i + 1, data: _arr[_i] };
+      if (_arr[_i] !== null && _arr[_i].v !== null && _arr[_i].v !== undefined) return { rollNum: _i + 1, data: _arr[_i] };
     }
     return null;
   }
@@ -14299,21 +14295,19 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
                 var _isCorr  = item.id.indexOf('corrupted:') !== -1;
                 /* Для corrupted: сравниваем с сырыми VL_GEAR_ROLLS данными.
                    Для regular: VL_GEAR_ROLLS не содержит 'regular' массива —
-                   используем _vlGetOrigDefaultRoll который применяет формулу к сырым corrupted,
-                   получая оригинальное regular значение без DT-оверрайдов. */
+                   используем сырые corrupted значения напрямую. */
                 var _origR = null;
                 if (_isCorr) {
                   var _origArr = VL_GEAR_ROLLS[_gBaseId] ? VL_GEAR_ROLLS[_gBaseId]['corrupted'] : null;
                   _origR = (_origArr && _saved) ? _origArr[_saved.rollNum - 1] : null;
                 } else {
-                  /* Regular: ищем оригинальный ролл через _vlGetOrigDefaultRoll-подобную логику
-                     но для конкретного rollNum, не только дефолтного */
+                  /* Regular: используем сырые corrupted значения для конкретного rollNum */
                   var _rawCorrArr = VL_GEAR_ROLLS[_gBaseId] ? VL_GEAR_ROLLS[_gBaseId]['corrupted'] : null;
                   if (_rawCorrArr && _rawCorrArr[_saved.rollNum - 1]) {
                     var _rawCorr = _rawCorrArr[_saved.rollNum - 1];
                     _origR = {
-                      v: Math.round(_rawCorr.v / 1.025),
-                      d: Math.max(0, Math.round((_rawCorr.d - 0.5) * 100) / 100)
+                      v: _rawCorr.v,
+                      d: _rawCorr.d
                     };
                   }
                 }
@@ -18884,7 +18878,7 @@ function toggleEasterTheme() {
     }
     var result = [];
     for (var i = 0; i < arr2.length; i++) {
-      if (arr2[i] !== null) result.push({ rollNum: i + 1, data: arr2[i] });
+      if (arr2[i] !== null && arr2[i].v !== null && arr2[i].v !== undefined) result.push({ rollNum: i + 1, data: arr2[i] });
     }
     return result.length ? result : null;
   }
