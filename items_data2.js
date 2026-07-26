@@ -61,6 +61,7 @@ window.VL_DB = {
     /* ── Exclusive ── */
     { id:'sunlar',         name:"Sunlar",         rarity:'exclusive', imgId:'sunlar', demand:5,   value:2500,  status:'rising'  },
     { id:'fools_phantom',  name:"Fool's Phantom", rarity:'exclusive', imgId:'fools_phantom', demand:2.5, value:14000, status:'rare'    },
+    { id:'sunshine',	   name:"Sunshine",  rarity:'exclusive', imgId:'lebronmeme',    demand:5, value:30121982,    status:'inflated' },
   ],
   gear: [
     /* ── Weapons ── */
