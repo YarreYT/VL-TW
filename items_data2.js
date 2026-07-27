@@ -275,6 +275,7 @@ window.VL_DB = {
       { id:'kronax_crate', name:"Kronax Crate", rarity:'mythic', imgId:'kronax_crate', subtype:'other', status:null, value:100, demand:2.25 },
       { id:'heroic_viltron_crate', name:"Heroic Viltron Crate", rarity:'mythic', imgId:'viltron_crate', subtype:'other', status:null, value:400, demand:3.5 },
       { id:'summer_chest', name:"Summer Chest", rarity:'mythic', imgId:'summer_chest', subtype:'other', status:null, value:15, demand:1.25 },
+      { id:'24_hours_2x_exp', name:"24 Hours 2x Exp", rarity:'mythic', imgId:'exp_24h', subtype:'other', status:null, value:1500, demand:2.75 },
   ],
 
 };
