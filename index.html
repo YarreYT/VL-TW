@@ -12567,20 +12567,9 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       if (window.updateFbGhosts) window.updateFbGhosts(list, list.offsetHeight || 400);
     }
 
-    /* Пустое состояние при отсутствии совпадений */
+    /* Пустое состояние при отсутствии совпадений — убрано по запросу, просто скрываем всё без сообщения */
     var emptyEl = document.getElementById('vc-search-empty');
-    if (filtering && !anyVisible) {
-      if (!emptyEl && list) {
-        emptyEl = document.createElement('div');
-        emptyEl.id = 'vc-search-empty';
-        emptyEl.className = 'vc-search-empty';
-        emptyEl.style.cssText = 'padding:24px 12px;text-align:center;opacity:.55;font-size:12px;letter-spacing:.4px;';
-        emptyEl.textContent = 'No results';
-        list.appendChild(emptyEl);
-      }
-    } else if (emptyEl) {
-      emptyEl.remove();
-    }
+    if (emptyEl) emptyEl.remove();
   };
 })();
 </script>
