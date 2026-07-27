@@ -11217,7 +11217,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div><!-- /bot-main-col -->
         <!-- Stats только для мобиля (десктоп видит stats-col снаружи) -->
         <div class="stats-col-mobile">
-          <div class="stat-chip"><span class="stat-num">27.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+          <div class="stat-chip"><span class="stat-num">26.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
           <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-weapons-m">0</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-armor-m">0</span><span class="stat-lbl" data-i18n="stat_armor">Armor</span></div>
@@ -11228,7 +11228,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div>
       </div>
       <div class="stats-col">
-        <div class="stat-chip"><span class="stat-num">27.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+        <div class="stat-chip"><span class="stat-num">26.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
         <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
         <div class="stat-chip"><span class="stat-num"><span id="stat-num-elements">0</span><span class="stat-num-sep">/</span><span id="stat-num-variants">0</span></span><span class="stat-lbl" data-i18n="stat_elements">Elements / Variants</span></div>
         <div class="stat-chip"><span class="stat-num" id="stat-num-cosmetics">0</span><span class="stat-lbl" data-i18n="stat_cosmetics">Cosmetics</span></div>
@@ -23035,7 +23035,7 @@ function toggleEasterTheme() {
         var curName = rec.name === '?' ? '' : rec.name;
         nameEl.innerHTML = '<input type="text" class="dt-cust-name-input" placeholder="?" value="'
           + curName.replace(/"/g,'&quot;') + '" maxlength="40" '
-          + 'oninput="this.value = this.value.replace(/[0-9]/g, \'\'); edNameInput(\'' + rec.id + '\', this.value)">';
+          + 'oninput="edNameInput(\'' + rec.id + '\', this.value)">';
       }
     } else if (nameEl && nameEl.querySelector('input')) {
       /* Карточку успели подтвердить, пока инпут ещё был в DOM — заменяем на статичный текст */
