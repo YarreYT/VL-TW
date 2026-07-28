@@ -481,6 +481,7 @@ window.VL_VARIANTS_DB = {
     sand:                 { value:0, demand:0, status:null },
     nature:               { value:0, demand:0, status:null },
     air:                  { value:0, demand:0, status:null },
+    infinity:             { value:550000, demand:5, status:null },
   },
 
   jumpscared: {
@@ -616,7 +617,8 @@ window.VL_VARIANTS_DB = {
   nuclear: {
     ice:                  { value:2500, demand:2, status:null },
     lava:                 { value:4000, demand:2, status:null },
-    air:                  { value:100000, demand:4, status:null },
+    air:                  { value:100000, demand:4, status:'rare' },
+    dragon:               { value:25000, demand:3.5, status:null },
   },
 };
 
