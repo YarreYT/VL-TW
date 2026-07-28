@@ -2593,15 +2593,12 @@ body.lang-ru .value-list-btn{
 .rarity-common    { color: #8a8a8a !important; }
 .rarity-uncommon  { color: #2ecc71 !important; }
 
-/* Mythic — статичный радужный градиент */
+/* Mythic — цвет буквально перетекает по всему спектру (не бегущая полоса):
+   JS-тикер каждый тик считает новый HSL-цвет и пишет его в --mythic-c на
+   ближайшем предке, поэтому ВЕСЬ текст и рамка карточки разом красные →
+   оранжевые → жёлтые → ... по кругу, без анимации position/размера фона. */
 .rarity-mythic {
-  background: linear-gradient(90deg,
-    #ff6ec7 0%, #ff9f43 18%, #ffd700 36%,
-    #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+  color: var(--mythic-c, #ff2323) !important;
 }
 /* — Ascended: анимированный радужный градиент (единый JS-тикер, пишет напрямую в style элемента) */
 .rarity-ascended {
@@ -2636,6 +2633,7 @@ body.lang-ru .value-list-btn{
     background-size: 100% 100%;
     background-position: 0% 50%;
   }
+  /* .rarity-mythic: JS-тикер не запускается, остаётся статичный fallback-цвет из CSS variable */
 }
 
 
@@ -6550,7 +6548,10 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   text-overflow: ellipsis;
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
 }
-.vc-diff-name.rarity-mythic,
+.vc-diff-name.rarity-mythic {
+  text-shadow: none !important;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
+}
 .vc-diff-name.rarity-ascended,
 .vc-diff-name.rarity-exclusive {
   text-shadow: none !important;
@@ -6576,12 +6577,12 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 /* Градиентные редкости — drop-shadow через filter (text-shadow ломает background-clip:text) */
 .vc-diff-rarity-single.rarity-ascended,
 .vc-diff-rarity-single.rarity-exclusive,
-.vc-diff-rarity-single.rarity-mythic,
 .vc-diff-rarity-new.rarity-ascended,
 .vc-diff-rarity-new.rarity-exclusive,
-.vc-diff-rarity-new.rarity-mythic,
 .vc-diff-rarity-old.rarity-ascended,
-.vc-diff-rarity-old.rarity-exclusive,
+.vc-diff-rarity-old.rarity-exclusive { filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3)); }
+.vc-diff-rarity-single.rarity-mythic,
+.vc-diff-rarity-new.rarity-mythic,
 .vc-diff-rarity-old.rarity-mythic { filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3)); }
 
 /* ── Diff card: Value block ── */
@@ -6819,9 +6820,11 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   text-shadow: 0 0 6px rgba(255,59,59,.55);
 }
 /* Gradient rarities on value nums — same pattern as rarity text */
-.vc-diff-val-num.rarity-ascended,
-.vc-diff-val-num.rarity-exclusive,
 .vc-diff-val-num.rarity-mythic {
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
+}
+.vc-diff-val-num.rarity-ascended,
+.vc-diff-val-num.rarity-exclusive {
   color: transparent !important;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
@@ -6920,42 +6923,42 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   box-shadow: none !important;
   position: relative; z-index: 1;
 }
-/* Mythic — rainbow border через background-clip */
+/* Mythic border — сплошной цвет, синхронно перекрашивается JS-тикером (см. --mythic-c) */
 .vc-diff-img-box.border-mythic {
   border: 2px solid transparent;
   background-image:
     linear-gradient(#1a2a3a, #1a2a3a),
-    linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box;
   background-clip: padding-box, border-box;
   box-shadow: 0 0 14px rgba(112,161,255,.28);
 }
 :root.theme-time .vc-diff-img-box.border-mythic {
-  background-image: linear-gradient(135deg,#1a1300,#221900), linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+  background-image: linear-gradient(135deg,#1a1300,#221900), linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box; background-clip: padding-box, border-box;
 }
 :root.theme-galaxy .vc-diff-img-box.border-mythic {
-  background-image: linear-gradient(135deg,#160b2a,#1e1035), linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+  background-image: linear-gradient(135deg,#160b2a,#1e1035), linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box; background-clip: padding-box, border-box;
 }
 :root.theme-discord .vc-diff-img-box.border-mythic {
-  background-image: linear-gradient(135deg,#1e1f22,#26272c), linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+  background-image: linear-gradient(135deg,#1e1f22,#26272c), linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box; background-clip: padding-box, border-box;
 }
 :root.theme-atlantic .vc-diff-img-box.border-mythic {
-  background-image: linear-gradient(135deg,#0e2840,#153550), linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+  background-image: linear-gradient(135deg,#0e2840,#153550), linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box; background-clip: padding-box, border-box;
 }
 :root.theme-easter .vc-diff-img-box.border-mythic {
-  background-image: linear-gradient(135deg,#f4ede8,#ede4de), linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+  background-image: linear-gradient(135deg,#f4ede8,#ede4de), linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box; background-clip: padding-box, border-box;
 }
 :root.theme-baldi .vc-diff-img-box.border-mythic {
-  background-image: linear-gradient(#0a0a0a,#111111), linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+  background-image: linear-gradient(#0a0a0a,#111111), linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box; background-clip: padding-box, border-box;
 }
 :root.theme-birthday .vc-diff-img-box.border-mythic {
-  background-image: linear-gradient(135deg,#FFE8F0,#F0E0FF,#E0F4FF), linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+  background-image: linear-gradient(135deg,#FFE8F0,#F0E0FF,#E0F4FF), linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box; background-clip: padding-box, border-box;
 }
 .vc-diff-img-box img {
@@ -8170,15 +8173,18 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   text-shadow: 0 0 1px rgba(0,0,0,0.35);
 }
 /* ── Gradient rarities: base filter from element reset, .rarity-* re-applies its own ── */
-.vl-detail-name.rarity-mythic,
 .vl-detail-name.rarity-ascended,
 .vl-detail-name.rarity-exclusive,
-.vl-detail-rarity.rarity-mythic,
 .vl-detail-rarity.rarity-ascended,
 .vl-detail-rarity.rarity-exclusive,
-.vl-detail-value-big.rarity-mythic,
 .vl-detail-value-big.rarity-ascended,
 .vl-detail-value-big.rarity-exclusive {
+  text-shadow: none !important;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
+}
+.vl-detail-name.rarity-mythic,
+.vl-detail-rarity.rarity-mythic,
+.vl-detail-value-big.rarity-mythic {
   text-shadow: none !important;
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
 }
@@ -8187,14 +8193,14 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 :root.theme-easter .vl-detail-img-box.border-mythic {
   background-image:
     linear-gradient(135deg, #f4ede8, #ede4de),
-    linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
 :root.theme-baldi .vl-detail-img-box.border-mythic {
   background-image:
     linear-gradient(#0a0a0a, #111111),
-    linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
@@ -8205,7 +8211,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   border-color: transparent;
   background-image:
     linear-gradient(#1a2a3a, #1a2a3a),
-    linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box;
   background-clip: padding-box, border-box;
   box-shadow: 0 0 22px rgba(112,161,255,.28), inset 0 0 40px rgba(0,0,0,.4), 0 0 0 1px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(0,0,0,0.65);
@@ -8214,28 +8220,28 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 :root.theme-time .vl-detail-img-box.border-mythic {
   background-image:
     linear-gradient(135deg, #1a1300 0%, #221900 100%),
-    linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
 :root.theme-galaxy .vl-detail-img-box.border-mythic {
   background-image:
     linear-gradient(135deg, #160b2a 0%, #1e1035 100%),
-    linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
 :root.theme-discord .vl-detail-img-box.border-mythic {
   background-image:
     linear-gradient(135deg, #1e1f22 0%, #26272c 100%),
-    linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
 :root.theme-atlantic .vl-detail-img-box.border-mythic {
   background-image:
     linear-gradient(135deg, #0e2840 0%, #153550 100%),
-    linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%);
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
@@ -8592,9 +8598,11 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
 }
 /* Gradient rarities — filter ломает background-clip:text анимацию, как и в VL */
-.dt-val-grad-overlay.rarity-mythic,
 .dt-val-grad-overlay.rarity-ascended,
 .dt-val-grad-overlay.rarity-exclusive {
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
+}
+.dt-val-grad-overlay.rarity-mythic {
   filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
 }
 
@@ -10726,7 +10734,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 :root.theme-birthday .vl-detail-img-box.border-mythic {
   background-image:
     linear-gradient(#F0E8FF, #F0E8FF),
-    linear-gradient(90deg, #ff6ec7 0%, #ff9f43 18%, #ffd700 36%, #7bed9f 54%, #70a1ff 72%, #c56cf0 90%, #ff6ec7 100%) !important;
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323)) !important;
   background-origin: border-box !important;
   background-clip: padding-box, border-box !important;
 }
@@ -11217,7 +11225,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div><!-- /bot-main-col -->
         <!-- Stats только для мобиля (десктоп видит stats-col снаружи) -->
         <div class="stats-col-mobile">
-          <div class="stat-chip"><span class="stat-num">27.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+          <div class="stat-chip"><span class="stat-num">29.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
           <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-weapons-m">0</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-armor-m">0</span><span class="stat-lbl" data-i18n="stat_armor">Armor</span></div>
@@ -11228,7 +11236,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div>
       </div>
       <div class="stats-col">
-        <div class="stat-chip"><span class="stat-num">27.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+        <div class="stat-chip"><span class="stat-num">29.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
         <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
         <div class="stat-chip"><span class="stat-num"><span id="stat-num-elements">0</span><span class="stat-num-sep">/</span><span id="stat-num-variants">0</span></span><span class="stat-lbl" data-i18n="stat_elements">Elements / Variants</span></div>
         <div class="stat-chip"><span class="stat-num" id="stat-num-cosmetics">0</span><span class="stat-lbl" data-i18n="stat_cosmetics">Cosmetics</span></div>
@@ -18865,6 +18873,18 @@ function toggleEasterTheme() {
       }
       return _result.length ? _result : null;
     }
+    /* Черновик кастомного Gear-предмета — все 11 слотов должны быть
+       доступны для заполнения в любом порядке, независимо от того, что
+       большинство из них ещё { v: null, d: 0 }. Обычный фильтр ниже
+       (arr2[i].v !== null) как раз и отсекал бы их все — здесь его
+       намеренно пропускаем именно для черновика. */
+    if (_edIsDraftForRolls && _edRecForRolls && _edRecForRolls.cat === 'gear') {
+      var _draftResult = [];
+      for (var di = 0; di < arr2.length; di++) {
+        if (arr2[di] !== null) _draftResult.push({ rollNum: di + 1, data: arr2[di] });
+      }
+      return _draftResult.length ? _draftResult : null;
+    }
     var result = [];
     for (var i = 0; i < arr2.length; i++) {
       if (arr2[i] !== null && arr2[i].v !== null && arr2[i].v !== undefined) result.push({ rollNum: i + 1, data: arr2[i] });
@@ -19158,11 +19178,24 @@ function toggleEasterTheme() {
   /* Если топ-ролл (11-й) стал незаполненным, пока редактор остальных
      роллов был открыт (черновик) — закрываем редактор, показывать больше
      нечего до заполнения топ-ролла. */
-  function _dtReUpdateLock(cardId) {
+  function _dtReUpdateLock(cardId, rollNum) {
     var editor = document.getElementById('dt-rolleditor-' + cardId);
     if (!editor || editor._removing) return;
+    var _entryForLock = _dtFindCardsEntry(cardId);
+    /* Лочим/закрываем редактор ТОЛЬКО когда меняется именно топ-ролл (11-й) —
+       он всегда редактируется в главном (dt-inp-val-) слоте карточки. Раньше
+       эта функция вызывалась на любой ввод в ЛЮБОМ ролл-слоте редактора (1-10),
+       но всегда проверяла топ-инпут — из-за этого редактор захлопывался прямо
+       во время печати в непустых роллах, если топ-ролл черновика ещё пуст. */
+    if (rollNum !== undefined && _entryForLock && _entryForLock.item) {
+      var _rollsForLock = dtGetRollsForItem(_entryForLock.item);
+      if (_rollsForLock && _rollsForLock.length) {
+        var _topRollForLock = _rollsForLock[_rollsForLock.length - 1].rollNum;
+        if (rollNum !== _topRollForLock) return;
+      }
+    }
     var _bidRaw = (function(){
-      var e = _dtFindCardsEntry(cardId);
+      var e = _entryForLock;
       if (e && e.item) { var b = e.item.baseId || e.item.id; if (typeof b==='string' && b.indexOf('corrupted:')===0) b = b.replace('corrupted:',''); return b; }
       return null;
     })();
@@ -19209,8 +19242,8 @@ function toggleEasterTheme() {
     else _dtRollState[cardId].rolls[rollNum].v = v;
     window._vlNeedsRefresh = true; /* DT изменил value ролла — VL нужен rebuild */
 
-    /* Обновляем lock-state если это топ-ролл */
-    _dtReUpdateLock(cardId);
+    /* Обновляем lock-state, только если это топ-ролл (см. _dtReUpdateLock) */
+    _dtReUpdateLock(cardId, rollNum);
 
     /* Если этот ролл сейчас активен — синхронизируем value/gold */
     if (_dtRollState[cardId].rollNum === rollNum) {
@@ -20213,18 +20246,52 @@ function toggleEasterTheme() {
       return '<button type="button" class="dt-status-opt" onclick="dtPickStatus(\''+cid+'\',\''+s+'\')" style="color:'+col+'">'+label+'</button>';
     }).join('');
     dd.innerHTML = listHTML2;
-    card.appendChild(dd);
-    /* Позиционируем под кнопкой (?): */
-    requestAnimationFrame(function(){
-      var btnRect = ev.target.getBoundingClientRect();
-      var cardRect = card.getBoundingClientRect();
-      dd.style.top = (btnRect.bottom - cardRect.top + 4) + 'px';
-      dd.style.left = Math.max(0, btnRect.left - cardRect.left - dd.offsetWidth + btnRect.width) + 'px';
-    });
-    /* Закрыть при клике вне */
+
+    /* Телепортируем dropdown в <body>, чтобы вырваться из stacking context карточки
+       (иначе z-index работает только относительно родителя, и соседние карточки
+       со своим stacking context могут перекрыть дропдаун) */
+    var anchorBtn = ev.target;
+    document.body.appendChild(dd);
+    dd.style.cssText = [
+      'position:fixed',
+      'z-index:9999',
+      'display:flex',
+      'flex-direction:column',
+      'gap:2px'
+    ].join(';');
+
+    function _dtPositionStatusDrop() {
+      var btnRect = anchorBtn.getBoundingClientRect();
+      var ddH = dd.offsetHeight;
+      var ddW = dd.offsetWidth;
+      var spaceBelow = window.innerHeight - btnRect.bottom;
+      /* Флип вверх, если снизу не хватает места */
+      var topVal = (spaceBelow < ddH + 8)
+        ? (btnRect.top - ddH - 4)
+        : (btnRect.bottom + 4);
+      /* Не даём уйти за левый/правый край экрана */
+      var leftVal = Math.min(
+        Math.max(4, btnRect.right - ddW),
+        window.innerWidth - ddW - 4
+      );
+      dd.style.top  = topVal + 'px';
+      dd.style.left = leftVal + 'px';
+    }
+
+    requestAnimationFrame(_dtPositionStatusDrop);
+    var _scrollHandler = _dtPositionStatusDrop;
+    window.addEventListener('scroll', _scrollHandler, { capture: true, passive: true });
+    window.addEventListener('resize', _scrollHandler, { passive: true });
+
+    /* Закрыть при клике вне (+ снимаем scroll/resize listeners) */
     setTimeout(function(){
       document.addEventListener('click', function _ddClose(e){
-        if (!dd.contains(e.target)) { dd.remove(); document.removeEventListener('click', _ddClose); }
+        if (!dd.contains(e.target)) {
+          dd.remove();
+          window.removeEventListener('scroll', _scrollHandler, true);
+          window.removeEventListener('resize', _scrollHandler);
+          document.removeEventListener('click', _ddClose);
+        }
       });
     }, 0);
   };
@@ -20631,7 +20698,7 @@ function toggleEasterTheme() {
 
       /*   Big value — editable inline input + gradient overlay for mythic/ascended */
       +   '<div class="vl-detail-value-row" style="position:relative;">'      +     ''      +     '<input type="text" inputmode="numeric" id="dt-inp-val-'+cid+'" class="dt-val-input" '      +       'value="'+(it.value===null||it.value===undefined?'':it.value)+'" placeholder="0" maxlength="15" '      +       'style="color:'+(useGrad ? 'transparent' : valueColor)+';caret-color:'+(useGrad ? rc.color : valueColor)+';" '      +       'oninput="dtValInput(event,\''+cid+'\')" '      +       'onfocus="dtValFocus(event,\''+cid+'\')" onblur="dtValBlur(event,\''+cid+'\')">'
-      +     (useGrad ? '<span class="dt-val-grad-overlay '+rc.cls+'" id="dt-val-overlay-'+cid+'">'+it.value+'</span>' : '')      +     ''      +   '</div>'
+      +     (useGrad ? '<span class="dt-val-grad-overlay '+rc.cls+'" id="dt-val-overlay-'+cid+'">'+(it.value===null||it.value===undefined?'':it.value)+'</span>' : '')      +     ''      +   '</div>'
       /*   Gold row */
       +   '<div class="vl-gold-value" id="dt-gold-'+cid+'" data-tp-val="'+it.value+'">'
       +     '<span class="vl-gold-value-icon"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="7" fill="#d4a017" stroke="#a07010" stroke-width="1"/><circle cx="8" cy="8" r="5" fill="#e8c040" opacity="0.5"/><text x="8" y="12" text-anchor="middle" font-family="serif" font-size="9" font-weight="900" fill="#7a4a00">$</text></svg></span>'
@@ -21529,40 +21596,58 @@ function toggleEasterTheme() {
 </div>
 
 <script>
-/* Единый RAF-тикер для shimmer-анимации Ascended / Exclusive.
+/* Единый RAF-тикер для анимаций Ascended / Exclusive / Mythic.
    ВАЖНО: раньше позиция градиента писалась через CSS custom property
    на document.documentElement (--shimmer-pos). Смена custom property на
    :root форсит Recalculate Style для ВСЕГО документа на каждый тик (30/сек) —
    включая навбар с тултипами и баннер на Home, даже если ни одной карточки
    VL при этом не открыто (achievable просто за счёт того что панель Value
-   Changes видна на Home/VL/DT и в ней есть хотя бы один ascended/exclusive
-   diff-card). Теперь пишем background-position НАПРЯМУЮ в inline style
-   только тех элементов, которые реально мерцают — это не трогает вообще
-   ничего за пределами самих текстовых лейблов редкости. */
+   Changes видна на Home/VL/DT и в ней есть хотя бы один ascended/exclusive/mythic
+   diff-card). Теперь пишем прямо в inline style/custom property только тех
+   элементов, которые реально анимируются — это не трогает ничего за
+   пределами самих текстовых лейблов редкости и рамок карточек.
+
+   Ascended / Exclusive — бегущий шиммер: JS двигает background-position
+   слева направо и обратно (как раньше).
+
+   Mythic — другая механика: цвет НЕ бежит полосой, а весь текст/рамка целиком
+   перекрашиваются одновременно — красный → оранжевый → жёлтый → ... → фиолетовый
+   → обратно к красному. Реализовано через один общий hue-угол (0-360°),
+   переводимый в HSL-цвет и записываемый как --mythic-c локально на каждом
+   элементе (текстовом и рамке), поэтому рамка и текст предмета всегда одного
+   и того же цвета в любой момент времени. */
 (function() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var pos = 0;
   var dir = 1;
   var speed = 3.3;
+  var hue = 0;
+  var hueSpeed = 2; // градусов за тик — полный оборот радуги примерно за 6 секунд
   var _lastT = 0;
   var _interval = 1000 / 30;
   var _rafId = null;
   var _running = false;
   var _shimmerEls = [];
+  var _mythicEls = [];
 
   function collectShimmerEls() {
-    var els = [];
-    document.querySelectorAll('.page.active .rarity-ascended, .page.active .rarity-exclusive').forEach(function(el){ els.push(el); });
+    var shimmer = [];
+    var mythic = [];
+    document.querySelectorAll('.page.active .rarity-ascended, .page.active .rarity-exclusive').forEach(function(el){ shimmer.push(el); });
+    document.querySelectorAll('.page.active .rarity-mythic, .page.active .border-mythic').forEach(function(el){ mythic.push(el); });
     var fbPanel = document.getElementById('dt-feedback-panel');
     if (fbPanel) {
-      fbPanel.querySelectorAll('.vc-diff-card:not(.card-offscreen) .rarity-ascended, .vc-diff-card:not(.card-offscreen) .rarity-exclusive').forEach(function(el){ els.push(el); });
+      fbPanel.querySelectorAll('.vc-diff-card:not(.card-offscreen) .rarity-ascended, .vc-diff-card:not(.card-offscreen) .rarity-exclusive').forEach(function(el){ shimmer.push(el); });
+      fbPanel.querySelectorAll('.vc-diff-card:not(.card-offscreen) .rarity-mythic, .vc-diff-card:not(.card-offscreen) .border-mythic').forEach(function(el){ mythic.push(el); });
     }
-    return els;
+    return { shimmer: shimmer, mythic: mythic };
   }
 
   function hasShimmerCards() {
-    _shimmerEls = collectShimmerEls();
-    return _shimmerEls.length > 0;
+    var found = collectShimmerEls();
+    _shimmerEls = found.shimmer;
+    _mythicEls = found.mythic;
+    return _shimmerEls.length > 0 || _mythicEls.length > 0;
   }
 
   function tick(t) {
@@ -21574,11 +21659,19 @@ function toggleEasterTheme() {
     if (document.hidden) { _rafId = requestAnimationFrame(tick); return; }
     if (t - _lastT < _interval) { _rafId = requestAnimationFrame(tick); return; }
     _lastT = t;
+
+    // Ascended / Exclusive shimmer position
     pos += dir * speed;
     if (pos >= 100) { pos = 100; dir = -1; }
     else if (pos <= 0) { pos = 0; dir = 1; }
     var bg = pos + '% 50%';
     for (var i = 0; i < _shimmerEls.length; i++) _shimmerEls[i].style.backgroundPosition = bg;
+
+    // Mythic hue cycle — весь цвет целиком меняется, без бегущей полосы
+    hue = (hue + hueSpeed) % 360;
+    var mythicColor = 'hsl(' + hue.toFixed(1) + ', 90%, 58%)';
+    for (var j = 0; j < _mythicEls.length; j++) _mythicEls[j].style.setProperty('--mythic-c', mythicColor);
+
     _rafId = requestAnimationFrame(tick);
   }
 
