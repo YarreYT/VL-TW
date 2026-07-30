@@ -5779,6 +5779,9 @@ body.lang-ru .value-list-btn{
   z-index: 5;
   pointer-events: none;
   user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }
 /* Diff-карты: только зеркалим позицию VL-бейджа на левый край */
 .vc-diff-card .vl-variant-badge,
@@ -11976,6 +11979,9 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         badge.className = 'vl-variant-badge';
         badge.title = vDef.name;
         badge.style.background = _panelBg;
+        if (vDef.name.length > 16) badge.style.fontSize = '11.5px';
+        else if (vDef.name.length > 13) badge.style.fontSize = '12.5px';
+        else if (vDef.name.length > 10) badge.style.fontSize = '13.5px';
         badge.textContent = vDef.name;
         el.appendChild(badge);  /* absolute поверх карточки, left:0 */
         el.classList.add('has-badge');
@@ -14481,8 +14487,9 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
           } else {
             _panelBg = 'linear-gradient(to right, ' + _bgRaw + '00 0%, ' + _bgRaw + 'cc 40%, ' + _bgRaw + ' 100%)';
           }
+          var _vbFs = vDef.name.length > 16 ? '15.5px' : (vDef.name.length > 13 ? '17.5px' : (vDef.name.length > 10 ? '19.5px' : '20px'));
           variantBadge = '<div class="vl-variant-badge" title="'+vDef.name+'" '
-            + 'style="background:'+_panelBg+'">'+vDef.name+'</div>';
+            + 'style="background:'+_panelBg+';font-size:'+_vbFs+'">'+vDef.name+'</div>';
         }
       }
     }
@@ -15375,6 +15382,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     { id:'kronax',     lbl:'KR', name:'Kronax',    bg:'#520114' },
     { id:'viltron',    lbl:'V',  name:'Viltron',   bg:'#520114' },
     { id:'nuclear',    lbl:'Nu', name:'Nuclear',   bg:'#7ec89a' },
+    { id:'corrupted_infernal', lbl:'CI', name:'Corrupted Infernal', bg:'#8b3fc8' },
   ];
 
   window.VL_DB = VL_DB;
@@ -15404,6 +15412,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     { id:'kronax',        name:'Kronax'       },
     { id:'viltron',       name:'Viltron'      },
     { id:'nuclear',       name:'Nuclear'      },
+    { id:'corruptedinfernal', name:'Corrupted Infernal' },
   ];
 
   // ── Стикеры: системные/сайт ──
@@ -20870,7 +20879,8 @@ function toggleEasterTheme() {
     } else {
       _panelBg = 'linear-gradient(to right, ' + _bgRaw + '00 0%, ' + _bgRaw + 'cc 40%, ' + _bgRaw + ' 100%)';
     }
-    return '<div class="vl-variant-badge" title="' + vDef.name + '" style="background:' + _panelBg + '">' + vDef.name + '</div>';
+    var _vbFs2 = vDef.name.length > 16 ? '15.5px' : (vDef.name.length > 13 ? '17.5px' : (vDef.name.length > 10 ? '19.5px' : '20px'));
+    return '<div class="vl-variant-badge" title="' + vDef.name + '" style="background:' + _panelBg + ';font-size:' + _vbFs2 + '">' + vDef.name + '</div>';
   }
 
   function _dtImgBoxCloseHTML(it, RC) {
@@ -22172,7 +22182,8 @@ function toggleEasterTheme() {
     } else {
       _panelBg = 'linear-gradient(to right, '+_bgRaw+'00 0%, '+_bgRaw+'cc 40%, '+_bgRaw+' 100%)';
     }
-    return '<div class="vl-variant-badge" title="'+vDef.name+'" style="background:'+_panelBg+'">'+vDef.name+'</div>';
+    var _vbFs3 = vDef.name.length > 16 ? '15.5px' : (vDef.name.length > 13 ? '17.5px' : (vDef.name.length > 10 ? '19.5px' : '20px'));
+    return '<div class="vl-variant-badge" title="'+vDef.name+'" style="background:'+_panelBg+';font-size:'+_vbFs3+'">'+vDef.name+'</div>';
   }
 
   // ── Switch category ──
