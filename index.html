@@ -6110,6 +6110,165 @@ body.lang-ru .value-list-btn{
   padding: 32px 0;
 }
 
+/* ── DT Input-Code Modal (Input Copied Code) — same visual language as .dt-cm-* ── */
+#dt-input-code-modal { position: fixed; inset: 0; z-index: 4000; display: none; align-items: center; justify-content: center; }
+#dt-input-code-modal.visible { display: flex; }
+#dt-input-code-modal .dt-cm-panel { width: min(620px, calc(100vw - 32px)); }
+.dt-ic-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dt-ic-hint {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--text-muted, #8b7fa8);
+  opacity: 0.75;
+}
+.dt-ic-textarea-wrap { position: relative; }
+.dt-ic-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 120px;
+  max-height: min(420px, calc(100vh - 340px));
+  overflow-y: auto;
+  resize: none;
+  padding: 12px 14px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-primary, #cec4ea);
+  background: rgba(0,0,0,0.30);
+  border: 1px solid rgba(var(--gold-rgb, 155,48,255), 0.28);
+  border-radius: 8px;
+  outline: none;
+  white-space: pre;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--gold-rgb, 155,48,255), 0.35) transparent;
+}
+.dt-ic-textarea:focus { border-color: rgba(var(--gold-rgb, 155,48,255), 0.55); }
+.dt-ic-textarea::-webkit-scrollbar { width: 4px; }
+.dt-ic-textarea::-webkit-scrollbar-track { background: transparent; }
+.dt-ic-textarea::-webkit-scrollbar-thumb { background: rgba(var(--gold-rgb, 155,48,255), 0.35); border-radius: 2px; }
+.dt-ic-footer-row { display:flex; gap:8px; align-items:center; justify-content:flex-end; }
+.dt-ic-apply {
+  padding: 7px 18px;
+  border: 1px solid rgba(80,250,123,0.35);
+  border-radius: 7px;
+  background: rgba(80,250,123,0.08);
+  color: #50fa7b;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.dt-ic-apply:hover { background: rgba(80,250,123,0.18); box-shadow: 0 0 14px rgba(80,250,123,0.25); }
+.dt-ic-cancel {
+  padding: 7px 18px;
+  border: 1px solid rgba(var(--gold-rgb, 155,48,255), 0.30);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted, #8b7fa8);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.dt-ic-cancel:hover { background: rgba(var(--gold-rgb, 155,48,255), 0.10); color: var(--text-primary); }
+
+/* Header button next to PRINT ALL */
+.dt-input-code-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid rgba(var(--gold-rgb, 155,48,255), 0.35);
+  border-radius: 7px;
+  background: rgba(var(--gold-rgb, 155,48,255), 0.08);
+  color: var(--gold-bright, #c875ff);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.dt-input-code-btn:hover { background: rgba(var(--gold-rgb, 155,48,255), 0.18); box-shadow: 0 0 14px rgba(var(--gold-rgb, 155,48,255), 0.25); }
+.dt-input-code-btn svg { width: 15px; height: 15px; }
+
+/* ── DT Errors Modal — same visual language as .dt-cm-*, red accent ── */
+#dt-error-modal { position: fixed; inset: 0; z-index: 4100; display: none; align-items: center; justify-content: center; }
+#dt-error-modal.visible { display: flex; }
+#dt-error-modal .dt-cm-panel {
+  width: min(620px, calc(100vw - 32px));
+  border-color: rgba(255,90,90,0.35);
+  box-shadow: 0 0 60px rgba(255,90,90,0.14), 0 20px 60px rgba(0,0,0,0.70);
+}
+#dt-error-modal .dt-cm-header { border-bottom-color: rgba(255,90,90,0.22); }
+#dt-error-modal .dt-cm-title { color: #ff5a5a; opacity: 0.85; }
+.dt-err-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,90,90,0.35) transparent;
+}
+.dt-err-body::-webkit-scrollbar { width: 4px; }
+.dt-err-body::-webkit-scrollbar-track { background: transparent; }
+.dt-err-body::-webkit-scrollbar-thumb { background: rgba(255,90,90,0.35); border-radius: 2px; }
+.dt-err-item {
+  border: 1px solid rgba(255,90,90,0.28);
+  border-radius: 8px;
+  padding: 10px 13px;
+  background: rgba(255,90,90,0.06);
+}
+.dt-err-line {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: #ff5a5a;
+  opacity: 0.75;
+  margin-bottom: 4px;
+}
+.dt-err-msg {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-primary, #cec4ea);
+}
+.dt-err-footer {
+  padding: 14px 18px 16px;
+  border-top: 1px solid rgba(255,90,90,0.18);
+  background: rgba(0,0,0,0.25);
+  flex-shrink: 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.dt-err-close-btn {
+  padding: 7px 18px;
+  border: 1px solid rgba(255,90,90,0.40);
+  border-radius: 7px;
+  background: rgba(255,90,90,0.10);
+  color: #ff5a5a;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.dt-err-close-btn:hover { background: rgba(255,90,90,0.22); box-shadow: 0 0 14px rgba(255,90,90,0.30); }
+
 /* ══════════════════════════════════════════════
    FEEDBACK PANEL (DT — правая колонка, console-panel паттерн)
 ══════════════════════════════════════════════ */
@@ -7697,6 +7856,23 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   color: rgba(255,255,200,0.50);
   opacity: 1;
 }
+:root.theme-baldi .dt-ic-hint {
+  color: rgba(255,255,200,0.65);
+  opacity: 1;
+}
+:root.theme-baldi .dt-ic-textarea {
+  background: #111;
+  border-color: #155A15;
+  color: #fff;
+}
+:root.theme-baldi .dt-ic-textarea:focus { border-color: #A0C890; }
+:root.theme-baldi .dt-ic-textarea::-webkit-scrollbar-thumb { background: #155A15; }
+:root.theme-baldi .dt-ic-cancel {
+  border-color: #155A15;
+  color: #FFFFC8;
+  opacity: 0.80;
+}
+:root.theme-baldi .dt-ic-cancel:hover { background: rgba(0,0,0,0.20); opacity: 1; }
 
 /* ── Easter variant popup ── */
 :root.theme-easter .vl-variant-popup-inner {
@@ -7789,6 +7965,23 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   color: #C84E78;
   opacity: 0.40;
 }
+:root.theme-easter .dt-ic-hint {
+  color: #C84E78;
+  opacity: 0.65;
+}
+:root.theme-easter .dt-ic-textarea {
+  background: #F5EFE8;
+  border-color: rgba(200,78,120,0.28);
+  color: #3D2A18;
+}
+:root.theme-easter .dt-ic-textarea:focus { border-color: rgba(200,78,120,0.55); }
+:root.theme-easter .dt-ic-textarea::-webkit-scrollbar-thumb { background: rgba(200,78,120,0.35); }
+:root.theme-easter .dt-ic-cancel {
+  border-color: rgba(200,78,120,0.32);
+  color: #C84E78;
+  opacity: 0.65;
+}
+:root.theme-easter .dt-ic-cancel:hover { background: rgba(200,78,120,0.10); opacity: 1; }
 
 /* ── Atlantic palette override ── */
 :root.theme-atlantic .dt-cm-panel {
@@ -7850,6 +8043,23 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   color: #C84766;
   opacity: 0.45;
 }
+:root.theme-atlantic .dt-ic-hint {
+  color: #C84766;
+  opacity: 0.65;
+}
+:root.theme-atlantic .dt-ic-textarea {
+  background: #F5EDDA;
+  border-color: rgba(200,71,102,0.30);
+  color: #C84766;
+}
+:root.theme-atlantic .dt-ic-textarea:focus { border-color: rgba(200,71,102,0.55); }
+:root.theme-atlantic .dt-ic-textarea::-webkit-scrollbar-thumb { background: rgba(200,71,102,0.35); }
+:root.theme-atlantic .dt-ic-cancel {
+  border-color: rgba(200,71,102,0.35);
+  color: #C84766;
+  opacity: 0.65;
+}
+:root.theme-atlantic .dt-ic-cancel:hover { background: rgba(200,71,102,0.10); opacity: 1; }
 
 .dt-card-print-btn {
   position: absolute;
@@ -8214,7 +8424,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
   background-origin: border-box;
   background-clip: padding-box, border-box;
-  box-shadow: 0 0 22px rgba(112,161,255,.28), inset 0 0 40px rgba(0,0,0,.4), 0 0 0 1px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(0,0,0,0.65);
+  box-shadow: 0 0 22px rgba(112,161,255,.28), 0 0 0 1px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(0,0,0,0.65);
 }
 /* ── Mythic border: тематические оверрайды inner-цвета (чтобы тема не перебивала gradient border) ── */
 :root.theme-time .vl-detail-img-box.border-mythic {
@@ -10713,6 +10923,19 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 :root.theme-birthday .dt-cm-copy-all:hover { color: #C084FC !important; border-color: rgba(192,132,252,0.55) !important; background: rgba(192,132,252,0.10) !important; }
 :root.theme-birthday .dt-cm-body::-webkit-scrollbar-thumb { background: rgba(192,132,252,0.40) !important; }
 :root.theme-birthday .dt-cm-empty { color: rgba(90,45,45,0.45) !important; }
+:root.theme-birthday .dt-ic-hint { color: rgba(90,45,45,0.55) !important; }
+:root.theme-birthday .dt-ic-textarea {
+  color: #5A2D2D !important;
+  background: rgba(255,245,240,0.70) !important;
+  border-color: rgba(196,120,90,0.35) !important;
+}
+:root.theme-birthday .dt-ic-textarea:focus { border-color: rgba(192,132,252,0.55) !important; }
+:root.theme-birthday .dt-ic-textarea::-webkit-scrollbar-thumb { background: rgba(192,132,252,0.40) !important; }
+:root.theme-birthday .dt-ic-cancel {
+  color: rgba(90,45,45,0.60) !important;
+  border-color: rgba(196,120,90,0.35) !important;
+}
+:root.theme-birthday .dt-ic-cancel:hover { color: #C084FC !important; border-color: rgba(192,132,252,0.55) !important; background: rgba(192,132,252,0.10) !important; }
 
 /* DT Status / Dem */
 :root.theme-birthday .dt-dem-input { color: #5A2D2D !important; border-color: rgba(196,120,90,0.40) !important; background: rgba(255,245,240,0.60) !important; }
@@ -10926,6 +11149,59 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   .dt-re-num { font-size: 14px; }
   .dt-re-price { font-size: 14px; }
   .dt-re-dem-spinner { left: calc(50% + 48px); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NORMALIZED ITEM SHADOWS — единая система теней для картинки
+   внутри рамки карточки. Ровно 2 слоя, одинаково для ЛЮБОЙ
+   редкости (common → exclusive), меняется только цвет по палитре:
+     слой 1 — мягкий ореол вокруг предмета (чуть более выразительный)
+     слой 2 — ровная тень от краёв рамки внутрь (одинаковая по кругу)
+   Все прежние виньетки (inset 40-50px) отключены — они и давали
+   эффект «нескольких теней» и разную густоту у разных редкостей.
+   ══════════════════════════════════════════════════════════════ */
+:root {
+  --item-halo: rgba(0,0,0,.52);
+  --item-drop: rgba(0,0,0,.45);
+}
+:root.theme-time     { --item-halo: rgba(0,0,0,.52); --item-drop: rgba(0,0,0,.45); }
+:root.theme-galaxy   { --item-halo: rgba(60,20,110,.55); --item-drop: rgba(0,0,0,.45); }
+:root.theme-discord  { --item-halo: rgba(0,0,0,.52); --item-drop: rgba(0,0,0,.45); }
+:root.theme-atlantic { --item-halo: rgba(6,50,80,.55); --item-drop: rgba(0,0,0,.42); }
+:root.theme-classic  { --item-halo: rgba(20,45,65,.50); --item-drop: rgba(0,0,0,.42); }
+:root.theme-baldi    { --item-halo: rgba(0,0,0,.50); --item-drop: rgba(0,0,0,.45); }
+:root.theme-easter   { --item-halo: rgba(60,130,200,.48); --item-drop: rgba(60,130,200,.30); }
+:root.theme-birthday { --item-halo: rgba(168,85,247,.48); --item-drop: rgba(90,40,140,.35); }
+
+/* Сама картинка — ровно 2 drop-shadow слоя */
+.vl-detail-img,
+.vc-diff-img-box img,
+:root.theme-easter .vl-detail-img,
+:root.theme-baldi .vl-detail-img,
+:root.theme-birthday .vl-detail-img-box .vl-detail-img,
+:root.theme-easter .vc-diff-img-box img,
+:root.theme-baldi .vc-diff-img-box img,
+:root.theme-birthday .vc-diff-img-box img {
+  filter: drop-shadow(0 0 12px var(--item-halo)) !important;
+}
+
+/* Внутренние виньетки боксов -> только тонкий 1px контур, без затемнения */
+.vl-detail-img-box::after,
+.vl-detail-img-wrap::after,
+.vc-diff-img-box::after,
+.vc-diff-img-wrap::after,
+:root.theme-easter .vl-detail-img-box::after,
+:root.theme-birthday .vl-detail-img-box::after,
+:root.theme-baldi .vl-detail-img-box::after,
+:root.theme-easter .vl-detail-img-wrap::after,
+:root.theme-birthday .vl-detail-img-wrap::after,
+:root.theme-baldi .vl-detail-img-wrap::after {
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.65), inset 0 0 22px var(--item-drop) !important;
+}
+/* У ascended/exclusive контур рисует wrapper — внутренний бокс не дублирует */
+.vl-detail-img-wrap .vl-detail-img-box::after,
+.vc-diff-img-wrap .vc-diff-img-box::after {
+  box-shadow: none !important;
 }
 </style>
 <base target="_blank">
@@ -11225,7 +11501,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div><!-- /bot-main-col -->
         <!-- Stats только для мобиля (десктоп видит stats-col снаружи) -->
         <div class="stats-col-mobile">
-          <div class="stat-chip"><span class="stat-num">29.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+          <div class="stat-chip"><span class="stat-num">30.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
           <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-weapons-m">0</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-armor-m">0</span><span class="stat-lbl" data-i18n="stat_armor">Armor</span></div>
@@ -11236,7 +11512,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div>
       </div>
       <div class="stats-col">
-        <div class="stat-chip"><span class="stat-num">29.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+        <div class="stat-chip"><span class="stat-num">30.07.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
         <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
         <div class="stat-chip"><span class="stat-num"><span id="stat-num-elements">0</span><span class="stat-num-sep">/</span><span id="stat-num-variants">0</span></span><span class="stat-lbl" data-i18n="stat_elements">Elements / Variants</span></div>
         <div class="stat-chip"><span class="stat-num" id="stat-num-cosmetics">0</span><span class="stat-lbl" data-i18n="stat_cosmetics">Cosmetics</span></div>
@@ -11422,6 +11698,12 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         <span class="vl-page-header-title" data-i18n="devtool_title">Developer Tool</span>
         <span class="vl-page-header-sub" data-i18n="devtool_sub">Value List Changer &amp; Printing results</span>
       </div>
+      <button class="dt-input-code-btn" id="dt-input-code-btn" onclick="dtInputCodeOpen()" title="Input copied code">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M5 21h14"/>
+        </svg>
+        <span data-i18n="dt_input_code_btn">Input Copied Code</span>
+      </button>
       <button class="dt-print-all-btn" id="dt-print-all-btn" onclick="dtPrintAll()" title="Copy code — all cards">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>
@@ -12611,6 +12893,13 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       return { v: r.v, d: r.d };
     });
   }
+  /* Экспортируем на window: DT-модуль (dtGetRollsForItem / dtGetGearMaxValue /
+     dtGetGearMaxDemand) — это ОТДЕЛЬНАЯ IIFE и не видит локальную функцию VL.
+     Без этого экспорта любое открытие Gear-карточки из кода (Input Copied Code)
+     падало с ReferenceError: _vlRegularFromCorrupted is not defined, из-за чего
+     цикл применения блоков обрывался на первом же Gear-предмете (применялись
+     только элементы), а модалка Input Copied Code не закрывалась. */
+  window._vlRegularFromCorrupted = _vlRegularFromCorrupted;
 
   /* При изменении corrupted-ролла в DT — перестраивает regular-карточку в VL если она открыта.
      vlGetRollsForItem теперь сам читает DT-оверрайды corrupted и применяет формулу,
@@ -12749,8 +13038,17 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
           /* Corrupted: use raw value, apply DT override if present */
           baseData = rawCorr[i];
           if (_dtRolls && _dtRolls[rollNum]) {
+            var _ovV = _dtRolls[rollNum].v;
+            /* v:null из DT-оверрайда допустим только для активного черновика
+               кастомного предмета (там это значит "слот ещё не тронут") —
+               для обычных предметов и подтверждённых кастомов такой null
+               означает "поле стёрли при редактировании" и должен читаться
+               как явный 0, а не протекать в VL как есть (иначе Value
+               показывал бы буквально "Null" вместо числа при выборе этого
+               ролла — см. историю бага). */
+            if (_ovV === null && !_edIsDraftForRollsVl) _ovV = 0;
             baseData = {
-              v: _dtRolls[rollNum].v !== undefined ? _dtRolls[rollNum].v : baseData.v,
+              v: _ovV !== undefined ? _ovV : baseData.v,
               d: _dtRolls[rollNum].d !== undefined ? _dtRolls[rollNum].d : baseData.d,
             };
           }
@@ -12758,8 +13056,10 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
           /* Regular: apply DT corrupted override first */
           var corrBase = rawCorr[i];
           if (_dtCorrRolls && _dtCorrRolls[rollNum]) {
+            var _ovVR = _dtCorrRolls[rollNum].v;
+            if (_ovVR === null && !_edIsDraftForRollsVl) _ovVR = 0;
             corrBase = {
-              v: _dtCorrRolls[rollNum].v !== undefined ? _dtCorrRolls[rollNum].v : corrBase.v,
+              v: _ovVR !== undefined ? _ovVR : corrBase.v,
               d: _dtCorrRolls[rollNum].d !== undefined ? _dtCorrRolls[rollNum].d : corrBase.d,
             };
           }
@@ -13561,14 +13861,30 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   function _vlRefreshOpenCards() {
     if (!vlOpenCards.length) return;
 
-    /* Build a fresh lookup. Для большинства карточек достаточно текущего варианта.
-       Лайкнутые карточки могут быть из других вариантов — добираем только их. */
+    /* Build a fresh lookup, охватывающий ВСЕ варианты (elements) и ВСЕ подтипы
+       (gear regular/corrupted) — открытая карточка может быть из любого из
+       них, независимо от того, что сейчас активно на экране VL. */
     var freshMap = {};
     ['cosmetic','chromas','gamepasses','other'].forEach(function(cat) {
       vlGetList(cat).forEach(function(item) { freshMap[item.id] = item; });
     });
-    /* Elements: текущий вариант */
+    /* Elements: сначала regular (нет ключа в VL_VARIANTS_DB, поэтому
+       vlGetList берёт первую ветку — !vdata), затем ВСЕ именованные
+       варианты, не только текущий активный (vlActiveVariant). Открытая
+       карточка может принадлежать любому варианту (пользователь мог открыть
+       её раньше, находясь на другом варианте, или код мог отредактировать
+       вариант, отличный от текущего активного) — если строить freshMap
+       только по vlActiveVariant, такие карточки не найдутся в freshMap и
+       молча не обновятся (см. баг: правки через Input Copied Code не
+       отражались в открытой VL-карточке без закрытия/переоткрытия). */
+    var _savedActiveVariant = vlActiveVariant;
+    vlActiveVariant = 'regular'; /* гарантированно отсутствует в VL_VARIANTS_DB → !vdata → regular-ветка */
     vlGetList('elements').forEach(function(item) { freshMap[item.id] = item; });
+    Object.keys(VL_VARIANTS_DB || {}).forEach(function(variantId) {
+      vlActiveVariant = variantId;
+      vlGetList('elements').forEach(function(item) { freshMap[item.id] = item; });
+    });
+    vlActiveVariant = _savedActiveVariant;
     /* Gear: оба варианта */
     var _savedGearVariant = vlGearVariant;
     vlGearVariant = 'regular';
@@ -14093,7 +14409,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     var _isEaster   = (typeof _vlThemeEaster !== 'undefined') ? _vlThemeEaster : document.documentElement.classList.contains('theme-easter');
     var _isBaldi    = (typeof _vlThemeBaldi  !== 'undefined') ? _vlThemeBaldi  : document.documentElement.classList.contains('theme-baldi');
     var _isBirthday = document.documentElement.classList.contains('theme-birthday');
-    var _inset = _isEaster ? 'inset 0 0 30px rgba(100,180,220,.18)' : _isBaldi ? 'inset 0 0 40px rgba(0,0,0,.5)' : _isBirthday ? 'inset 0 0 40px rgba(192,132,252,.10),inset 0 0 18px rgba(168,85,247,.07)' : 'inset 0 0 40px rgba(0,0,0,.4)';
+    var _inset = 'inset 0 0 0 0 transparent'; /* NORMALIZED: внутренние виньетки убраны, тень задаётся единым блоком в CSS */
     var _outline1px = '0 0 0 1px rgba(0,0,0,0.65)';
     var _inset1px = 'inset 0 0 0 1px rgba(0,0,0,0.65)';
     if (item.rarity === 'mythic') {
@@ -14180,41 +14496,23 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     (function(){
       var _baseRawId = item.baseId || item.id;
 
-      /* Кастомный предмет (создан через DT): зелёный бейдж ADDED, пока значения
-         совпадают со снапшотом на момент создания; если что-то поменяли —
-         показываем обычный EDITED (жёлтый), а если вернули как было — снова ADDED. */
+      /* Кастомный предмет (создан через DT): всегда зелёный бейдж ADDED.
+         Раньше здесь также проверялось "не отредактировали ли значения
+         после создания" (_edIsUnchanged) и, если да, показывался жёлтый
+         EDITED — но это было нужно только пока кастомные предметы можно
+         было редактировать вне черновика (стандартным методом, как обычные
+         предметы). Теперь editing вне черновика для кастомных предметов
+         полностью заблокирован (см. dtValInput/dtPickRarity/dtPickStatus/
+         dtRollDemStepEditor и т.п. — они no-op для confirmed custom вне
+         _edDrafts), значит rec никогда не может разойтись с rec._orig
+         иначе как через черновик+подтверждение, а подтверждение само
+         обновляет _orig — то есть EDITED для custom-предметов больше
+         физически не может произойти, и проверку можно было убрать. */
       if (window._edIsCustomItem && window._edIsCustomItem(_baseRawId)) {
-        var _edRec = window._edFindItem ? window._edFindItem(_baseRawId) : null;
-        var _edRollNum = undefined;
-        if (_edRec && _edRec.cat === 'gear') {
-          /* Ролл, который сейчас реально отображён на карточке: сохранённый в
-             _vlRollState, если карточка уже открыта и пользователь переключал
-             роллы, иначе — тот же дефолт, что использует _vlRollStarsRowHTML
-             при первом открытии карточки (последний не-null ролл). Работает
-             одинаково и на первом открытии, и при переоткрытии карточки, т.к.
-             не полагается на «запомненный номер отредактированного ролла». */
-          var _edSaved = _vlRollState[cardId];
-          if (_edSaved && _edSaved.rollNum !== undefined) {
-            _edRollNum = _edSaved.rollNum;
-          } else {
-            var _edRolls = vlGetRollsForItem(item);
-            _edRollNum = (_edRolls && _edRolls.length) ? _vlDefaultRollNum(_edRolls) : 11;
-          }
-        }
-        var _unchanged = window._edIsUnchanged ? window._edIsUnchanged(_baseRawId, _edRollNum) : true;
         var _belowAdd = variantBadge !== '';
-        if (_unchanged) {
-          editedBadge = '<div class="vl-added-badge'
-            + (_belowAdd ? ' vl-added-badge--below' : '')
-            + '" id="vl-added-badge-' + cardId + '">ADDED</div>';
-        } else {
-          /* Тот же дизайн EDITED-бейджа, что и для обычных предметов ниже,
-             но без прогона через dtCards/_vlRarityOverrides, которые кастомные
-             предметы не заполняют. */
-          editedBadge = '<div class="vl-edited-badge'
-            + (_belowAdd ? ' vl-edited-badge--below' : '')
-            + '" id="vl-edited-badge-' + cardId + '">EDITED</div>';
-        }
+        editedBadge = '<div class="vl-added-badge'
+          + (_belowAdd ? ' vl-added-badge--below' : '')
+          + '" id="vl-added-badge-' + cardId + '">ADDED</div>';
         return;
       }
 
@@ -14257,6 +14555,15 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
           var _isGearItem = (_dtEntry.item && _dtEntry.item.cat === 'gear')
             || (typeof item.id === 'string' && item.id.indexOf('corrupted:') !== -1);
           if (!_isGearItem && String(item.status || '') !== String(_orig.status || '')) {
+            _isEdited = true;
+          }
+          /* Rarity (non-gear only — gear rarity уже покрыта _vlRarityOverrides
+             выше, п.1). Раньше здесь rarity не сравнивалась вообще — правка
+             rarity через Input Copied Code (например смена редкости Dragon)
+             не выставляла EDITED для Regular-элементов/cosmetic/gamepasses/
+             chromas/other, хотя origData.rarity корректно хранит исходное
+             значение с момента открытия карточки. */
+          if (!_isEdited && !_isGearItem && String(item.rarity || '') !== String(_orig.rarity || '')) {
             _isEdited = true;
           }
           if (!_isEdited) {
@@ -15823,6 +16130,18 @@ const T = {
     fb_ph_text:'Describe your price suggestion in detail...',
     fb_btn_cancel:'CANCEL', fb_btn_send:'SEND',
     fb_own_badge:'YOU', fb_edit_btn:'EDIT', fb_delete_btn:'DELETE', dt_code_title:'Code Snippets', dt_no_changes:'No changes', dt_print_all:'PRINT ALL', dt_copy_all:'Copy All',
+    dt_input_code_btn:'Input Copied Code', dt_input_code_title:'Input Copied Code', dt_input_code_placeholder:'Paste copied code here...',
+    dt_input_code_apply:'Apply', dt_input_code_cancel:'Cancel',
+    dt_input_err_title:'Errors Found', dt_input_err_close:'Close',
+    dt_input_err_unknown_id:'Unknown element',
+    dt_input_err_bad_json:'Could not parse this block',
+    dt_input_err_no_label:'Missing header comment (// VL_DB... — Name) above this block',
+    dt_input_err_unknown_target:'Unrecognized target type',
+    dt_input_err_bad_rolls:'Invalid roll data',
+    dt_input_err_bad_rate:'Invalid gold rate value',
+    dt_input_err_empty:'No code was entered',
+    dt_input_line:'Line',
+    dt_input_applied:'Applied — cards updated',
     devtool_wip:'WORK IN PROGRESS', devtool_wip_desc:'This section is reserved for internal development tools.',
     devtool_value_lbl:'Value:',
     dt_status_none:'— None —',
@@ -16013,6 +16332,9 @@ const T = {
     upd16_title: 'UPDATES OF 11.06.2026',
     upd16_sub: 'Developer Notes 11.06.2026',
     upd16_body: `Don't forget to visit our Discord server for all sites to stay up to date with the news — and of course, just to hang out.\nLink: <a class="upd-link" href="https://discord.gg/83KU8JjAU9" target="_blank" rel="noopener">https://discord.gg/83KU8JjAU9</a>\n\n<span class="upd-accent">So, what's new on 11.06.2026?</span>\n\n<span class="upd-cyan">›</span> New items added:\n<span class="upd-accent">Dragon Slayer Sword</span>\n<span class="upd-accent">Dragon Slayer Set</span>\n<span class="upd-accent">Viltron Set</span>\n<span class="upd-accent">Eggshell Set</span>\n<span class="upd-muted">We'll get to the new cosmetic swords soon.</span>\n\n<span class="upd-accent">Major addition — Value Changes Log!</span>\nA new system replacing the feedback nobody used.\nThis system will list the items that have changed since the previous site update!\nA great new feature for even better price tracking.\nIf there are items you've <span class="upd-accent">LIKED</span> among them — they'll appear at the very top.\n\nAlso some fixes, such as:\n<span class="upd-muted">VERY WEIRD CARDS in the 366–480px range</span>\n<span class="upd-muted">And the issue where you couldn't enter expressions in the Values search.</span>\n\n<span class="upd-accent">What's expected in the next update?</span>\nNew items, of course. Specifically, new cosmetics from the Battle Pass. We were such lazy asses we only added the armour from that same Pass.\nAlso, since accessories have become tradeable, a <span class="upd-accent">Relics</span> sub-category under Gear will be added soon.\n\nAnd that's all!\nHave a wonderful morning / day / evening / night to all of you!`,
+    upd18_title: 'UPDATES OF 30.07.2026',
+    upd18_sub: 'Developer Notes 30.07.2026',
+    upd18_body: `Summer is nearly over, and the devs are still milking us with new content while breaking our brains with hard dungeons. LOL\n\nAnyway. We've got a small update too.\nA new value list is being prepared, and here's another decent bit of news — our editor audience has grown a little, and our Discord server has reached 100+ members. Huge thanks for that.\n\nAs for the update.. what's new?\nOnce again, milking the devs for new features.\nThe freshest one of them —\n\n<span class=\"upd-accent\">Input Copied Code!</span>\nLets you enter changed data for existing items as CODE. This comes in handy if you need to drop your changes to the developer so he can continue his work using your database.\n\nIn the future, a feature to upload your own price list might be added.\n\nNaturally, a lot of new items.\nThe <span class=\"upd-accent\">Mythic</span> rarity got a redesign, closer to the original (that is, to the game's own design).\n\n<span class=\"upd-accent\">What's planned for the next update?</span>\nNew features again, basically, new items, and maybe I'll work on some new pages.\nAnd that's all for now.\n\nHave a wonderful morning / day / evening / night to all of you!\nDon't waste at least the last month of summer! :D`,
     upd17_title: 'UPDATES OF 17.07.2026',
     upd17_sub: 'Developer Notes 17.07.2026',
     upd17_body: `It's been such a long time since this site was updated. Over a month!\nAnd so much has changed in the game already.\n\nAlso, our Discord server is just a couple of players short of reaching 100 members.\nJoin through this link — <a class="upd-link" href="https://discord.gg/z4YEe7afFK" target="_blank" rel="noopener">https://discord.gg/z4YEe7afFK</a> !!!\n\nLet's go in order.\nWhat's new?????\n\n<span class="upd-accent">Value Changes functionality expanded.</span>\nIt now shows not just the difference between items, but also which ones were <span class="upd-accent">ADDED!</span> and <span class="upd-accent">REMOVED!</span> You can also type an item's name into search and it'll show up for you. And you can pick a variation to view only items of that specific variation.\n\n<span class="upd-accent">Developer Tool functionality expanded.</span>\nYou can now create custom items and send them to the developer. Who knows, maybe he'll add them to the list. Along with this, a check feature was also added, which will tell you upon login whether your item was added to the site's official database or not.\n\nNaturally, new items have been added! They'll be fully displayed in the list. I can name a few of them, but not all:\n\n* Heroic Viltron Set — mythical armor\n* Terrablade LE — secret weapon\n* Gubby Launcher — secret weapon\n* Lord Prisma Ring — what now?\n* Firework Bow — mythical weapon\n\nWhat's this Lord Prisma Ring? Does that mean..\n\n<span class="upd-accent">A NEW SUB-CATEGORY FOR GEAR HAS BEEN ADDED — RELICS!</span> Hallelujah!\nWe've added accessories, not from every dungeon, but at least the latest ones. Specifically from Underworld, Angel Sanctuary, Crafted, and "Limited" ones.\n\nNew variations added — <span class="upd-accent">Kronax</span> and <span class="upd-accent">Viltron</span>. There was an idea to merge them into one Boss variation, but after thinking it over, we decided screw it.\n\nSome minor fixes and site optimizations, of course.\n\n<span class="upd-accent">What's expected in the next updates?</span>\nWe might come up with some more fixes and mechanics, and of course it'll be interesting to hear your opinion on the new prices or the old ones.. suggest your own options and back them up with arguments!\nWhat to remove, what to add, what to change.\nWrite to us on our Discord server — ED Community Services\n<a class="upd-link" href="https://discord.gg/z4YEe7afFK" target="_blank" rel="noopener">https://discord.gg/z4YEe7afFK</a>\n\nAnd that's all for now!\nHave a wonderful morning / day / evening / night to all of you!`,
@@ -16063,6 +16385,18 @@ const T = {
     fb_btn_cancel:'ОТМЕНА', fb_btn_send:'ОТПРАВИТЬ',
     fb_own_badge:'ВЫ', fb_edit_btn:'ИЗМЕНИТЬ', fb_delete_btn:'УДАЛИТЬ',
     dt_code_title:'Сниппеты кода', dt_no_changes:'Нет изменений', dt_print_all:'ПЕЧАТЬ', dt_copy_all:'Скопировать всё',
+    dt_input_code_btn:'Ввести ваши коды', dt_input_code_title:'Ввести ваши коды', dt_input_code_placeholder:'Вставьте скопированный код сюда...',
+    dt_input_code_apply:'Применить', dt_input_code_cancel:'Отмена',
+    dt_input_err_title:'Найдены ошибки', dt_input_err_close:'Закрыть',
+    dt_input_err_unknown_id:'Неизвестный элемент',
+    dt_input_err_bad_json:'Не удалось разобрать этот блок',
+    dt_input_err_no_label:'Отсутствует комментарий-заголовок (// VL_DB... — Название) над этим блоком',
+    dt_input_err_unknown_target:'Нераспознанный тип цели',
+    dt_input_err_bad_rolls:'Некорректные данные роллов',
+    dt_input_err_bad_rate:'Некорректное значение курса золота',
+    dt_input_err_empty:'Код не был введён',
+    dt_input_line:'Строка',
+    dt_input_applied:'Применено — карточки обновлены',
     devtool_wip:'В РАЗРАБОТКЕ', devtool_wip_desc:'Этот раздел зарезервирован для внутренних инструментов разработчика.',
     devtool_value_lbl:'Значение:',
     dt_status_none:'— Нет —',
@@ -16254,6 +16588,9 @@ const T = {
     upd16_title: 'ОБНОВЛЕНИЯ НА 11.06.2026',
     upd16_sub: 'Записи разработчика 11.06.2026',
     upd16_body: `Не забываем посещать наш дискорд-сервер по всем сайтам чтобы следить за новостями и конечно же — чисто поболтать.\nСсылка: <a class="upd-link" href="https://discord.gg/83KU8JjAU9" target="_blank" rel="noopener">https://discord.gg/83KU8JjAU9</a>\n\n<span class="upd-accent">А теперь по обновлению на 11.06.2026</span>\n\n<span class="upd-cyan">›</span> Новые добавленные предметы:\n<span class="upd-accent">Dragon Slayer Sword</span>\n<span class="upd-accent">Dragon Slayer Set</span>\n<span class="upd-accent">Viltron Set</span>\n<span class="upd-accent">Eggshell Set</span>\n<span class="upd-muted">До новых косметических мечей мы ещё доберёмся.</span>\n\n<span class="upd-accent">Значительное изменение — Value Changes Log!</span>\nНовая система, которая заменяет никому не нужные отзывы.\nЭта система будет выписывать те предметы, которые изменились с прошлого обновления сайта!\nЭто крутое нововведение для ещё большей наблюдательности.\nЕсли среди предметов есть те, что вы <span class="upd-accent">ЛАЙКНУЛИ</span> — они будут отображаться самыми первыми.\n\nТак-же некоторые фиксы, такие как:\n<span class="upd-muted">ОЧЕНЬ СТРАННЫЕ КАРТОЧКИ НА ДИАПАЗОНЕ 366–480</span>\n<span class="upd-muted">И то что нельзя было вводить примеры в категории поисковика — Values.</span>\n\n<span class="upd-accent">Что ожидается в следующем обновлении?</span>\nДобавление новых предметов, конечно же. В частности это новая косметика с Battle Pass. Мы настолько ленивые жопы что добавили лишь броню с этого же Пасса.\nА так-же, в связи с тем что аксессуары стали обмениваемыми, то в скором времени будет добавлена суб-категория <span class="upd-accent">Relics</span> в категории Gear.\n\nА на этом всё!\nВсем добрейшего утра / дня / вечера / ночи!`,
+    upd18_title: 'ОБНОВЛЕНИЯ НА 30.07.2026',
+    upd18_sub: 'Записи разработчика 30.07.2026',
+    upd18_body: `Лето уже почти заканчивается, разработчики всё ещё доят нас новым контентом и ломают нам психику сложными данжами. LOL\n\nТак или иначе. И мы немного обновляемся\nНовый список цен готовиться и не менее хорошая новость - наша аудитория эдиторов немного расширилась, и наш дискорд сервер достиг 100+ участников. Огромное за это спасибо.\n\nЧто касаемо обновления.. Что нового?\nОпять же дою разработчиков новыми функциями\nСамая свежая из них\n\n<span class=\"upd-accent\">Input Copied Code!</span>\nПозволяет ввести изменённые данные о существующих предметах КОДОМ. Это пригодится на случай если надо дропнуть свои изменения разработчику чтобы он продолжил свою работу имея вашу базу.\n\nВ будущем возможно будет добавлена функция загрузки своего собственного прайс-листа.\n\nЕстественно много новых предметов.\nРедкость <span class=\"upd-accent\">Mythic</span> получила редизайн, близкий к оригиналу (то есть к дизайну игры)\n\n<span class=\"upd-accent\">Что планируется в новом обновлении?</span>\nСобственно новые опять же фичи, предметы и может займусь новыми страницами.\nА на этом всё\n\nВсем добрейшего утречка / дня / вечерочка / ночи!\nНе проебите хотя бы последний месяц лета! :D`,
     upd17_title: 'ОБНОВЛЕНИЯ НА 17.07.2026',
     upd17_sub: 'Записи разработчика 17.07.2026',
     upd17_body: `Как же долго не было обновления на этом сайте. Больше месяца!\nА в игре успело же столько всего измениться.\n\nТак-же на нашем дискорд-сервере нехватает парочку игроков, чтобы сделать 100 участников\nЗаходите по этой ссылке — <a class="upd-link" href="https://discord.gg/z4YEe7afFK" target="_blank" rel="noopener">https://discord.gg/z4YEe7afFK</a> !!!\n\nДавайте по порядку.\nЧто нового?????\n\n<span class="upd-accent">Расширен функционал Value Changes.</span>\nТеперь он показывает не только разницу между предметами, но и так-же показывает какие были ещё и <span class="upd-accent">ДОБАВЛЕНЫ!</span> и <span class="upd-accent">УДАЛЕНЫ!</span> А так-же вы можете ввести в поиск название предмета и он вам покажется. Ну и вы можете выбрать вариацию и смотреть предметы исключительно выбранной вами вариации.\n\n<span class="upd-accent">Расширен функционал Developer Tool.</span>\nТеперь можно создавать кастомные предметы и скинуть разработчику. Мало ли он их внесёт в список. В связи с этим так-же была добавлена функция проверки, которая при входе скажет вам — был ли ваш предмет добавлен в официальную базу данных сайта, или нет.\n\nДобавлены естественно новые предметы! Они будут отображаться в списке полноценно. Я могу перечислить некоторые из них, но не все:\n\n* Heroic Viltron Set — мифическая броня\n* Terrablade LE — секретное оружие\n* Gubby Launcher — секретное оружие\n* Lord Prisma Ring — что-что?\n* Firework Bow — мифическое оружие\n\nКакой Lord Prisma Ring? Неужели это значит..\n\n<span class="upd-accent">ДОБАВЛЕНА НОВАЯ ПОДКАТЕГОРИЯ ДЛЯ GEAR — RELICS!</span> Алилуя!\nМы добавили аксессуары, не из всех данжей, но по крайней мере последние из них. Именно по Underworld, Angel Sanctuary, Крафтовые и "Лимитированные".\n\nДобавлены новые вариации — <span class="upd-accent">Kronax</span> и <span class="upd-accent">Viltron</span>. Была идея их объединить в одну вариацию Boss, но что-то мы подумали и решили что хуй с ним.\n\nНекоторые побочные фиксы и оптимизации сайта конечно же.\n\n<span class="upd-accent">Что ожидается в следующих обновлениях?</span>\nВозможно ещё придумаем какие-нибудь фиксы и механики, ну и конечно же будет интересно узнать ваше мнение по поводу новых цен или старых.. предлагайте свои варианты и аргументируйте их!\nЧто удалить, что добавить, что изменить.\nПишите на наш дискорд-сервер — ED Community Services\n<a class="upd-link" href="https://discord.gg/z4YEe7afFK" target="_blank" rel="noopener">https://discord.gg/z4YEe7afFK</a>\n\nА на этом всё!\nВсем добрейшего утречка / дня / вечера / ночи!`,
@@ -16278,14 +16615,15 @@ const T = {
 function t(k) { return T[lang][k] || k; }
 
 /* ── UPDATES PAGINATION ── */
-// Pages: 0 = v1.0.1 (old), 1 = v1.0.2, 2 = v1.0.3, 3 = v1.0.4, 4 = v1.0.5 (current). Start on page 4.
-let updPage = 4;
+// Pages: 0 = v1.0.1 (old), 1 = v1.0.2, 2 = v1.0.3, 3 = v1.0.4, 4 = v1.0.5, 5 = v1.1.2 (current). Start on page 5.
+let updPage = 5;
 const UPD_PAGES = [
   { title:'upd13_title', sub:'upd13_sub', body:'upd13_body' },
   { title:'upd14_title', sub:'upd14_sub', body:'upd14_body' },
   { title:'upd15_title', sub:'upd15_sub', body:'upd15_body' },
   { title:'upd16_title', sub:'upd16_sub', body:'upd16_body' },
   { title:'upd17_title', sub:'upd17_sub', body:'upd17_body' },
+  { title:'upd18_title', sub:'upd18_sub', body:'upd18_body' },
 ];
 
 function updRender() {
@@ -18315,6 +18653,730 @@ function toggleEasterTheme() {
     });
   };
 
+  /* ══════════════════════════════════════════════════════════════════════
+     INPUT COPIED CODE — обратный парсер: пользователь вставляет ровно тот
+     же текст, что генерируется Code Snippets / Print All (см. _dtBuildSnippets
+     выше), и мы применяем изменения к соответствующим карточкам/данным.
+
+     Поддерживаемые типы блоков (по префиксу label в комментарии-заголовке):
+       // VL_DB.<cat>  —  Name              → { id, name, rarity, imgId?, subtype?, status, value, demand }
+       // VL_DB.gear  —  Name               → { id, name, rarity, imgId?, subtype?, status }  (без value/demand)
+       // VL_GEAR_ROLLS.<baseId>.<variant>  —  Name  →  <variant>: [ {v:..,d:..}, null, ... ]
+       // TP → GOLD RATE                     → содержит "_edTpRate || <число>"
+
+     Всё-или-ничего: если хотя бы один блок не проходит валидацию, НИЧЕГО
+     не применяется — показывается окно ошибок с номерами строк.
+  ══════════════════════════════════════════════════════════════════════ */
+
+  function _dtIcLangErr(key, fallback) {
+    return (window.t ? window.t(key) : null) || fallback;
+  }
+
+  /* ── Разбить вставленный текст на блоки { label, code, lineNum } ── */
+  function _dtIcSplitBlocks(raw) {
+    var lines = raw.replace(/\r\n/g, '\n').split('\n');
+    var blocks = [];
+    var i = 0;
+    while (i < lines.length) {
+      var line = lines[i];
+      var mLabel = line.match(/^\s*\/\/\s*(.+?)\s*$/);
+      if (mLabel) {
+        var label = mLabel[1];
+        var lineNum = i + 1;
+        /* Собираем код блока: все последующие непустые/не-комментарийные строки
+           до следующего "// " заголовка или конца текста. Код может занимать
+           несколько строк (например VL_GEAR_ROLLS с длинным массивом), поэтому
+           берём по балансу скобок { } / [ ]. */
+        var codeLines = [];
+        var depth = 0;
+        var started = false;
+        var j = i + 1;
+        for (; j < lines.length; j++) {
+          var l = lines[j];
+          if (!started && /^\s*$/.test(l)) continue; /* пропускаем пустые строки перед кодом */
+          if (!started && /^\s*\/\//.test(l)) break; /* следующий заголовок раньше кода — блок пуст */
+          started = true;
+          codeLines.push(l);
+          for (var k = 0; k < l.length; k++) {
+            if (l[k] === '{' || l[k] === '[') depth++;
+            else if (l[k] === '}' || l[k] === ']') depth--;
+          }
+          if (started && depth <= 0) { j++; break; }
+        }
+        blocks.push({ label: label, code: codeLines.join('\n'), lineNum: lineNum, codeStartLine: i + 2 });
+        i = j;
+      } else {
+        i++;
+      }
+    }
+    return blocks;
+  }
+
+  /* ── Безопасно распарсить объект/массив-литерал вида { id:'x', ... } ── */
+  function _dtIcParseLiteral(code) {
+    /* Снипеты кастомных предметов (_edBuildCustomItemSnippets) всегда
+       заканчиваются запятой — отформатированы как строка для вставки в
+       массив/объект (", }," и т.п.), а не как самостоятельное выражение.
+       Внутри Function('return (' + code + ')') висячая запятая перед
+       закрывающей скобкой — синтаксическая ошибка ("Unexpected token )"),
+       поэтому снимаем её здесь же, один раз, для всех типов блоков. */
+    var trimmed = code.trim().replace(/,\s*$/, '');
+    return Function('"use strict"; return (' + trimmed + ');')();
+  }
+
+  /* ── Разобрать метку VL_DB.<cat>  —  Name  /  VL_GEAR_ROLLS.<baseId>.<variant>  —  Name  /  TP → GOLD RATE ── */
+  function _dtIcParseLabel(label) {
+    /* Опциональная скобочная пометка после cat/id — например "(NEW)",
+       "(NEW base)", "(existing item)", "(существующий предмет)" — генерируется
+       _edBuildCustomItemSnippets для кастомных предметов (Added/Confirmed).
+       Снимаем её здесь же, до основных regexp'ов, чтобы не дублировать
+       разбор пометки в каждом из них. isNew — true для любой пометки,
+       кроме "(existing...)"/"(существующ...)", которая явно говорит, что
+       запись уже есть в базе (просто новый вариант существующего предмета). */
+    var mAnno = label.match(/^(.*?)\s*\(([^)]*)\)\s*(—|-)\s*(.*)$/);
+    var isNew = false;
+    if (mAnno) {
+      var annoText = mAnno[2].trim().toLowerCase();
+      isNew = !/^existing|^существ/.test(annoText);
+      label = mAnno[1] + '  ' + mAnno[3] + '  ' + mAnno[4];
+    }
+    var mDb = label.match(/^VL_DB\.([a-zA-Z0-9_]+)\s*—\s*(.*)$/) || label.match(/^VL_DB\.([a-zA-Z0-9_]+)\s*-\s*(.*)$/);
+    if (mDb) return { kind: 'db', cat: mDb[1], name: mDb[2], isNew: isNew };
+    var mRolls = label.match(/^VL_GEAR_ROLLS\.([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*—\s*(.*)$/) || label.match(/^VL_GEAR_ROLLS\.([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s*-\s*(.*)$/);
+    if (mRolls) return { kind: 'rolls', baseId: mRolls[1], variant: mRolls[2], name: mRolls[3], isNew: isNew };
+    /* VL_GEAR_ROLLS.<id> (NEW) — только id, без .<variant> — формат,
+       генерируемый _edBuildCustomItemSnippets (rollsBlock содержит и
+       regular и corrupted роллы внутри одного JS-объекта, а не один массив
+       под конкретный variant, как в обычном diff-снипете). */
+    var mRollsNew = label.match(/^VL_GEAR_ROLLS\.([a-zA-Z0-9_]+)\s*—\s*(.*)$/) || label.match(/^VL_GEAR_ROLLS\.([a-zA-Z0-9_]+)\s*-\s*(.*)$/);
+    if (mRollsNew) return { kind: 'rollsNew', baseId: mRollsNew[1], name: mRollsNew[2], isNew: isNew };
+    var mVariant = label.match(/^VL_VARIANTS_DB\.([a-zA-Z0-9_]+)\s*—\s*(.*)$/) || label.match(/^VL_VARIANTS_DB\.([a-zA-Z0-9_]+)\s*-\s*(.*)$/);
+    if (mVariant) return { kind: 'variant', variant: mVariant[1], name: mVariant[2], isNew: isNew };
+    if (/^TP\s*(→|->)\s*GOLD\s*RATE$/i.test(label.trim())) return { kind: 'rate' };
+    return null;
+  }
+
+  /* ── Валидировать + подготовить один блок. Возвращает { ok, error, action } ── */
+  function _dtIcValidateBlock(block) {
+    var target = _dtIcParseLabel(block.label);
+    if (!target) {
+      return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_unknown_target', 'Unrecognized target type') + ': "// ' + block.label + '"' };
+    }
+
+    if (!block.code || !block.code.trim()) {
+      return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_bad_json', 'Could not parse this block') };
+    }
+
+    if (target.kind === 'variant') {
+      /* Формат: "  <baseId>:        { value:.., demand:.., status:.. },"  —
+         допускаем произвольные пробелы/табы вокруг двоеточия и опциональную
+         запятую в конце (как при копировании нескольких строк подряд). */
+      var vMatch = block.code.match(/^\s*([a-zA-Z0-9_]+)\s*:\s*(\{[\s\S]*\})\s*,?\s*$/);
+      if (!vMatch) {
+        return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_json', 'Could not parse this block') };
+      }
+      var vObj;
+      try { vObj = _dtIcParseLiteral(vMatch[2]); }
+      catch (e) { return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_json', 'Could not parse this block') }; }
+      if (!vObj || typeof vObj !== 'object') {
+        return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_json', 'Could not parse this block') };
+      }
+      var vBaseId = vMatch[1];
+      var vVariant = target.variant;
+      var elEntry = (window.VL_DB.elements || []).filter(function(e) { return e.id === vBaseId; })[0];
+      if (!elEntry) {
+        return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_unknown_id', 'Unknown element') + ': "' + vBaseId + '"' };
+      }
+      return { ok: true, action: { type: 'variant', variant: vVariant, baseId: vBaseId, data: vObj } };
+    }
+
+    if (target.kind === 'rate') {
+      var mRate = block.code.match(/_edTpRate\s*\|\|\s*([0-9.]+)/);
+      var rate = mRate ? Number(mRate[1]) : NaN;
+      if (!mRate || isNaN(rate) || rate <= 0) {
+        return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_rate', 'Invalid gold rate value') };
+      }
+      return { ok: true, action: { type: 'rate', rate: rate } };
+    }
+
+    if (target.kind === 'rollsNew') {
+      /* Формат: "<baseId>: {\n corrupted: [ {v:..,d:..}, ... ]\n },"  —
+         целая новая запись VL_GEAR_ROLLS для кастомного предмета (в отличие
+         от 'rolls' — diff одного варианта уже существующего предмета).
+         В реальной базе VL_GEAR_ROLLS всегда содержит только ключ
+         corrupted (regular считается формулой corrupted/1.025 — см. VL). */
+      var rnMatch = block.code.match(/^\s*([a-zA-Z0-9_]+)\s*:\s*(\{[\s\S]*\})\s*,?\s*$/);
+      if (!rnMatch) {
+        return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_rolls', 'Invalid roll data') };
+      }
+      var rnObj;
+      try { rnObj = _dtIcParseLiteral(rnMatch[2]); }
+      catch (e) { return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_rolls', 'Invalid roll data') }; }
+      if (!rnObj || typeof rnObj !== 'object' || !Array.isArray(rnObj.corrupted)) {
+        return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_rolls', 'Invalid roll data') };
+      }
+      var rnBaseId = rnMatch[1];
+      if (rnBaseId !== target.baseId) {
+        return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_rolls', 'Invalid roll data') };
+      }
+      var rnGearRec = (window.VL_DB.gear || []).filter(function(e) { return e.id === rnBaseId; })[0];
+      var rnKnownRolls = window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[rnBaseId];
+      if (!rnGearRec && !target.isNew) {
+        return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_unknown_id', 'Unknown element') + ': "' + rnBaseId + '"' };
+      }
+      return { ok: true, action: { type: 'rollsNew', baseId: rnBaseId, corrupted: rnObj.corrupted, isNew: !rnKnownRolls } };
+    }
+
+    if (target.kind === 'rolls') {
+      var rollsMatch = block.code.match(/^\s*([a-zA-Z0-9_]+)\s*:\s*(\[[\s\S]*\])\s*$/);
+      if (!rollsMatch) {
+        return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_rolls', 'Invalid roll data') };
+      }
+      var rollsArr;
+      try { rollsArr = _dtIcParseLiteral(rollsMatch[2]); }
+      catch (e) { return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_rolls', 'Invalid roll data') }; }
+      if (!Array.isArray(rollsArr)) {
+        return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_rolls', 'Invalid roll data') };
+      }
+      var baseId = target.baseId;
+      var known = (window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId]);
+      var gearRec = (window.VL_DB.gear || []).filter(function(e) { return e.id === baseId; })[0];
+      if (!known || !gearRec) {
+        return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_unknown_id', 'Unknown element') + ': "' + baseId + '"' };
+      }
+      return { ok: true, action: { type: 'rolls', baseId: baseId, variant: rollsMatch[1], rolls: rollsArr } };
+    }
+
+    /* target.kind === 'db' */
+    var obj;
+    try { obj = _dtIcParseLiteral(block.code); }
+    catch (e) { return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_json', 'Could not parse this block') }; }
+    if (!obj || typeof obj !== 'object' || !obj.id) {
+      return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_json', 'Could not parse this block') };
+    }
+    var cat = target.cat;
+    var list = window.VL_DB[cat];
+    if (!list) {
+      return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_unknown_target', 'Unrecognized target type') + ': "VL_DB.' + cat + '"' };
+    }
+    var existing = list.filter(function(e) { return e.id === obj.id; })[0];
+    /* Для (NEW)-помеченных кастомных предметов obj.id — это ЭКСПОРТНЫЙ id
+       (сгенерированный из имени, см. _edComputeExportIds), а не настоящий
+       внутренний rec.id, под которым запись реально лежит в VL_DB[cat].
+       Прямой поиск по obj.id в list здесь почти всегда промахивается — из-за
+       этого правка уже существующего кастомного предмета ошибочно считалась
+       "новым" предметом и создавала предмет-призрак вместо правки настоящего. */
+    var existingCustom = target.isNew ? _edFindItemByExportId(obj.id) : null;
+    if (!existing && !existingCustom && !target.isNew) {
+      return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_unknown_id', 'Unknown element') + ': "' + obj.id + '"' };
+    }
+    if (existing && target.isNew) {
+      /* Помечен как (NEW), но запись с таким id уже есть В ТОЧНОСТИ (редкий
+         случай: экспортный id совпал с реальным internal id) — правим как
+         обычный db-блок. */
+      return { ok: true, action: { type: 'db', cat: cat, id: obj.id, data: obj } };
+    }
+    if (existingCustom) {
+      /* Найден по экспортному id как кастомный предмет — правим его. id в
+         action остаётся экспортным (obj.id): _dtIcApplyAction сам резолвит
+         его обратно в rec через _edFindItemByExportId. */
+      return { ok: true, action: { type: 'db', cat: cat, id: obj.id, data: obj } };
+    }
+    return { ok: true, action: { type: 'db', cat: cat, id: obj.id, data: obj, isNew: !existing } };
+  }
+
+  /* ── Применить одно валидированное действие ── */
+  /* ── Открыть карточку предмета напрямую (минуя переключение активной
+     вкладки категории/варианта в UI) — используется после применения кода,
+     т.к. отредактированные данные "живут" только пока карточка открыта: если
+     карточку закрыть, она возвращает предмет к исходным (сохранённым в
+     VL_DB/VL_VARIANTS_DB) данным через dtRemoveCard. Поэтому здесь мы не
+     просто пишем данные в базу, а гарантированно открываем карточку с уже
+     применённым значением, как будто пользователь только что кликнул на
+     предмет в списке. ── */
+  function _dtIcOpenCard(cardId, cat, itemData, origDataOverride) {
+    if (dtCards[cardId]) {
+      /* Уже открыта — просто перерисуем с новыми данными (см. вызовы ниже). */
+      return;
+    }
+    var it = itemData;
+    it.cat = cat;
+    /* origDataOverride — снапшот, снятый ДО применения правок кода (см. вызовы
+       из _dtIcApplyAction). Без него origData совпал бы с уже изменёнными
+       данными, и предмет никогда не показался бы как Edited в VL, а закрытие
+       карточки "откатывало" бы её саму на себя же (т.е. правки бы не пропадали). */
+    dtCards[cardId] = {
+      item: it,
+      origData: origDataOverride || { value: it.value, rarity: it.rarity, demand: it.demand, status: it.status }
+    };
+    dtAddCard(it);
+  }
+
+  /* Находит rec кастомного предмета по ЭКСПОРТНОМУ id (тому, что видит
+     пользователь в сгенерированном code-input снипете — "zhivoder" и т.п.),
+     а не по внутреннему rec.id (случайная строка, используется в DOM/
+     localStorage — см. _edComputeExportIds). Простой _edFindItem(exportId)
+     всегда возвращает null для кастомных предметов, потому что _edCustomItems
+     хранит записи по внутреннему id — отсюда баг: правка существующего
+     кастом-предмета через Input Copied Code создавала дубликат-призрак
+     вместо обновления настоящей записи. */
+  function _edFindItemByExportId(exportId) {
+    if (!exportId) return null;
+    /* Сначала — обычный путь (вдруг exportId и есть настоящий rec.id, как
+       бывает для gear/variant записей, где экспортный id строится иначе). */
+    var direct = (typeof window._edFindItem === 'function') ? window._edFindItem(exportId) : null;
+    if (direct) return direct;
+    if (typeof window._edComputeExportIds !== 'function' || !window._edCustomItems) return null;
+    var map = window._edComputeExportIds(); // rec.id -> exportId
+    for (var i = 0; i < window._edCustomItems.length; i++) {
+      var rec = window._edCustomItems[i];
+      if (map[rec.id] === exportId) return rec;
+    }
+    return null;
+  }
+
+  /* ── Сравнить набор полей d (данные из вставленного кода) с текущим
+     "оригиналом" ref (либо dtCards[id].origData, если карточка уже открыта,
+     либо самой записью в базе, если ещё нет). Если ВСЕ поля, присутствующие
+     в d, совпадают со значениями в ref — вставленный код идентичен тому, что
+     уже есть, и применять/открывать карточку не нужно (по просьбе: трогать
+     предмет только когда данные реально отличаются). Сравнение делается по
+     строковому представлению (String()), чтобы не отличать 100 от "100". ── */
+  function _dtIcIsNoOp(d, ref) {
+    if (!ref) return false;
+    var keys = ['name', 'rarity', 'imgId', 'subtype', 'status', 'value', 'demand'];
+    for (var i = 0; i < keys.length; i++) {
+      var k = keys[i];
+      if (!(k in d)) continue;
+      var a = d[k], b = ref[k];
+      if (String(a == null ? '' : a) !== String(b == null ? '' : b)) return false;
+    }
+    return true;
+  }
+
+  /* ── Единый id DT-карточки для Gear ──
+     Список DT (dtGetList) строит weapon/armor/accessory под составным id
+     'corrupted:<id>' (пока dtGearVariant === 'corrupted' — а он залочен на
+     corrupted), и только relic — под чистым <id>. Раньше db-блок паста
+     открывал карточку под чистым entry.id, а блок роллов того же предмета —
+     под 'corrupted:<id>': получались ДВЕ разные карточки для одного предмета,
+     одна из которых "призрак" (без роллов, не совпадает ни с чем в списке).
+     Теперь оба пути используют этот хелпер. */
+  function _dtIcGearCardId(entry) {
+    if (!entry) return null;
+    if (entry.subtype === 'relic') return entry.id;
+    return (dtGearVariant === 'corrupted') ? ('corrupted:' + entry.id) : entry.id;
+  }
+
+  function _dtIcApplyAction(action) {
+    if (action.type === 'rate') {
+      if (typeof window.tpRateChanged === 'function') window.tpRateChanged(action.rate);
+      return;
+    }
+
+    if (action.type === 'rollsNew') {
+      /* Роллы кастомного gear-предмета (метка "(NEW)") — игнорируются
+         полностью, по той же причине, что и сам db(NEW)-блок выше:
+         кастомные предметы (и их роллы) через Input Copied Code не
+         создаются, не редактируются и не показываются вообще. */
+      return;
+    }
+
+    if (action.type === 'rolls') {
+      /* ВАЖНО: раньше это писало напрямую в window.VL_GEAR_ROLLS[baseId][variant]
+         НАВСЕГДА — то же самое хранилище, что считается "оригиналом" для
+         diff'а в _dtBuildSnippets. Из-за этого: 1) Code Snippets/кнопка
+         копирования у карточки не показывали ничего (оригинал == новое
+         значение, diff пустой); 2) закрытие карточки не откатывало правки,
+         т.к. откатывать было не из чего (rollback читает именно
+         VL_GEAR_ROLLS как истину).
+         Обычный редактор роллов в DT никогда не трогает VL_GEAR_ROLLS —
+         он держит правки только в _dtRollState[cid].rolls, пока карточка
+         открыта (см. _dtReSetVal/_dtReSetDem и т.п.). Здесь делаем то же
+         самое — имитируем, будто пользователь вручную поменял эти роллы
+         в открытой карточке. */
+      var rBaseId  = action.baseId;
+      var gEntryR  = (window.VL_DB.gear || []).filter(function(e) { return e.id === rBaseId; })[0];
+      if (!gEntryR) return;
+      if (gEntryR.isCustom) return; /* кастомные предметы полностью обходим стороной, даже через обычный (не-NEW) rolls-путь */
+      var isRelicR   = gEntryR.subtype === 'relic';
+      var isCorrR    = isRelicR || action.variant === 'corrupted';
+      var rollCardId = _dtIcGearCardId(gEntryR);
+      var rCid       = rollCardId.replace(/[^a-zA-Z0-9_\-]/g, '_');
+
+      if (!_dtRollState[rCid]) _dtRollState[rCid] = { rollNum: null, rolls: {} };
+      if (!_dtRollState[rCid].rolls) _dtRollState[rCid].rolls = {};
+
+      /* Сравниваем каждый непустой слот с уже действующим значением этого
+         ролла (сначала — уже открытая правка в _dtRollState, иначе —
+         оригинал из VL_GEAR_ROLLS) — если ВСЕ непустые слоты в пасте
+         совпадают с тем, что уже есть, ничего не меняем и карточку не
+         трогаем/не открываем. */
+      var rBaseRolls = (window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[rBaseId] && window.VL_GEAR_ROLLS[rBaseId][isCorrR ? 'corrupted' : 'regular']) || (window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[rBaseId] && window.VL_GEAR_ROLLS[rBaseId].corrupted) || [];
+      var rAnyDiff = false;
+      action.rolls.forEach(function(r, i) {
+        if (!r) return;
+        var cur = _dtRollState[rCid].rolls[i + 1] || rBaseRolls[i];
+        if (!cur || String(cur.v) !== String(r.v) || String(cur.d) !== String(r.d)) rAnyDiff = true;
+      });
+      if (!rAnyDiff) return; /* идентично текущему — не трогаем */
+
+      action.rolls.forEach(function(r, i) {
+        if (!r) return; /* null-слот в пасте — не трогаем, оставляем как в оригинале */
+        _dtRollState[rCid].rolls[i + 1] = { v: r.v, d: r.d };
+      });
+      window._vlNeedsRefresh = true;
+
+      if (dtCards[rollCardId]) {
+        /* Карточка уже открыта — просто перерисуем, чтобы подтянуть новые
+           значения роллов из _dtRollState. */
+        dtRenderDetail(dtCards[rollCardId].item);
+      } else {
+        /* Открываем карточку как будто пользователь кликнул по предмету —
+           базовые поля (rarity/status/value/demand) не менялись этим
+           действием, поэтому origData = текущим данным записи. */
+        _dtIcOpenCard(rollCardId, 'gear', {
+          id: rollCardId,
+          baseId: rBaseId,
+          imgId: gEntryR.imgId,
+          name: gEntryR.name,
+          subtype: gEntryR.subtype,
+          rarity: gEntryR.rarity,
+          value: gEntryR.value,
+          demand: gEntryR.demand,
+          status: gEntryR.status,
+          isCustom: !!gEntryR.isCustom
+        });
+      }
+      return;
+    }
+
+    if (action.type === 'variant') {
+      /* VL_VARIANTS_DB — это "сохранённая" истина: vlGetList берёт значения
+         оттуда ТОЛЬКО когда карточка не открыта в DT, а если открыта —
+         полностью подменяет их живыми данными из dtCards[compositeId].item
+         (см. vlGetList: "_it ? _it.value : v.value" и т.п.). Раньше этот код
+         писал новые значения прямо в VL_VARIANTS_DB[variant][baseId]
+         НАВСЕГДА — из-за этого правки не пропадали после закрытия карточки:
+         "оригинал", из которого читает VL, был уже затёрт новым значением.
+         Поэтому здесь VL_VARIANTS_DB вообще не трогаем — читаем из него
+         только истинный оригинал, а редактируем исключительно overlay
+         (dtCards[vCardId].item), как и обычный ручной ввод в карточке. */
+      var vEntry = (window.VL_VARIANTS_DB && window.VL_VARIANTS_DB[action.variant] && window.VL_VARIANTS_DB[action.variant][action.baseId]) || {};
+      var vElEntry = (window.VL_DB.elements || []).filter(function(e) { return e.id === action.baseId; })[0];
+      if (vElEntry && vElEntry.isCustom) return; /* кастомные предметы полностью обходим стороной */
+      var vCardId = action.variant + ':' + action.baseId;
+
+      var vOrigSnapshot = {
+        value: 'value' in vEntry ? vEntry.value : (vElEntry && vElEntry.value),
+        rarity: (vElEntry && vElEntry.rarity) || 'rare',
+        demand: 'demand' in vEntry ? vEntry.demand : (vElEntry && vElEntry.demand),
+        status: 'status' in vEntry ? vEntry.status : (vElEntry && vElEntry.status)
+      };
+
+      if (_dtIcIsNoOp(action.data, dtCards[vCardId] ? dtCards[vCardId].item : vOrigSnapshot)) return; /* идентично — не трогаем */
+
+      if (dtCards[vCardId]) {
+        /* Карточка уже была открыта ДО ввода кода — origData уже хранит
+           истинный оригинал (снят при обычном открытии карточки кликом).
+           Трогать его нельзя, иначе Edited-статус потеряется. */
+        var vIt = dtCards[vCardId].item;
+        if ('value' in action.data) vIt.value = action.data.value;
+        if ('demand' in action.data) vIt.demand = action.data.demand;
+        if ('status' in action.data) vIt.status = action.data.status;
+        dtRenderDetail(vIt);
+      } else {
+        _dtIcOpenCard(vCardId, 'elements', {
+          id: vCardId,
+          baseId: action.baseId,
+          name: (vElEntry && vElEntry.name) || action.baseId,
+          rarity: vOrigSnapshot.rarity,
+          value: 'value' in action.data ? action.data.value : vOrigSnapshot.value,
+          demand: 'demand' in action.data ? action.data.demand : vOrigSnapshot.demand,
+          status: 'status' in action.data ? action.data.status : vOrigSnapshot.status,
+          isCustom: !!(vElEntry && vElEntry.isCustom)
+        }, vOrigSnapshot);
+      }
+      /* Если этот предмет уже открыт как карточка в VL (пользователь зашёл
+         туда раньше) — помечаем, что при следующем посещении страницы VL
+         нужно перестроить открытые карточки свежими данными (тот же флаг,
+         что выставляют dtValInput/dtPickRarity/dtPickStatus при обычном
+         ручном редактировании). Без этого VL-карточка молча висит со старым
+         значением, пока её не закрыть и открыть заново. */
+      window._vlNeedsRefresh = true;
+      return;
+    }
+
+    /* action.type === 'db' */
+    if (action.isNew) {
+      /* Метка "(NEW)" = кастомный предмет — Input Copied Code такие блоки
+         полностью игнорирует. Не создаёт, не редактирует, не открывает
+         карточку, ничего не показывает. Кастомные предметы существуют и
+         редактируются исключительно через обычный UI (создание + карандаш/
+         черновик), Input Copied Code предназначен только для восстановления
+         временных правок ОБЫЧНЫХ (не-custom) предметов, отредактированных
+         вне черновика (см. ветку ниже, action.isNew falsy). */
+      return;
+    }
+
+    var list = window.VL_DB[action.cat];
+    var entry = list.filter(function(e) { return e.id === action.id; })[0];
+    if (!entry) {
+      /* Прямой поиск по action.id не нашёл ничего — почти наверняка это
+         кастомный предмет, чей VL_DB-объект (baseEntry) лежит под ВНУТРЕННИМ
+         rec.id, а action.id здесь — экспортный id из вставленного кода (см.
+         _edComputeExportIds). Резолвим через rec и находим соответствующий
+         baseEntry по rec.id. Если и это не находит ничего — предмета
+         действительно не существует, выходим как раньше. */
+      var _custRecForEntry = _edFindItemByExportId(action.id);
+      if (_custRecForEntry) entry = list.filter(function(e) { return e.id === _custRecForEntry.id; })[0];
+    }
+    if (!entry) return;
+    if (entry.isCustom) return; /* подтверждённый кастомный gear-предмет — редактируется только через черновик, paste его больше не трогает */
+    var d = action.data;
+    /* dbCardId ДОЛЖЕН быть настоящим id записи (entry.id), а не сырым
+       action.id (экспортный id из метки вставленного кода, напр.
+       'swuhs_mother') — если предмет уже существовал как подтверждённый
+       custom (найден через _edFindItemByExportId выше), его настоящий id
+       обычно 'custom_xxxxxxxx', и открытие карточки под export-id создаёт
+       "призрак": dtCards[cardId] существует, но не совпадает ни с одним
+       реальным id, который использует rollsNew/_edFindItem/_edCompositeId —
+       из-за чего паст роллов для этого предмета в этом же вставленном коде
+       молча не находит запись и ничего не сохраняет. */
+    var dbCardId = (action.cat === 'gear') ? _dtIcGearCardId(entry) : entry.id;
+    var cidForPickers = dbCardId.replace(/[^a-zA-Z0-9_\-]/g, '_');
+
+    if (action.cat === 'gear') {
+      /* Как и везде: если вставленный код полностью совпадает с текущими
+         данными (уже открытой карточки, либо самой записи, если карточка
+         ещё не открыта) — ничего не открываем и не меняем. */
+      var gRefForNoOp = dtCards[dbCardId] ? dtCards[dbCardId].item : entry;
+      if (_dtIcIsNoOp(d, gRefForNoOp)) return;
+
+      /* Gear НИКОГДА не мутируется в VL_DB напрямую: dtGetList (DT) и
+         vlGetGearList (VL) всегда строят копии для gear и берут актуальные
+         rarity/status через оверлей dtCards[id].item поверх сырого
+         VL_DB.gear — а кросс-вариантный Edited-бейдж держится на отдельных
+         таблицах _vlRarityOverrides/_vlStatusOverrides. Раньше этот код писал
+         rarity/status прямо в entry (реальную запись VL_DB.gear) НАВСЕГДА —
+         именно поэтому правки не пропадали после закрытия карточки: закрывать
+         было нечего откатывать, "оригинал" в VL_DB уже был затёрт.
+         Поэтому здесь переиспользуем ТЕ ЖЕ обработчики, что дергает ручной
+         выбор редкости/статуса в UI (dtPickRarity/dtPickStatus) — это
+         гарантирует идентичное поведение: правильные overrides с истинным
+         оригиналом из VL_DB, синхронизацию между Regular/Corrupted одного
+         предмета и корректный откат при закрытии карточки. */
+      if (!dtCards[dbCardId]) {
+        _dtIcOpenCard(dbCardId, action.cat, {
+          id: dbCardId,
+          baseId: entry.id,
+          imgId: entry.imgId,
+          name: entry.name,
+          subtype: entry.subtype,
+          rarity: entry.rarity,
+          value: entry.value,
+          demand: entry.demand,
+          status: entry.status,
+          isCustom: !!entry.isCustom
+        });
+      }
+      if ('rarity' in d && typeof window.dtPickRarity === 'function') window.dtPickRarity(cidForPickers, d.rarity);
+      if ('status' in d && typeof window.dtPickStatus === 'function') window.dtPickStatus(cidForPickers, d.status);
+      return;
+    }
+
+    /* Прочие категории (elements-regular, cosmetic/chromas/gamepasses/other):
+       dtGetList возвращает РЕАЛЬНЫЕ объекты из VL_DB[cat] (ту же ссылку на
+       entry), поэтому мутация entry здесь идентична обычному редактированию
+       через UI — она временная и откатывается dtRemoveCard'ом по origData
+       при закрытии карточки (см. dtRemoveCard: it.value = orig.value, где
+       it — это тот же объект, что и entry). Снапшот берём ДО мутации. */
+    /* ── entry.isCustom: этот id принадлежит кастомному предмету ──
+       Даже если валидатор не пометил action как isNew (потому что запись
+       УЖЕ существует в VL_DB[cat] — это ожидаемо для custom items,
+       _edInjectRecord создаёт её при каждой загрузке страницы), мутировать
+       entry здесь напрямую НЕЛЬЗЯ: entry — это baseEntry, отдельный
+       объект-прокладка, которую _edInjectRecord создаёт ИЗ rec (см.
+       _edInjectRecord: baseEntry = {id, cat, isCustom:true}, push в
+       VL_DB[cat]) — не сам rec из _edCustomItems. Правка baseEntry:
+         1) откатывается при закрытии DT-карточки (dtRemoveCard вернёт
+            origData, снятый ДО правки) — правка молча исчезает с экрана;
+         2) никогда не долетает до _edCustomItems/localStorage — при
+            следующей перезагрузке edInitAll() пересоздаст entry заново ИЗ
+            старого rec, игнорируя то, что было на экране;
+         3) может рассинхронизировать id/ссылки между entry и rec, отчего
+            на экране появляется "предмет-призрак" — дубликат без картинки
+            (imgData есть только у настоящего rec, не у baseEntry-прокладки).
+       Правильный путь — тот же, что для новых кастомных предметов: писать
+       ПРЯМО в rec (единственный источник истины, живущий в localStorage) и
+       заново прогонять его через _edInjectRecord — она сама актуализирует
+       baseEntry по свежим данным rec. */
+    if (entry.isCustom) {
+      /* По договорённости: подтверждённые кастомные предметы больше не
+         редактируются через Input Copied Code вообще — только через
+         черновик (карандаш/edUnlockItem). Раньше здесь были 40+ строк,
+         которые тихо писали новые значения прямо в rec (в обход черновика)
+         при каждой повторной вставке того же/похожего кода — именно из-за
+         этого правки "прилипали" насовсем, хотя пользователь ожидал
+         временное поведение как у обычной DT-карточки. Теперь — полный
+         no-op: паст видит, что id принадлежит уже существующему кастому, и
+         ничего не делает. */
+      return;
+    }
+
+
+    var dOrigSnapshot = { value: entry.value, rarity: entry.rarity, demand: entry.demand, status: entry.status };
+
+    if (_dtIcIsNoOp(d, dtCards[dbCardId] ? dtCards[dbCardId].item : dOrigSnapshot)) return; /* идентично — не трогаем */
+
+    if ('name' in d) entry.name = d.name;
+    if ('rarity' in d) entry.rarity = d.rarity;
+    if ('imgId' in d) entry.imgId = d.imgId;
+    if ('subtype' in d) entry.subtype = d.subtype;
+    if ('status' in d) entry.status = d.status;
+    if ('value' in d) entry.value = d.value;
+    if ('demand' in d) entry.demand = d.demand;
+    /* Тот же флаг, что выставляют dtValInput/dtPickRarity при обычном ручном
+       редактировании — без него уже открытая карточка в VL не подхватит
+       новые данные, пока её не закрыть и открыть заново. */
+    window._vlNeedsRefresh = true;
+
+    if (dtCards[dbCardId]) {
+      /* Карточка уже была открыта ДО ввода кода — origData уже хранит
+         истинный оригинал (снят при обычном открытии карточки кликом).
+         Трогать его нельзя, иначе Edited-статус и diff потеряются. */
+      var it = dtCards[dbCardId].item;
+      if ('name' in d) it.name = d.name;
+      if ('rarity' in d) it.rarity = d.rarity;
+      if ('status' in d) it.status = d.status;
+      if ('value' in d) it.value = d.value;
+      if ('demand' in d) it.demand = d.demand;
+      dtRenderDetail(it);
+    } else {
+      /* Передаём саму entry (а не пересобранный объект-копию) — иначе
+         dtCards[id].item будет отдельным объектом, не связанным с реальной
+         записью VL_DB, и закрытие карточки откатит только эту бесхозную
+         копию, а настоящие данные в VL_DB так и останутся перезаписанными
+         навсегда. См. историю бага с Astra 4000→40000, не откатывавшимся
+         после закрытия карточки. */
+      _dtIcOpenCard(dbCardId, action.cat, entry, dOrigSnapshot);
+    }
+  }
+
+  /* ── Открыть/закрыть модалку ввода ── */
+  window.dtInputCodeOpen = function() {
+    var modal = document.getElementById('dt-input-code-modal');
+    var ta = document.getElementById('dt-ic-textarea');
+    if (!modal) return;
+    if (ta) { ta.value = ''; ta.style.height = ''; }
+    modal.classList.add('visible');
+    document.addEventListener('keydown', _dtIcEscHandler);
+    if (ta) setTimeout(function(){ ta.focus(); }, 30);
+  };
+
+  function _dtIcEscHandler(e) {
+    if (e.key === 'Escape') dtInputCodeClose();
+  }
+
+  window.dtInputCodeClose = function() {
+    var modal = document.getElementById('dt-input-code-modal');
+    if (modal) modal.classList.remove('visible');
+    document.removeEventListener('keydown', _dtIcEscHandler);
+  };
+
+  /* ── Textarea autosize (лимит высоты + скролл заданы в CSS max-height) ── */
+  window._dtIcAutosize = function(el) {
+    el.style.height = 'auto';
+    el.style.height = el.scrollHeight + 'px';
+  };
+
+  /* ── Окно ошибок ── */
+  function _dtShowErrors(errors) {
+    var body = document.getElementById('dt-err-body');
+    var modal = document.getElementById('dt-error-modal');
+    if (!body || !modal) return;
+    var lineLbl = _dtIcLangErr('dt_input_line', 'Line');
+    body.innerHTML = errors.map(function(err) {
+      var lineHTML = (err.line != null) ? ('<div class="dt-err-line">' + lineLbl + ' ' + err.line + '</div>') : '';
+      return '<div class="dt-err-item">' + lineHTML + '<div class="dt-err-msg">' + _dtIcEscapeHTML(err.msg) + '</div></div>';
+    }).join('');
+    modal.classList.add('visible');
+    document.addEventListener('keydown', _dtErrEscHandler);
+  }
+
+  function _dtIcEscapeHTML(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function _dtErrEscHandler(e) {
+    if (e.key === 'Escape') dtErrorModalClose();
+  }
+
+  window.dtErrorModalClose = function() {
+    var modal = document.getElementById('dt-error-modal');
+    if (modal) modal.classList.remove('visible');
+    document.removeEventListener('keydown', _dtErrEscHandler);
+  };
+
+  /* ── Точка входа: применить вставленный код ── */
+  window.dtInputCodeApply = function() {
+    var ta = document.getElementById('dt-ic-textarea');
+    var raw = ta ? ta.value : '';
+    if (!raw || !raw.trim()) {
+      _dtShowErrors([{ line: null, msg: _dtIcLangErr('dt_input_err_empty', 'No code was entered') }]);
+      return;
+    }
+
+    var blocks = _dtIcSplitBlocks(raw);
+    if (!blocks.length) {
+      _dtShowErrors([{ line: 1, msg: _dtIcLangErr('dt_input_err_no_label', 'Missing header comment (// VL_DB... — Name) above this block') }]);
+      return;
+    }
+
+    var errors = [];
+    var actions = [];
+    blocks.forEach(function(block) {
+      var res = _dtIcValidateBlock(block);
+      if (res.ok) actions.push(res.action);
+      else errors.push({ line: res.line, msg: res.msg });
+    });
+
+    if (errors.length) {
+      _dtShowErrors(errors);
+      return; /* всё-или-ничего: ничего не применяем, пока не исправят все ошибки */
+    }
+
+    /* Каждое действие изолировано: раньше исключение внутри одного блока
+       (например Gear) обрывало весь forEach — остальные карточки не
+       открывались, а модалка оставалась висеть. Теперь сбой одного блока не
+       мешает остальным: применяем ВСЕ блоки за один раз, а упавшие
+       показываем в окне ошибок после применения. */
+    var runtimeErrors = [];
+    actions.forEach(function(action, idx) {
+      try {
+        _dtIcApplyAction(action);
+      } catch (e) {
+        try { console.error('[InputCopiedCode] block failed', action, e); } catch(_) {}
+        runtimeErrors.push({
+          line: (blocks[idx] && blocks[idx].lineNum) || null,
+          msg: _dtIcLangErr('dt_input_err_apply_failed', 'Could not apply this block') + ': ' + (e && e.message ? e.message : String(e))
+        });
+      }
+    });
+
+    /* Список слева (активная категория) и кнопка Print All/View All могли
+       устареть — данные и открытые карточки изменились. */
+    if (typeof dtRender === 'function') dtRender(dtCat);
+    _dtSyncPrintAllBtn();
+
+    /* Модалка закрывается всегда — даже если часть блоков не применилась
+       (об этом скажет окно ошибок), чтобы не оставлять её висеть без
+       объяснения. */
+    window.dtInputCodeClose();
+    if (runtimeErrors.length) { _dtShowErrors(runtimeErrors); return; }
+    try { window.sndPlayClick('correct'); } catch(_) {}
+  };
+
   /* ── Генерация и скачивание items_data.js с применёнными изменениями DT ── */
   window.dtCmDownloadFile = function(onlyCid) {
 
@@ -18885,9 +19947,22 @@ function toggleEasterTheme() {
       }
       return _draftResult.length ? _draftResult : null;
     }
+    /* Оверлей ручных/pasted правок конкретных роллов (_dtRollState[item.id].rolls) —
+       если правка добавляет значение ролла, которого не было в исходном
+       VL_GEAR_ROLLS (arr2[i] был null или arr2[i].v был null), он раньше
+       никогда не появлялся в списке ниже — только перезаписывал значение
+       УЖЕ существующего слота. Из-за этого паст с 11-м роллом,
+       отсутствовавшим у предмета раньше, "проглатывался": значение нигде
+       не отображалось, а дефолтный выбор ролла указывал на пустой слот
+       (видно как NULL-статус и 0 в шапке карточки). */
+    var _overlayRolls = window._dtRollState && item.id && window._dtRollState[item.id.replace(/[^a-zA-Z0-9_\-]/g, '_')] && window._dtRollState[item.id.replace(/[^a-zA-Z0-9_\-]/g, '_')].rolls;
     var result = [];
     for (var i = 0; i < arr2.length; i++) {
-      if (arr2[i] !== null && arr2[i].v !== null && arr2[i].v !== undefined) result.push({ rollNum: i + 1, data: arr2[i] });
+      var _base = arr2[i];
+      var _ov = _overlayRolls && _overlayRolls[i + 1];
+      var _hasBase = _base !== null && _base.v !== null && _base.v !== undefined;
+      var _hasOv = _ov && _ov.v !== null && _ov.v !== undefined;
+      if (_hasBase || _hasOv) result.push({ rollNum: i + 1, data: _hasOv ? _ov : _base });
     }
     return result.length ? result : null;
   }
@@ -18934,7 +20009,7 @@ function toggleEasterTheme() {
       }
       return rs[0].rollNum;
     })(rolls);
-    var initRoll   = saved ? saved.rollNum : _defRoll2;
+    var initRoll   = (saved && saved.rollNum !== null && saved.rollNum !== undefined) ? saved.rollNum : _defRoll2;
     /* Берём кастомные данные для этого ролла если есть, иначе из VL_GEAR_ROLLS */
     var _initRollIdx = 0;
     for (var i = 0; i < rolls.length; i++) { if (rolls[i].rollNum === initRoll) { _initRollIdx = i; break; } }
@@ -19147,6 +20222,14 @@ function toggleEasterTheme() {
     ed.id = 'dt-rolleditor-' + cardId;
     ed.dataset.cid = cardId;
     ed.innerHTML = built.rowsHTML;
+    /* Кастомный предмет вне черновика: строки списка роллов (10, 9, 8...)
+       рисуются здесь ПОСЛЕ того, как edEnhanceCustomCard уже отработал на
+       открытии карточки — поэтому обычная блокировка полей туда не
+       долетала (баг: топ-ролл заблокирован, а остальные строки — нет).
+       window._edLockRollEditorRows подключается ниже по файлу (там же, где
+       определён edEnhanceCustomCard) и no-op, пока custom-предметы вообще
+       не инициализированы. */
+    if (typeof window._edLockRollEditorRows === 'function') window._edLockRollEditorRows(ed, cardId);
     card.after(ed);
 
     requestAnimationFrame(function(){ requestAnimationFrame(function(){
@@ -19220,12 +20303,18 @@ function toggleEasterTheme() {
     var parts = raw.split('.');
     if (parts.length > 2) raw = parts[0] + '.' + parts.slice(1).join('');
     if (inp.value !== raw) inp.value = raw;
-    /* Пустая строка -> null (поле не тронуто/стёрто), а не 0 — иначе
-       неотличимо от явно введённого нуля (см. _edRollHasValue). Для
-       некастомных предметов (без _ed*) это не используется, поведение
-       не меняется — там v всегда приходит уже числом из VL_GEAR_ROLLS. */
-    var v = raw.length ? parseFloat(raw) : null;
-    if (v !== null && isNaN(v)) v = null;
+    /* Пустая строка -> null ТОЛЬКО пока это активный черновик кастомного
+       предмета (там null = "слот ещё не создан", отличается от явного 0 —
+       см. _edRollHasValue). Для обычных существующих предметов стирание
+       уже заполненного поля должно означать явный ноль, а не "удалить
+       ролл из списка": иначе очистка value у реального ролла пряталa бы
+       его целиком (dtGetRollsForItem фильтрует по v!==null), что уместно
+       только при создании нового предмета, но не при редактировании уже
+       существующего. */
+    var _rpiBaseId = window._edCidRegistry && window._edCidRegistry[cardId];
+    var _rpiIsDraft = !!(_rpiBaseId && window._edDrafts && window._edDrafts[_rpiBaseId]);
+    var v = raw.length ? parseFloat(raw) : (_rpiIsDraft ? null : 0);
+    if (v !== null && isNaN(v)) v = _rpiIsDraft ? null : 0;
     var vSafe = v === null ? 0 : v; /* для мест ниже, где нужен именно number (gold, overlay и т.п.) */
 
     /* Синхронизируем градиентный оверлей (mythic/ascended/exclusive), если есть */
@@ -19748,10 +20837,7 @@ function toggleEasterTheme() {
     var rc = RC[it.rarity] || { color:'#888', glow:'rgba(136,136,136,0.15)' };
     var _dtOutline = '0 0 0 1px rgba(0,0,0,0.65),inset 0 0 0 1px rgba(0,0,0,0.65)';
     var _cls = document.documentElement.classList;
-    var _inset = _cls.contains('theme-easter') ? 'inset 0 0 30px rgba(100,180,220,.18)'
-               : _cls.contains('theme-baldi')  ? 'inset 0 0 40px rgba(0,0,0,.5)'
-               : _cls.contains('theme-birthday') ? 'inset 0 0 40px rgba(192,132,252,.10),inset 0 0 18px rgba(168,85,247,.07)'
-               : 'inset 0 0 40px rgba(0,0,0,.4)';
+    var _inset = 'inset 0 0 0 0 transparent'; /* NORMALIZED */
     if (it.rarity === 'mythic') {
       return '<div class="vl-detail-img-box border-mythic" id="dt-img-box" style="box-shadow:0 0 20px ' + rc.glow + ',' + _inset + ',' + _dtOutline + '">';
     } else if (rc.gradient) {
@@ -20562,10 +21648,7 @@ function toggleEasterTheme() {
     var imgBoxClass = 'vl-detail-img-box' + (it.rarity === 'mythic' ? ' border-mythic' : '');
     var _dtOutline2 = '0 0 0 1px rgba(0,0,0,0.65),inset 0 0 0 1px rgba(0,0,0,0.65)';
     var _cls2 = document.documentElement.classList;
-    var _inset2 = _cls2.contains('theme-easter') ? 'inset 0 0 30px rgba(100,180,220,.18)'
-                : _cls2.contains('theme-baldi')  ? 'inset 0 0 40px rgba(0,0,0,.5)'
-                : _cls2.contains('theme-birthday') ? 'inset 0 0 32px rgba(192,132,252,.12)'
-                : 'inset 0 0 40px rgba(0,0,0,.4)';
+    var _inset2 = 'inset 0 0 0 0 transparent'; /* NORMALIZED */
     var imgBoxStyle = it.rarity === 'mythic'
       ? 'box-shadow:0 0 20px '+rc.glow+','+_inset2+','+_dtOutline2+';'
       : (rc.gradient ? 'box-shadow:0 0 20px '+rc.glow+','+_inset2+','+_dtOutline2+';' : 'border-color:'+rc.color+';box-shadow:0 0 20px '+rc.glow+','+_inset2+','+_dtOutline2+';');
@@ -21595,6 +22678,41 @@ function toggleEasterTheme() {
   </div>
 </div>
 
+<!-- ── DT Input-Code Modal ── -->
+<div id="dt-input-code-modal" role="dialog" aria-modal="true" aria-label="Input Copied Code">
+  <div class="dt-cm-backdrop" onclick="dtInputCodeClose()"></div>
+  <div class="dt-cm-panel">
+    <div class="dt-cm-header">
+      <span class="dt-cm-title" data-i18n="dt_input_code_title">Input Copied Code</span>
+      <button class="dt-cm-close" onclick="dtInputCodeClose()" title="Close">✕</button>
+    </div>
+    <div class="dt-ic-body">
+      <textarea class="dt-ic-textarea" id="dt-ic-textarea" rows="4" data-i18n-placeholder="dt_input_code_placeholder" placeholder="Paste copied code here..." oninput="_dtIcAutosize(this)"></textarea>
+    </div>
+    <div class="dt-cm-footer">
+      <div class="dt-ic-footer-row">
+        <button class="dt-ic-cancel" onclick="dtInputCodeClose()" data-i18n="dt_input_code_cancel">Cancel</button>
+        <button class="dt-ic-apply" onclick="dtInputCodeApply()" data-i18n="dt_input_code_apply">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DT Errors Modal ── -->
+<div id="dt-error-modal" role="dialog" aria-modal="true" aria-label="Errors Found">
+  <div class="dt-cm-backdrop" onclick="dtErrorModalClose()"></div>
+  <div class="dt-cm-panel">
+    <div class="dt-cm-header">
+      <span class="dt-cm-title" data-i18n="dt_input_err_title">Errors Found</span>
+      <button class="dt-cm-close" onclick="dtErrorModalClose()" title="Close">✕</button>
+    </div>
+    <div class="dt-err-body" id="dt-err-body"></div>
+    <div class="dt-err-footer">
+      <button class="dt-err-close-btn" onclick="dtErrorModalClose()" data-i18n="dt_input_err_close">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* Единый RAF-тикер для анимаций Ascended / Exclusive / Mythic.
    ВАЖНО: раньше позиция градиента писалась через CSS custom property
@@ -22327,6 +23445,7 @@ function toggleEasterTheme() {
     if (rec.cat === 'gear') return (rec.subtype === 'relic') ? rec.id : 'corrupted:' + rec.id;
     return rec.id;
   }
+  window._edCompositeId = _edCompositeId; /* нужен снаружи модуля — см. _dtIcApplyAction (Input Copied Code) */
 
   /* ── Композитный id для VL-операций (закрытие карточки, снятие лайка) ──
      Раньше в VL переключатель Corrupted/Regular у Gear реально переключался,
@@ -22516,6 +23635,7 @@ function toggleEasterTheme() {
     }
   }
   window._edInjectRecord = _edInjectRecord; /* нужен снаружи модуля — см. dtRemoveCard */
+  window.edSaveCustomItems = edSaveCustomItems; /* нужен снаружи модуля — см. _dtIcApplyAction (Input Copied Code) */
 
   /* ── Откат живой записи черновика из VL_DB/VL_VARIANTS_DB ──
      _edInjectRecord пишет предпросмотр черновика ПРЯМО в общие живые
@@ -22661,6 +23781,7 @@ function toggleEasterTheme() {
     });
     return map;
   }
+  window._edComputeExportIds = _edComputeExportIds;
   /* imgId при экспорте: если пользователь загружал файл картинки — берём его
      имя как есть (без расширения), иначе откатываемся на export id предмета. */
   function _edResolveImgId(rec, exportId) {
@@ -23108,6 +24229,29 @@ function toggleEasterTheme() {
     return r;
   };
 
+  /* ── Общие хелперы жёсткой блокировки полей вне черновика ──────────────
+     Используются и в edEnhanceCustomCard (поля на самой карточке), и в
+     window._edLockRollEditorRows (строки списка роллов 10, 9, 8... —
+     рисуются отдельно, по клику на dtToggleRollDropdown). disabled +
+     pointer-events:none, а не просто отключение записи данных — иначе
+     поле продолжает казаться редактируемым, хотя ввод никуда не попадает. */
+  function _edLockField(el) {
+    if (!el) return;
+    if ('disabled' in el) el.disabled = true;
+    el.style.pointerEvents = 'none';
+    el.style.opacity = el.style.opacity || '0.55';
+    el.setAttribute('tabindex', '-1');
+    el.setAttribute('aria-disabled', 'true');
+  }
+  function _edUnlockField(el) {
+    if (!el) return;
+    if ('disabled' in el) el.disabled = false;
+    el.style.pointerEvents = '';
+    el.style.opacity = '';
+    el.removeAttribute('tabindex');
+    el.removeAttribute('aria-disabled');
+  }
+
   /* ── Донастройка открытой карточки под кастомный предмет ── */
   window.edEnhanceCustomCard = function(compositeId, baseId) {
     var cid = _edSanitizeId(compositeId);
@@ -23218,6 +24362,63 @@ function toggleEasterTheme() {
         editBtn.remove();
       }
     }
+
+    /* ── Жёсткая блокировка полей вне черновика ──────────────────────────
+       Раньше вне черновика был заблокирован только ПУТЬ ЗАПИСИ данных
+       (см. обёртки dtValInput/dtDemInput/dtDemStep/dtPickRarity/dtPickStatus
+       ниже по файлу) — сами поля оставались активными, в них можно было
+       печатать, просто ввод никуда не сохранялся. Для кастомных предметов
+       это лишнее: раз редактирование разрешено только через черновик
+       (см. Input Copied Code), поля должны быть физически недоступны —
+       disabled/pointer-events:none, а не просто "не пишут". Раньше это
+       частично касалось только Gear (и то не полностью — inputs оставались
+       кликабельными), для остальных категорий (Elements, Cosmetic,
+       Gamepasses, Chromas, Other) блокировки не было вообще. Теперь —
+       единая логика для ВСЕХ категорий кастомных предметов. Роллы (просмотр)
+       не трогаем — они и так read-only вне черновика на уровне данных. */
+    var valInp = card.querySelector('#dt-inp-val-' + cid);
+    /* Раньше demInp брался только по #dt-inp-dem-<cid> — это ID главного
+       (топ) ролла. У строк списка роллов (10, 9, 8...) тот же класс
+       dt-dem-input, но СВОЙ маркап без такого id (см. dt-re-row в
+       _dtGetRollRowsHTML) — поэтому строки списка оставались активными,
+       хотя топ-слот уже блокировался. Берём все .dt-dem-input на карточке,
+       не только по id. Аналогично .dt-re-price — это value-инпут КАЖДОЙ
+       строки списка роллов (топ-ролл использует отдельный #dt-inp-val-,
+       уже покрыт выше). */
+    var demInputs = card.querySelectorAll('.dt-dem-input');
+    var rollPriceInputs = card.querySelectorAll('.dt-re-price');
+    var demArrows = card.querySelectorAll('.dt-dem-arrow');
+    var rarChips = card.querySelectorAll('.dt-rar-chip:not(.dt-subtype-chip)');
+    var subtypeChips = card.querySelectorAll('.dt-subtype-chip');
+    var statusTriggers = card.querySelectorAll('.vl-status-help, .vl-status-inline');
+
+    var _fieldFn = isDraft ? _edUnlockField : _edLockField;
+    _fieldFn(valInp);
+    demInputs.forEach(_fieldFn);
+    rollPriceInputs.forEach(_fieldFn);
+    demArrows.forEach(_fieldFn);
+    rarChips.forEach(_fieldFn);
+    subtypeChips.forEach(_fieldFn);
+    statusTriggers.forEach(_fieldFn);
+  };
+
+  /* Отдельная функция для строк списка роллов (10, 9, 8...): они рисуются
+     ПОЗЖЕ, по клику на dtToggleRollDropdown, уже после того как
+     edEnhanceCustomCard отработал на открытии карточки — поэтому обычная
+     блокировка выше их не видит и их нужно блокировать отдельно сразу
+     после вставки в DOM (см. вызов у ed.innerHTML = built.rowsHTML выше
+     по файлу). Не привязана к isDraft параметром — сама смотрит текущее
+     состояние черновика через _edCidRegistry/_edDrafts, т.к. вызывается
+     из кода, который не в курсе, черновик это или нет. */
+  window._edLockRollEditorRows = function(editorEl, cardId) {
+    if (!editorEl) return;
+    var baseId = window._edCidRegistry && window._edCidRegistry[cardId];
+    if (!baseId) return; /* не кастомный предмет — обычная логика сайта, не трогаем */
+    var isDraftNow = !!(window._edDrafts && window._edDrafts[baseId]);
+    var fn = isDraftNow ? _edUnlockField : _edLockField;
+    editorEl.querySelectorAll('.dt-re-price').forEach(fn);
+    editorEl.querySelectorAll('.dt-dem-input').forEach(fn);
+    editorEl.querySelectorAll('.dt-dem-arrow').forEach(fn);
   };
 
   /* ── Временная разблокировка имени/картинки у уже созданного предмета ──
@@ -23730,8 +24931,10 @@ function toggleEasterTheme() {
     var orig = window[fnName];
     if (typeof orig !== 'function') return;
     window[fnName] = function(a, b) {
-      var r = orig.apply(this, arguments);
       var cid = fnName === 'dtDemStep' ? a : b;
+      var baseId = _edCidRegistry[cid];
+      if (baseId && !_edDrafts[baseId]) return; /* подтверждённый custom вне черновика — стандартное редактирование отключено, менять можно только через черновик */
+      var r = orig.apply(this, arguments);
       _edSyncValDem(cid);
       return r;
     };
@@ -23745,8 +24948,9 @@ function toggleEasterTheme() {
     var orig = window[fnName];
     if (typeof orig !== 'function') return;
     window[fnName] = function(e, cardId, rollNum) {
-      var r = orig.apply(this, arguments);
       var baseId = _edCidRegistry[cardId];
+      if (baseId && !_edDrafts[baseId]) return; /* подтверждённый custom вне черновика — только просмотр роллов, редактировать нельзя */
+      var r = orig.apply(this, arguments);
       if (baseId) {
         var rec = _edFindItem(baseId);
         if (rec && rec.cat === 'gear') _edSyncGearRolls(cardId, rec);
@@ -23757,8 +24961,9 @@ function toggleEasterTheme() {
   var _origDtRollDemStepEditor = window.dtRollDemStepEditor;
   if (typeof _origDtRollDemStepEditor === 'function') {
     window.dtRollDemStepEditor = function(cardId, rollNum, dir) {
-      var r = _origDtRollDemStepEditor.apply(this, arguments);
       var baseId = _edCidRegistry[cardId];
+      if (baseId && !_edDrafts[baseId]) return; /* подтверждённый custom вне черновика — только просмотр роллов, редактировать нельзя */
+      var r = _origDtRollDemStepEditor.apply(this, arguments);
       if (baseId) {
         var rec = _edFindItem(baseId);
         if (rec && rec.cat === 'gear') _edSyncGearRolls(cardId, rec);
@@ -23778,8 +24983,9 @@ function toggleEasterTheme() {
   var _origDtPickRarity = window.dtPickRarity;
   if (typeof _origDtPickRarity === 'function') {
     window.dtPickRarity = function(cid, rarity) {
-      var r = _origDtPickRarity.apply(this, arguments);
       var baseId = _edCidRegistry[cid];
+      if (baseId && !_edDrafts[baseId]) return; /* подтверждённый custom вне черновика — редактировать нельзя, только через черновик */
+      var r = _origDtPickRarity.apply(this, arguments);
       if (baseId) {
         var rec = _edFindItem(baseId);
         if (rec) { rec.rarity = rarity; _edInjectRecord(rec); if (!_edDrafts[baseId]) edSaveCustomItems(); }
@@ -23790,13 +24996,27 @@ function toggleEasterTheme() {
   var _origDtPickStatus = window.dtPickStatus;
   if (typeof _origDtPickStatus === 'function') {
     window.dtPickStatus = function(cid, status) {
-      var r = _origDtPickStatus.apply(this, arguments);
       var baseId = _edCidRegistry[cid];
+      if (baseId && !_edDrafts[baseId]) return; /* подтверждённый custom вне черновика — редактировать нельзя, только через черновик */
+      var r = _origDtPickStatus.apply(this, arguments);
       if (baseId) {
         var rec = _edFindItem(baseId);
         if (rec) { rec.status = status; _edInjectRecord(rec); if (!_edDrafts[baseId]) edSaveCustomItems(); }
       }
       return r;
+    };
+  }
+  /* dtStatusDropdown — сам триггер открытия списка статусов. Визуально уже
+     заблокирован (pointer-events:none на .vl-status-help/.vl-status-inline,
+     см. edEnhanceCustomCard), но добавляем и JS-guard — на случай открытия
+     не кликом (клавиатура, программный вызов и т.п.), чтобы список статусов
+     для подтверждённого вне-черновика кастомного предмета вообще не рисовался. */
+  var _origDtStatusDropdown = window.dtStatusDropdown;
+  if (typeof _origDtStatusDropdown === 'function') {
+    window.dtStatusDropdown = function(ev, cid) {
+      var baseId = _edCidRegistry[cid];
+      if (baseId && !_edDrafts[baseId]) return;
+      return _origDtStatusDropdown.apply(this, arguments);
     };
   }
 
