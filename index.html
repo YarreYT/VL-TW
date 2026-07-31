@@ -18788,8 +18788,24 @@ function toggleEasterTheme() {
         /* Восстанавливаем полный массив роллов с учётом изменений */
         var allOrigRolls = (window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId] && window.VL_GEAR_ROLLS[baseId][rollVariant]) || [];
         /* Строим map изменённых роллов */
+        /* ВАЖНО: в строку попадают ВСЕ ручные правки из rollState, а не только
+           те, что отличаются от оригинала. Иначе ролл, возвращённый пользователем
+           к оригинальному значению, печатался бы из ЗАГРУЖЕННОЙ базы. */
         var changedMap = {};
         changedRolls.forEach(function(cr) { changedMap[cr.rollNum] = cr; });
+        if (rollState && rollState.rolls) {
+          Object.keys(rollState.rolls).forEach(function(rn) {
+            var n = parseInt(rn, 10);
+            var cur = rollState.rolls[rn];
+            if (!n || !cur) return;
+            var base = allOrigRolls[n - 1] || {};
+            changedMap[n] = {
+              rollNum: n,
+              v: (cur.v !== undefined && cur.v !== null) ? cur.v : base.v,
+              d: (cur.d !== undefined && cur.d !== null) ? cur.d : base.d
+            };
+          });
+        }
 
         /* Собираем строку целиком для данного rollVariant */
         var rollParts = allOrigRolls.map(function(r, i) {
@@ -23750,7 +23766,10 @@ function toggleEasterTheme() {
     var pri = _pri();
     if (!pri) return false;
     var o = window._dbLdOrigRolls(baseId, variant);
-    var c = (window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId] && window.VL_GEAR_ROLLS[baseId][variant]) || null;
+    /* Сравниваем с ЭФФЕКТИВНЫМИ роллами (загруженная база + правки в DT),
+       иначе ручной возврат к оригиналу не учитывается. */
+    var c = _effRolls(baseId, variant);
+    if (!c || !c.length) c = (window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId] && window.VL_GEAR_ROLLS[baseId][variant]) || null;
     if (!o && !c) return false;
     return !_rollsEq(o, c);
   };
@@ -23792,6 +23811,25 @@ function toggleEasterTheme() {
     return !_same(a.value, item.value) || !_same(a.demand, item.demand) || !_same(a.status, item.status);
   };
 
+  /* ── Текущие ЭФФЕКТИВНЫЕ данные предмета: загруженная база + правки в DT.
+        Без этого diff видит только загруженную базу, и предмет, который
+        пользователь руками вернул к оригиналу (или изменил по-своему),
+        печатался бы со значениями загруженной базы. ── */
+  function _dtOverride(id) {
+    var c = window.dtCards && window.dtCards[id];
+    return (c && c.item) ? c.item : null;
+  }
+  function _effItem(item, cardId) {
+    var ov = _dtOverride(cardId) || _dtOverride(item && item.id);
+    if (!ov) return item;
+    var m = {};
+    Object.keys(item).forEach(function(k){ m[k] = item[k]; });
+    ['name','rarity','value','demand','status'].forEach(function(k){
+      if (ov[k] !== undefined) m[k] = ov[k];
+    });
+    return m;
+  }
+
   /* ══════════ Полный diff загруженной базы против оригинала ══════════ */
   function _diff(onlyBaseId) {
     var pri = _pri();
@@ -23806,10 +23844,11 @@ function toggleEasterTheme() {
       (window.VL_DB[cat] || []).forEach(function(it){
         if (!it || !it.id || it.isCustom || skip(it.id)) return;
         var a = o[it.id];
-        if (!a) { out.push({ kind: cat === 'elements' ? 'element' : 'flat', cat: cat, item: it, added: true }); return; }
-        if (!_same(a.name, it.name) || !_same(a.rarity, it.rarity) || !_same(a.imgId, it.imgId)
-         || !_same(a.value, it.value) || !_same(a.demand, it.demand) || !_same(a.status, it.status)) {
-          out.push({ kind: cat === 'elements' ? 'element' : 'flat', cat: cat, item: it, added: false });
+        var eff = _effItem(it, it.id);
+        if (!a) { out.push({ kind: cat === 'elements' ? 'element' : 'flat', cat: cat, item: eff, added: true }); return; }
+        if (!_same(a.name, eff.name) || !_same(a.rarity, eff.rarity) || !_same(a.imgId, eff.imgId)
+         || !_same(a.value, eff.value) || !_same(a.demand, eff.demand) || !_same(a.status, eff.status)) {
+          out.push({ kind: cat === 'elements' ? 'element' : 'flat', cat: cat, item: eff, added: false });
         }
       });
     });
@@ -23819,10 +23858,11 @@ function toggleEasterTheme() {
     (window.VL_DB.gear || []).forEach(function(it){
       if (!it || !it.id || it.isCustom || skip(it.id)) return;
       var a = og[it.id];
-      if (!a) { out.push({ kind: 'gear', item: it, added: true }); return; }
-      if (!_same(a.name, it.name) || !_same(a.rarity, it.rarity) || !_same(a.imgId, it.imgId)
-       || !_same(a.subtype, it.subtype) || !_same(a.status, it.status)) {
-        out.push({ kind: 'gear', item: it, added: false });
+      var geff = _effItem(it, 'corrupted:' + it.id);
+      if (!a) { out.push({ kind: 'gear', item: geff, added: true }); return; }
+      if (!_same(a.name, geff.name) || !_same(a.rarity, geff.rarity) || !_same(a.imgId, geff.imgId)
+       || !_same(a.subtype, geff.subtype) || !_same(a.status, geff.status)) {
+        out.push({ kind: 'gear', item: geff, added: false });
       }
     });
 
@@ -23832,6 +23872,7 @@ function toggleEasterTheme() {
       var cur = (window.VL_GEAR_ROLLS[id] || {}).corrupted;
       var old = (pri.gr && pri.gr[id] || {}).corrupted;
       if (!cur) return;
+      cur = _effRolls(id, 'corrupted');
       if (!old || !_rollsEq(old, cur)) {
         var gEntry = _byId(window.VL_DB.gear)[id];
         out.push({ kind: 'rolls', id: id, rolls: cur, added: !old, name: gEntry ? gEntry.name : id });
@@ -23846,9 +23887,10 @@ function toggleEasterTheme() {
         var b = nmap[id];
         if (!b || b.isCustom || skip(id) || _isCustom(id)) return;
         var a = omap[id];
-        if (a && _same(a.value, b.value) && _same(a.demand, b.demand) && _same(a.status, b.status)) return;
+        var beff = _effItem(b, variant + ':' + id);
+        if (a && _same(a.value, beff.value) && _same(a.demand, beff.demand) && _same(a.status, beff.status)) return;
         var el = _byId(window.VL_DB.elements)[id];
-        out.push({ kind: 'variant', variant: variant, id: id, data: b, added: !a, name: el ? el.name : id });
+        out.push({ kind: 'variant', variant: variant, id: id, data: beff, added: !a, name: el ? el.name : id });
       });
     });
 
