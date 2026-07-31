@@ -245,6 +245,11 @@ document.dispatchEvent(new Event('fb-ready'));
   window._VL_DB1          = _c(window.VL_DB);
   window._VL_VARIANTS_DB1 = _c(window.VL_VARIANTS_DB);
   window._VL_GEAR_ROLLS1  = _c(window.VL_GEAR_ROLLS);
+  /* Неприкосновенная копия items_data1 — нужна чтобы Load Database мог
+     вернуть Value Changes к обычному сравнению items_data1 ↔ items_data2. */
+  window._VL_DB1_ORIG          = _c(window.VL_DB);
+  window._VL_VARIANTS_DB1_ORIG = _c(window.VL_VARIANTS_DB);
+  window._VL_GEAR_ROLLS1_ORIG  = _c(window.VL_GEAR_ROLLS);
 })();
 </script>
 <!-- ── Актуальная база (items_data2.js) — перезаписывает globals, сайт работает с ней ── -->
@@ -6205,6 +6210,136 @@ body.lang-ru .value-list-btn{
 .dt-input-code-btn:hover { background: rgba(var(--gold-rgb, 155,48,255), 0.18); box-shadow: 0 0 14px rgba(var(--gold-rgb, 155,48,255), 0.25); }
 .dt-input-code-btn svg { width: 15px; height: 15px; }
 
+/* ── DT Load-Database Modal (Load Database) — same visual language as .dt-ic-* ── */
+#dt-load-db-modal { position: fixed; inset: 0; z-index: 4050; display: none; align-items: center; justify-content: center; }
+#dt-load-db-modal.visible { display: flex; }
+#dt-load-db-modal .dt-cm-panel { width: min(480px, calc(100vw - 32px)); }
+.dt-ic-loaddb {
+  margin-right: auto;
+  padding: 7px 18px;
+  border: 1px solid rgba(var(--gold-rgb, 155,48,255), 0.35);
+  border-radius: 7px;
+  background: rgba(var(--gold-rgb, 155,48,255), 0.08);
+  color: var(--gold-bright, #c875ff);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background .15s, box-shadow .15s;
+}
+.dt-ic-loaddb:hover { background: rgba(var(--gold-rgb, 155,48,255), 0.18); box-shadow: 0 0 14px rgba(var(--gold-rgb, 155,48,255), 0.25); }
+/* Двухколоночная раскладка: текст слева, квадратный слот справа — окно уже, текст просто переносится на больше строк */
+.dt-ld-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 160px;
+  gap: 16px;
+  align-items: start;
+}
+.dt-ld-col-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+@media (max-width: 620px) {
+  .dt-ld-split { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  /* "Растворяем" текстовую колонку, чтобы её дети (подсказка / заголовок / список)
+     стали прямыми элементами .dt-ld-split и могли переставляться через order —
+     это позволяет положить список предметов НИЖЕ квадрата, хотя в разметке он выше. */
+  .dt-ld-col-text { display: contents; }
+  .dt-ic-hint { order: 1; }
+  .dt-ld-drop { order: 2; width: 140px; aspect-ratio: 1 / 1; min-height: unset; }
+  .dt-ld-q { order: 3; }
+  .dt-ld-img-list { order: 4; width: 100%; }
+}
+
+/* Квадратный слот выбора файла — тон берём из палитры, без чёрного */
+.dt-ld-drop {
+  position: relative;
+  width: 160px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  padding: 14px;
+  box-sizing: border-box;
+  border: 1px dashed rgba(var(--gold-rgb, 155,48,255), 0.38);
+  border-radius: 12px;
+  background:
+    linear-gradient(rgba(var(--gold-rgb, 155,48,255), 0.06), rgba(var(--gold-rgb, 155,48,255), 0.06)),
+    var(--bg-void, #100d1f);
+  color: var(--text-primary, #cec4ea);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10.5px;
+  line-height: 1.5;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.dt-ld-drop:hover {
+  border-color: rgba(var(--gold-rgb, 155,48,255), 0.65);
+  background:
+    linear-gradient(rgba(var(--gold-rgb, 155,48,255), 0.13), rgba(var(--gold-rgb, 155,48,255), 0.13)),
+    var(--bg-void, #100d1f);
+  box-shadow: 0 0 18px rgba(var(--gold-rgb, 155,48,255), 0.18);
+}
+.dt-ld-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.dt-ld-drop svg { width: 26px; height: 26px; opacity: 0.55; }
+.dt-ld-drop-sub { font-size: 9.5px; opacity: 0.6; }
+.dt-ld-drop.has-file {
+  border-style: solid;
+  border-color: rgba(80,250,123,0.50);
+  color: #2fae52;
+  background:
+    linear-gradient(rgba(80,250,123,0.10), rgba(80,250,123,0.10)),
+    var(--bg-void, #100d1f);
+}
+.dt-ld-drop.has-file svg { opacity: 0.85; }
+.dt-ld-drop-name { overflow-wrap: break-word; }
+
+/* Совместимость со старой разметкой */
+.dt-ld-file { position: relative; }
+.dt-ld-file input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+.dt-ld-q {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted, #8b7fa8);
+}
+.dt-ld-imgs { display: flex; flex-direction: column; gap: 8px; }
+.dt-ld-img-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 172px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--gold-rgb, 155,48,255), 0.35) transparent;
+}
+.dt-ld-img-list::-webkit-scrollbar { width: 4px; }
+.dt-ld-img-list::-webkit-scrollbar-track { background: transparent; }
+.dt-ld-img-list::-webkit-scrollbar-thumb { background: rgba(var(--gold-rgb, 155,48,255), 0.35); border-radius: 2px; }
+.dt-ld-img-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--text-primary, #cec4ea);
+}
+.dt-ld-img-row::before { content: '\2022'; opacity: 0.45; }
+.dt-ld-img-row.ok::before { content: '\2713'; color: #50fa7b; opacity: 1; }
+.dt-ld-img-row.bad::before { content: '\2715'; color: #ff5a5a; opacity: 1; }
+.dt-ld-img-row.bad { color: #ff5a5a; }
+.dt-ld-row-note { display: block; font-size: 9.5px; opacity: 0.7; }
+
+
 /* ── DT Errors Modal — same visual language as .dt-cm-*, red accent ── */
 #dt-error-modal { position: fixed; inset: 0; z-index: 4100; display: none; align-items: center; justify-content: center; }
 #dt-error-modal.visible { display: flex; }
@@ -7863,6 +7998,16 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   color: rgba(255,255,200,0.65);
   opacity: 1;
 }
+:root.theme-baldi .dt-ld-q {
+  color: rgba(255,255,200,0.90);
+  opacity: 1;
+}
+:root.theme-baldi .dt-ld-img-row {
+  color: rgba(255,255,200,0.85);
+}
+:root.theme-baldi .dt-ld-img-row.ok::before { color: #7CFFA0; }
+:root.theme-baldi .dt-ld-img-row.bad { color: #FF8A8A; }
+:root.theme-baldi .dt-ld-img-row.bad::before { color: #FF8A8A; }
 :root.theme-baldi .dt-ic-textarea {
   background: #111;
   border-color: #155A15;
@@ -7876,6 +8021,22 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   opacity: 0.80;
 }
 :root.theme-baldi .dt-ic-cancel:hover { background: rgba(0,0,0,0.20); opacity: 1; }
+:root.theme-baldi .dt-ld-drop {
+  background: #0A0A0A;
+  border-color: #B81E1E;
+  color: #FFFFFF;
+}
+:root.theme-baldi .dt-ld-drop:hover {
+  background: #141414;
+  border-color: #E23A3A;
+  box-shadow: 0 0 18px rgba(184,30,30,0.30);
+}
+:root.theme-baldi .dt-ld-drop-sub { color: rgba(255,255,255,0.65); }
+:root.theme-baldi .dt-ld-drop.has-file {
+  background: #0A0A0A;
+  border-color: #2fae52;
+  color: #7CFFA0;
+}
 
 /* ── Easter variant popup ── */
 :root.theme-easter .vl-variant-popup-inner {
@@ -7972,6 +8133,13 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   color: #C84E78;
   opacity: 0.65;
 }
+:root.theme-easter .dt-ld-q {
+  color: #C84E78;
+  opacity: 0.85;
+}
+:root.theme-easter .dt-ld-img-row {
+  color: #3D2A18;
+}
 :root.theme-easter .dt-ic-textarea {
   background: #F5EFE8;
   border-color: rgba(200,78,120,0.28);
@@ -8049,6 +8217,14 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 :root.theme-atlantic .dt-ic-hint {
   color: #C84766;
   opacity: 0.65;
+}
+:root.theme-atlantic .dt-ld-q {
+  color: #C84766;
+  opacity: 0.85;
+}
+:root.theme-atlantic .dt-ld-img-row {
+  color: #C84766;
+  opacity: 0.95;
 }
 :root.theme-atlantic .dt-ic-textarea {
   background: #F5EDDA;
@@ -10926,7 +11102,58 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 :root.theme-birthday .dt-cm-copy-all:hover { color: #C084FC !important; border-color: rgba(192,132,252,0.55) !important; background: rgba(192,132,252,0.10) !important; }
 :root.theme-birthday .dt-cm-body::-webkit-scrollbar-thumb { background: rgba(192,132,252,0.40) !important; }
 :root.theme-birthday .dt-cm-empty { color: rgba(90,45,45,0.45) !important; }
+:root.theme-time .dt-ic-hint { color: rgba(245,210,120,0.55) !important; }
+:root.theme-time .dt-ld-q { color: rgba(245,210,120,0.85) !important; }
+:root.theme-time .dt-ld-img-row { color: #e8e2d0 !important; }
+:root.theme-time .dt-ld-img-row.ok::before { color: #7CFFA0 !important; }
+:root.theme-time .dt-ld-img-row.bad { color: #FF8A8A !important; }
+:root.theme-time .dt-ld-img-row.bad::before { color: #FF8A8A !important; }
+:root.theme-time .dt-ic-textarea {
+  background: rgba(245,200,66,0.05) !important;
+  border-color: rgba(245,200,66,0.20) !important;
+  color: #e8e2d0 !important;
+}
+:root.theme-time .dt-ic-textarea:focus { border-color: rgba(245,200,66,0.55) !important; }
+:root.theme-time .dt-ic-textarea::-webkit-scrollbar-thumb { background: rgba(245,200,66,0.35) !important; }
+:root.theme-time .dt-ic-cancel {
+  border-color: rgba(245,200,66,0.32) !important;
+  color: #f5c842 !important;
+}
+:root.theme-time .dt-ic-cancel:hover { background: rgba(245,200,66,0.10) !important; }
+
+:root.theme-galaxy .dt-ic-hint, :root:not([class*="theme-"]) .dt-ic-hint { color: rgba(200,140,255,0.55) !important; }
+:root.theme-galaxy .dt-ld-q, :root:not([class*="theme-"]) .dt-ld-q { color: rgba(200,140,255,0.85) !important; }
+:root.theme-galaxy .dt-ld-img-row, :root:not([class*="theme-"]) .dt-ld-img-row { color: #e8e0f0 !important; }
+:root.theme-galaxy .dt-ic-textarea, :root:not([class*="theme-"]) .dt-ic-textarea {
+  background: rgba(155,48,255,0.05) !important;
+  border-color: rgba(155,48,255,0.20) !important;
+  color: #e8e0f0 !important;
+}
+:root.theme-galaxy .dt-ic-textarea:focus, :root:not([class*="theme-"]) .dt-ic-textarea:focus { border-color: rgba(155,48,255,0.55) !important; }
+:root.theme-galaxy .dt-ic-cancel, :root:not([class*="theme-"]) .dt-ic-cancel {
+  border-color: rgba(155,48,255,0.32) !important;
+  color: #c875ff !important;
+}
+:root.theme-galaxy .dt-ic-cancel:hover, :root:not([class*="theme-"]) .dt-ic-cancel:hover { background: rgba(155,48,255,0.10) !important; }
+
+:root.theme-discord .dt-ic-hint { color: rgba(88,101,242,0.65) !important; }
+:root.theme-discord .dt-ld-q { color: rgba(88,101,242,0.90) !important; }
+:root.theme-discord .dt-ld-img-row { color: #dbdee1 !important; }
+:root.theme-discord .dt-ic-textarea {
+  background: rgba(88,101,242,0.06) !important;
+  border-color: rgba(88,101,242,0.25) !important;
+  color: #dbdee1 !important;
+}
+:root.theme-discord .dt-ic-textarea:focus { border-color: rgba(88,101,242,0.60) !important; }
+:root.theme-discord .dt-ic-cancel {
+  border-color: rgba(88,101,242,0.35) !important;
+  color: #5865F2 !important;
+}
+:root.theme-discord .dt-ic-cancel:hover { background: rgba(88,101,242,0.12) !important; }
+
 :root.theme-birthday .dt-ic-hint { color: rgba(90,45,45,0.55) !important; }
+:root.theme-birthday .dt-ld-q { color: rgba(90,45,45,0.80) !important; }
+:root.theme-birthday .dt-ld-img-row { color: #5A2D2D !important; }
 :root.theme-birthday .dt-ic-textarea {
   color: #5A2D2D !important;
   background: rgba(255,245,240,0.70) !important;
@@ -12256,7 +12483,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       var RC = window.RARITY_CFG || {};
       var rc = RC[itemMeta.rarity] || RC.rare || { color: '#70a1ff', glow: 'rgba(112,161,255,0.20)' };
       var _imgLookupId = itemMeta.itemId || itemMeta.id;
-      var imgSrc = (window._edCustomImg && window._edCustomImg[_imgLookupId]) || ('images/' + itemMeta.category + '/' + itemMeta.imgId + '.webp');
+      var imgSrc = (window._edCustomImg && window._edCustomImg[_imgLookupId]) || (window._dbLoadImg && window._dbLoadImg[itemMeta.imgId]) || ('images/' + itemMeta.category + '/' + itemMeta.imgId + '.webp');
       var _cls = document.documentElement.classList;
       var _isEaster   = _cls.contains('theme-easter');
       var _isBaldi    = _cls.contains('theme-baldi');
@@ -14407,7 +14634,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         +(filled?' style="--bar-color:'+rc.color+'"':'')+' ></span>';
     }
 
-    var imgSrc = (window._edCustomImg && window._edCustomImg[item.id]) || ('images/' + (item.category || 'elements') + '/' + (item.imgId || item.baseId || item.id) + '.webp');
+    var imgSrc = (window._edCustomImg && window._edCustomImg[item.id]) || (window._dbLoadImg && window._dbLoadImg[item.imgId || item.baseId || item.id]) || ('images/' + (item.category || 'elements') + '/' + (item.imgId || item.baseId || item.id) + '.webp');
     var imgBoxClass = 'vl-detail-img-box';
     var imgBoxStyle = '';
     var imgWrapOpen = '';
@@ -14521,6 +14748,33 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
           + (_belowAdd ? ' vl-added-badge--below' : '')
           + '" id="vl-added-badge-' + cardId + '">ADDED</div>';
         return;
+      }
+
+      /* ── Load Database: предметы из временно загруженной кастомной базы ──
+         Помечаем ТЕМИ ЖЕ бейджами, что и обычное редактирование: изменённые —
+         EDITED, добавленные — ADDED. Совпадающие по значениям предметы не
+         попадают в _dbLoadMarks вообще и остаются без бейджа. */
+      var _ldMarks = window._dbLoadMarks;
+      if (_ldMarks) {
+        if (_ldMarks.added[item.id] || _ldMarks.addedBase[_baseRawId]) {
+          var _belowLdA = variantBadge !== '';
+          editedBadge = '<div class="vl-added-badge'
+            + (_belowLdA ? ' vl-added-badge--below' : '')
+            + '" id="vl-added-badge-' + cardId + '">ADDED</div>';
+          return;
+        }
+        /* Если пользователь вручную вернул предмету оригинальные значения
+           (из items_data2.js), бейдж снимаем — проверка ниже сравнивает
+           текущие данные с нетронутым снимком базы. */
+        var _ldStill = (typeof window._dbLdStillEdited === 'function')
+          ? window._dbLdStillEdited(item) : true;
+        if (_ldStill && (_ldMarks.edited[item.id] || _ldMarks.editedBase[_baseRawId])) {
+          var _belowLdE = variantBadge !== '';
+          editedBadge = '<div class="vl-edited-badge'
+            + (_belowLdE ? ' vl-edited-badge--below' : '')
+            + '" id="vl-edited-badge-' + cardId + '">EDITED</div>';
+          return;
+        }
       }
 
       var _isEdited = false;
@@ -16141,6 +16395,21 @@ const T = {
     fb_own_badge:'YOU', fb_edit_btn:'EDIT', fb_delete_btn:'DELETE', dt_code_title:'Code Snippets', dt_no_changes:'No changes', dt_print_all:'PRINT ALL', dt_copy_all:'Copy All',
     dt_input_code_btn:'Input Copied Code', dt_input_code_title:'Input Copied Code', dt_input_code_placeholder:'Paste copied code here...',
     dt_input_code_apply:'Apply', dt_input_code_cancel:'Cancel',
+    dt_load_db_btn:'Load Database', dt_load_db_title:'Load Database',
+    dt_load_db_hint:'Upload a database file in the same format as items_data2.js. Values are applied temporarily — a page reload restores the original database.',
+    dt_load_db_pick:'Choose database file (.js)', dt_load_db_apply:'Load', dt_load_db_reset:'Restore original',
+    dt_load_db_imgq:'Are there images for the added items?', dt_load_db_yes:'Yes', dt_load_db_no:'No',
+    dt_load_db_step2_title:'These added items need an image', dt_load_db_step2_hint:'Attach a 1024×1024 .webp for every imgId below (file name must equal imgId). Items left without an image will not be added.',
+    dt_load_db_continue:'Add', dt_load_db_skip:'Skip',
+    dt_load_db_pick_imgs:'Choose images',
+    dt_load_db_err_nofile:'Choose a database file first',
+    dt_load_db_err_read:'Could not read the file',
+    dt_load_db_err_parse:'Could not read the file as a database',
+    dt_load_db_err_no_db:'window.VL_DB was not found in the file',
+    dt_load_db_err_not_array:'must be an array', dt_load_db_err_not_object:'must be an object',
+    dt_load_db_err_no_id:'item has no valid id', dt_load_db_err_no_name:'item has no name',
+    dt_load_db_err_bad_rarity:'unknown rarity', dt_load_db_err_rolls:'corrupted rolls array is missing',
+    dt_load_db_err_noimg:'These added items were skipped — no matching 1024×1024 .webp image (file name must equal imgId)',
     dt_input_err_title:'Errors Found', dt_input_err_close:'Close',
     dt_input_err_unknown_id:'Unknown element',
     dt_input_err_bad_json:'Could not parse this block',
@@ -16396,6 +16665,21 @@ const T = {
     dt_code_title:'Сниппеты кода', dt_no_changes:'Нет изменений', dt_print_all:'ПЕЧАТЬ', dt_copy_all:'Скопировать всё',
     dt_input_code_btn:'Ввести ваши коды', dt_input_code_title:'Ввести ваши коды', dt_input_code_placeholder:'Вставьте скопированный код сюда...',
     dt_input_code_apply:'Применить', dt_input_code_cancel:'Отмена',
+    dt_load_db_btn:'Загрузить базу', dt_load_db_title:'Загрузка базы данных',
+    dt_load_db_hint:'Загрузите файл базы того же формата, что и items_data2.js. Значения применяются временно — после перезагрузки страницы вернётся оригинальная база.',
+    dt_load_db_pick:'Выберите файл базы (.js)', dt_load_db_apply:'Загрузить', dt_load_db_reset:'Вернуть оригинал',
+    dt_load_db_imgq:'Есть ли изображения для добавленных предметов?', dt_load_db_yes:'Да', dt_load_db_no:'Нет',
+    dt_load_db_step2_title:'Этим добавленным предметам нужны изображения', dt_load_db_step2_hint:'Прикрепите 1024×1024 .webp для каждого imgId ниже (имя файла должно совпадать с imgId). Предметы без изображения не будут добавлены.',
+    dt_load_db_continue:'Добавить', dt_load_db_skip:'Пропустить',
+    dt_load_db_pick_imgs:'Выберите изображения',
+    dt_load_db_err_nofile:'Сначала выберите файл базы',
+    dt_load_db_err_read:'Не удалось прочитать файл',
+    dt_load_db_err_parse:'Не удалось прочитать файл как базу данных',
+    dt_load_db_err_no_db:'В файле не найден window.VL_DB',
+    dt_load_db_err_not_array:'должен быть массивом', dt_load_db_err_not_object:'должен быть объектом',
+    dt_load_db_err_no_id:'у предмета нет корректного id', dt_load_db_err_no_name:'у предмета нет имени',
+    dt_load_db_err_bad_rarity:'неизвестная редкость', dt_load_db_err_rolls:'отсутствует массив роллов corrupted',
+    dt_load_db_err_noimg:'Эти добавленные предметы пропущены — нет подходящего изображения 1024×1024 .webp (имя файла должно совпадать с imgId)',
     dt_input_err_title:'Найдены ошибки', dt_input_err_close:'Закрыть',
     dt_input_err_unknown_id:'Неизвестный элемент',
     dt_input_err_bad_json:'Не удалось разобрать этот блок',
@@ -18378,6 +18662,16 @@ function toggleEasterTheme() {
       variant = it.id.split(':')[0];
     }
 
+    /* ── Load Database ──
+       Если загружена кастомная база, «оригиналом» для diff'а становится
+       нетронутый items_data2.js, а не снимок значений на момент открытия
+       карточки. Иначе предмет, изменённый самой загруженной базой, выглядел
+       бы как «без изменений» и Code Snippets был бы пустым. */
+    if (window._dbLoadMarks && typeof window._dbLdOrigFor === 'function') {
+      var _ldOrigSnip = window._dbLdOrigFor(cat, baseId, variant);
+      if (_ldOrigSnip) orig = _ldOrigSnip;
+    }
+
     var snippets = []; /* массив { label, code } */
 
     /* ════════ ELEMENTS ════════ */
@@ -18450,9 +18744,12 @@ function toggleEasterTheme() {
                           || (String(it.status || '') !== String(orig.status || ''));
 
       /* Проверяем изменения в роллах */
+      /* Load Database: роллы тоже сравниваем с оригинальным items_data2.js */
+      var _ldRollsOrig = (window._dbLoadMarks && typeof window._dbLdOrigRolls === 'function')
+        ? window._dbLdOrigRolls(baseId, rollVariant) : null;
       var changedRolls = [];
       if (rollState && rollState.rolls) {
-        var origRollData = window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId] && window.VL_GEAR_ROLLS[baseId][rollVariant];
+        var origRollData = _ldRollsOrig || (window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId] && window.VL_GEAR_ROLLS[baseId][rollVariant]);
         Object.keys(rollState.rolls).forEach(function(rn) {
           var idx    = parseInt(rn, 10) - 1;
           var cur    = rollState.rolls[rn];
@@ -18463,6 +18760,12 @@ function toggleEasterTheme() {
         });
       }
       var rollsChanged = changedRolls.length > 0;
+      /* Роллы могли быть изменены самой загруженной базой — тогда rollState
+         ещё нетронут, но код всё равно должен показаться. */
+      if (!rollsChanged && window._dbLoadMarks && typeof window._dbLdRollsDiffer === 'function'
+          && window._dbLdRollsDiffer(baseId, rollVariant)) {
+        rollsChanged = true;
+      }
 
       if (!rarStatusChanged && !rollsChanged) return null;
 
@@ -18535,6 +18838,20 @@ function toggleEasterTheme() {
     if (typeof window._edBuildCustomItemSnippets === 'function') {
       window._edBuildCustomItemSnippets().forEach(function(s) { result.push(s); });
     }
+    /* ── Load Database: код ВСЕХ изменённых/добавленных загруженной базой
+       предметов, даже если их карточки не открыты. Дубли (карточка открыта и
+       уже дала сниппет) отбрасываем — приоритет у открытой карточки. ── */
+    if (window._dbLoadMarks && typeof window._dbLdBuildAllSnippets === 'function') {
+      var _ldSeen = {};
+      result.forEach(function(s){ _ldSeen[String(s.label).replace(' (NEW)', '')] = true; });
+      window._dbLdBuildAllSnippets().forEach(function(s){
+        var k = String(s.label).replace(' (NEW)', '');
+        if (_ldSeen[k]) return;
+        _ldSeen[k] = true;
+        result.push(s);
+      });
+    }
+
     /* ── Gold rate — добавляем если изменён ── */
     var DEFAULT_RATE = window.ED_GOLD_RATE;
     var curRate = window._edTpRate || DEFAULT_RATE;
@@ -19277,10 +19594,11 @@ function toggleEasterTheme() {
     var modal = document.getElementById('dt-input-code-modal');
     var ta = document.getElementById('dt-ic-textarea');
     if (!modal) return;
-    if (ta) { ta.value = ''; ta.style.height = ''; }
+    /* Текст НЕ очищаем при открытии — так введённый код переживает
+       закрытие/открытие окна (сбрасывается только вручную или при Apply). */
     modal.classList.add('visible');
     document.addEventListener('keydown', _dtIcEscHandler);
-    if (ta) setTimeout(function(){ ta.focus(); }, 30);
+    if (ta) { setTimeout(function(){ ta.focus(); _dtIcAutosize(ta); }, 30); }
   };
 
   function _dtIcEscHandler(e) {
@@ -19383,6 +19701,7 @@ function toggleEasterTheme() {
        объяснения. */
     window.dtInputCodeClose();
     if (runtimeErrors.length) { _dtShowErrors(runtimeErrors); return; }
+    if (ta) { ta.value = ''; ta.style.height = ''; }
     try { window.sndPlayClick('correct'); } catch(_) {}
   };
 
@@ -19439,6 +19758,25 @@ function toggleEasterTheme() {
           var blockText    = text.slice(bi, pos + 1);
           var newBlockText = replaceLine(blockText, needle, newLine);
           return text.slice(0, bi) + newBlockText + text.slice(pos + 1);
+        }
+
+        /* ── Load Database: сначала вкатываем ВСЕ изменения загруженной базы,
+           затем сверху лягут правки открытых карточек (они свежее). ── */
+        if (window._dbLoadMarks && typeof window._dbLdApplyToSource === 'function') {
+          var _ldOnlyBase = null;
+          if (onlyCid) {
+            Object.keys(dtCards).forEach(function(k) {
+              if (k.replace(/[^a-zA-Z0-9_\-]/g, '_') !== onlyCid) return;
+              var _oe = dtCards[k];
+              if (_oe && _oe.item) _ldOnlyBase = String(_oe.item.baseId || _oe.item.id).replace('corrupted:', '');
+            });
+          }
+          try {
+            src = window._dbLdApplyToSource(src, {
+              replaceLine: replaceLine,
+              replaceLineInBlock: replaceLineInBlock
+            }, _ldOnlyBase);
+          } catch (e) { try { console.error('LoadDB apply to source failed', e); } catch(_) {} }
         }
 
         /* ════════ Проходим по всем изменённым карточкам ════════ */
@@ -21666,7 +22004,7 @@ function toggleEasterTheme() {
     var imgWrapClose = useWrap ? '</div>' : '';
 
     /* Image src */
-    var imgSrc = (window._edCustomImg && window._edCustomImg[it.id]) || ('images/' + (it.cat||dtCat) + '/' + (it.imgId||it.baseId||it.id) + '.webp');
+    var imgSrc = (window._edCustomImg && window._edCustomImg[it.id]) || (window._dbLoadImg && window._dbLoadImg[it.imgId||it.baseId||it.id]) || ('images/' + (it.cat||dtCat) + '/' + (it.imgId||it.baseId||it.id) + '.webp');
 
     /* Variant badge */
     var variantBadge = _dtVariantBadgeInlineHTML(it);
@@ -22702,12 +23040,1002 @@ function toggleEasterTheme() {
     </div>
     <div class="dt-cm-footer">
       <div class="dt-ic-footer-row">
+        <button class="dt-ic-loaddb" onclick="dtLoadDbOpen()" data-i18n="dt_load_db_btn">Load Database</button>
         <button class="dt-ic-cancel" onclick="dtInputCodeClose()" data-i18n="dt_input_code_cancel">Cancel</button>
         <button class="dt-ic-apply" onclick="dtInputCodeApply()" data-i18n="dt_input_code_apply">Apply</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- ── DT Load-Database Modal ── -->
+<div id="dt-load-db-modal" role="dialog" aria-modal="true" aria-label="Load Database">
+  <div class="dt-cm-backdrop" onclick="dtLoadDbClose()"></div>
+  <div class="dt-cm-panel">
+    <div class="dt-cm-header">
+      <span class="dt-cm-title" data-i18n="dt_load_db_title">Load Database</span>
+      <button class="dt-cm-close" onclick="dtLoadDbClose()" title="Close">✕</button>
+    </div>
+    <div class="dt-ic-body dt-ld-split" id="dt-ld-step1">
+      <div class="dt-ld-col-text">
+        <div class="dt-ic-hint" data-i18n="dt_load_db_hint">Upload a database file in the same format as items_data2.js. Values are applied temporarily — a page reload restores the original database.</div>
+      </div>
+      <label class="dt-ld-drop" id="dt-ld-file-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M8 8l4-4 4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <span class="dt-ld-drop-name" id="dt-ld-file-name" data-i18n="dt_load_db_pick">Choose database file (.js)</span>
+        <input type="file" accept=".js,application/javascript,text/javascript" onchange="dtLoadDbPickFile(this)">
+      </label>
+    </div>
+    <div class="dt-ic-body dt-ld-split" id="dt-ld-step2" style="display:none;">
+      <div class="dt-ld-col-text">
+        <div class="dt-ic-hint" data-i18n="dt_load_db_step2_hint">Attach a 1024×1024 .webp for every imgId below (file name must equal imgId). Items left without an image will not be added.</div>
+        <div class="dt-ld-q"><span data-i18n="dt_load_db_step2_title">These added items need an image</span></div>
+        <div class="dt-ld-img-list" id="dt-ld-need-list"></div>
+      </div>
+      <label class="dt-ld-drop" id="dt-ld-img-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-11 10"/></svg>
+        <span class="dt-ld-drop-name" data-i18n="dt_load_db_pick_imgs">Choose images</span>
+        <span class="dt-ld-drop-sub">.webp · 1024×1024 · file name = imgId</span>
+        <input type="file" accept="image/webp" multiple onchange="dtLoadDbPickImages(this)">
+      </label>
+    </div>
+
+    <div class="dt-cm-footer">
+      <div class="dt-ic-footer-row" id="dt-ld-footer1">
+        <button class="dt-ic-cancel" id="dt-ld-reset" onclick="dtLoadDbReset()" style="margin-right:auto;display:none;" data-i18n="dt_load_db_reset">Restore original</button>
+        <button class="dt-ic-cancel" onclick="dtLoadDbClose()" data-i18n="dt_input_code_cancel">Cancel</button>
+        <button class="dt-ic-apply" onclick="dtLoadDbApply()" data-i18n="dt_load_db_apply">Load</button>
+      </div>
+      <div class="dt-ic-footer-row" id="dt-ld-footer2" style="display:none;">
+        <button class="dt-ic-cancel" onclick="dtLoadDbClose()" data-i18n="dt_input_code_cancel">Cancel</button>
+        <button class="dt-ic-apply" onclick="dtLoadDbConfirmImages()" data-i18n="dt_load_db_continue">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   LOAD DATABASE (Input Copied Code → Load Database)
+
+   Временно подменяет живую базу сайта (window.VL_DB / VL_VARIANTS_DB /
+   VL_GEAR_ROLLS) содержимым загруженного файла того же формата, что и
+   items_data2.js. Эффект живёт только до перезагрузки страницы.
+
+   Что делает:
+     • изменённые предметы получают тот же бейдж EDITED, что и при
+       обычном редактировании (через window._dbLoadMarks — см. vlBuildCard);
+     • добавленные предметы получают бейдж ADDED;
+     • Value Changes сравнивает уже НЕ items_data1 vs items_data2, а
+       оригинальный items_data2 (снимок _dbLdPristine) vs загруженную базу —
+       для этого подменяется window._VL_DB1 и запускается window._vcRunDiff();
+     • добавленный предмет попадает в базу только если для него загружено
+       изображение 1024×1024 .webp, имя файла которого совпадает с его imgId.
+
+   ВАЖНО: VL/DT-модули кэшируют ссылки (var VL_DB = window.VL_DB), поэтому
+   объекты мутируются НА МЕСТЕ, а не переприсваиваются.
+══════════════════════════════════════════════════════════════════ */
+(function(){
+
+  var _ldFileName = '';
+  var _ldSrc      = '';
+  var _ldImgs     = {};          /* imgId → dataURL */
+  var _ldPending  = null;        /* разобранная база, ожидающая изображений */
+  var CATS = ['elements','gear','cosmetic','gamepasses','chromas','other'];
+  var _ldPristine = null;        /* нетронутый items_data2 (без кастомных предметов) */
+
+  window._dbLoadImg   = window._dbLoadImg   || {};                  /* imgId → dataURL */
+  window._dbLoadMarks = window._dbLoadMarks || null;                /* {edited:{}, added:{}} */
+
+  var REQ_W = 1024, REQ_H = 1024;
+
+  function _c(o) { try { return JSON.parse(JSON.stringify(o)); } catch(e) { return o; } }
+
+  function _lang(key, fallback) {
+    try { if (typeof window.t === 'function') { var v = window.t(key); if (v && v !== key) return v; } } catch(e) {}
+    return fallback;
+  }
+
+  /* ── Окно ошибок: та же модалка, что и у Input Copied Code ── */
+  function _ldErrors(list) {
+    var body  = document.getElementById('dt-err-body');
+    var modal = document.getElementById('dt-error-modal');
+    if (!body || !modal) { try { console.error(list); } catch(_) {} return; }
+    body.innerHTML = list.map(function(msg) {
+      return '<div class="dt-err-item"><div class="dt-err-msg">'
+        + String(msg).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        + '</div></div>';
+    }).join('');
+    modal.classList.add('visible');
+  }
+
+  /* ── Снимок оригинальной базы (без кастомных предметов пользователя) ── */
+  function _stripCustomList(arr) {
+    return (arr || []).filter(function(it){ return !it || !it.isCustom; });
+  }
+  function _stripCustomDb(db) {
+    var out = {};
+    Object.keys(db || {}).forEach(function(cat){
+      out[cat] = Array.isArray(db[cat]) ? _stripCustomList(db[cat]) : _c(db[cat]);
+    });
+    return out;
+  }
+  function _stripCustomVdb(vdb) {
+    var out = {};
+    Object.keys(vdb || {}).forEach(function(v){
+      out[v] = {};
+      Object.keys(vdb[v] || {}).forEach(function(id){
+        if (vdb[v][id] && vdb[v][id].isCustom) return;
+        out[v][id] = vdb[v][id];
+      });
+    });
+    return out;
+  }
+  function _ensurePristine() {
+    if (_ldPristine) return;
+    _ldPristine = {
+      db:  _c(_stripCustomDb(window.VL_DB)),
+      vdb: _c(_stripCustomVdb(window.VL_VARIANTS_DB)),
+      gr:  _c(window.VL_GEAR_ROLLS),
+      rate: window.ED_GOLD_RATE
+    };
+    /* Экспортируем наружу — на снимок опираются Code Snippets / Print All /
+       Download .js и проверка "предмет всё ещё отличается от оригинала". */
+    window._dbLdPristine = _ldPristine;
+  }
+
+  /* ── Мутация на месте: объект-контейнер остаётся тем же ── */
+  function _replaceInto(target, source) {
+    if (!target || !source) return;
+    Object.keys(target).forEach(function(k){ delete target[k]; });
+    Object.keys(source).forEach(function(k){ target[k] = source[k]; });
+  }
+
+  /* ══════════ Парсинг файла базы ══════════ */
+  function _parseDbSource(src) {
+    var sandbox = {};
+    try {
+      /* Файл базы — это только присваивания window.X = {...}; исполняем его в
+         песочнице, где window/self/globalThis — пустой объект, чтобы файл
+         физически не мог тронуть живые globals до валидации. */
+      var fn = new Function('window', 'self', 'globalThis', 'document', 'localStorage', 'fetch', '"use strict";' + src);
+      fn(sandbox, sandbox, sandbox, undefined, undefined, undefined);
+    } catch (e) {
+      return { error: _lang('dt_load_db_err_parse', 'Could not read the file as a database') + ': ' + (e && e.message ? e.message : String(e)) };
+    }
+    if (!sandbox.VL_DB || typeof sandbox.VL_DB !== 'object') {
+      return { error: _lang('dt_load_db_err_no_db', 'window.VL_DB was not found in the file') };
+    }
+    var CATS = ['elements','gear','cosmetic','gamepasses','chromas','other'];
+    var errs = [];
+    CATS.forEach(function(cat){
+      if (sandbox.VL_DB[cat] === undefined) return;      /* категория может отсутствовать */
+      if (!Array.isArray(sandbox.VL_DB[cat])) { errs.push('VL_DB.' + cat + ' — ' + _lang('dt_load_db_err_not_array', 'must be an array')); return; }
+      sandbox.VL_DB[cat].forEach(function(it, i){
+        if (!it || typeof it !== 'object' || !it.id || typeof it.id !== 'string') {
+          errs.push('VL_DB.' + cat + '[' + i + '] — ' + _lang('dt_load_db_err_no_id', 'item has no valid id'));
+        } else if (!it.name) {
+          errs.push('VL_DB.' + cat + ' → ' + it.id + ' — ' + _lang('dt_load_db_err_no_name', 'item has no name'));
+        } else if (!it.rarity || (window.RARITY_CFG && !window.RARITY_CFG[it.rarity])) {
+          errs.push('VL_DB.' + cat + ' → ' + it.id + ' — ' + _lang('dt_load_db_err_bad_rarity', 'unknown rarity') + ': ' + it.rarity);
+        }
+      });
+    });
+    if (sandbox.VL_VARIANTS_DB && typeof sandbox.VL_VARIANTS_DB !== 'object') errs.push('VL_VARIANTS_DB — ' + _lang('dt_load_db_err_not_object', 'must be an object'));
+    if (sandbox.VL_GEAR_ROLLS) {
+      if (typeof sandbox.VL_GEAR_ROLLS !== 'object') {
+        errs.push('VL_GEAR_ROLLS — ' + _lang('dt_load_db_err_not_object', 'must be an object'));
+      } else {
+        Object.keys(sandbox.VL_GEAR_ROLLS).forEach(function(id){
+          var rec = sandbox.VL_GEAR_ROLLS[id];
+          if (!rec || !Array.isArray(rec.corrupted)) {
+            errs.push('VL_GEAR_ROLLS.' + id + ' — ' + _lang('dt_load_db_err_rolls', 'corrupted rolls array is missing'));
+          }
+        });
+      }
+    }
+    if (errs.length) return { error: null, errors: errs };
+    return {
+      db:   sandbox.VL_DB,
+      vdb:  sandbox.VL_VARIANTS_DB || {},
+      gr:   sandbox.VL_GEAR_ROLLS  || {},
+      rate: sandbox.ED_GOLD_RATE,
+      rarityCfg: sandbox.RARITY_CFG,
+      statusCfg: sandbox.STATUS_CFG,
+      statusDesc: sandbox.STATUS_DESC
+    };
+  }
+
+  /* ══════════ Сравнение: что изменено, что добавлено ══════════ */
+  function _same(a, b) {
+    return String(a === null || a === undefined ? '' : a) === String(b === null || b === undefined ? '' : b);
+  }
+  function _byId(arr) {
+    var m = {};
+    (arr || []).forEach(function(e){ if (e && e.id) m[e.id] = e; });
+    return m;
+  }
+  function _rollsEqual(a, b) {
+    var A = (a && a.corrupted) || [], B = (b && b.corrupted) || [];
+    var n = Math.max(A.length, B.length);
+    for (var i = 0; i < n; i++) {
+      var x = A[i] || {}, y = B[i] || {};
+      if (!_same(x.v, y.v) || !_same(x.d, y.d)) return false;
+    }
+    return true;
+  }
+
+  /* marks.edited / marks.added    — точное совпадение по id карточки
+     marks.editedBase / addedBase   — распространяется на ВСЕ вариации предмета
+                                      (имя, редкость, subtype — общие для них) */
+  function _computeMarks(oldDb, oldVdb, oldGr, newDb, newVdb, newGr) {
+    var marks = { edited: {}, added: {}, editedBase: {}, addedBase: {} };
+
+    /* Плоские категории + elements (обычная вариация) */
+    ['elements','cosmetic','gamepasses','chromas','other'].forEach(function(cat){
+      var o = _byId(oldDb[cat]), n = _byId(newDb[cat]);
+      Object.keys(n).forEach(function(id){
+        var b = n[id], a = o[id];
+        if (!a) { marks.added[id] = true; marks.addedBase[id] = true; return; }
+        if (!_same(a.name, b.name) || !_same(a.rarity, b.rarity)) marks.editedBase[id] = true;
+        if (!_same(a.value, b.value) || !_same(a.demand, b.demand) || !_same(a.status, b.status)) marks.edited[id] = true;
+      });
+    });
+
+    /* Elements → вариации. id карточки = "variant:elemId" (см. compositeId) */
+    Object.keys(newVdb || {}).forEach(function(variant){
+      var nmap = newVdb[variant] || {}, omap = (oldVdb && oldVdb[variant]) || {};
+      Object.keys(nmap).forEach(function(elemId){
+        var b = nmap[elemId], a = omap[elemId];
+        var cid = variant + ':' + elemId;
+        if (!a) { marks.added[cid] = true; return; }
+        if (!_same(a.value, b.value) || !_same(a.demand, b.demand) || !_same(a.status, b.status)) marks.edited[cid] = true;
+      });
+    });
+
+    /* Gear — самая замудрённая категория: запись предмета + отдельная таблица
+       роллов VL_GEAR_ROLLS. Regular-карточка живёт под id предмета,
+       Corrupted-карточка — под "corrupted:<id>" (у relic вариаций нет). */
+    var og = _byId(oldDb.gear), ng = _byId(newDb.gear);
+    Object.keys(ng).forEach(function(id){
+      var b = ng[id], a = og[id];
+      if (!a) { marks.added[id] = true; marks.addedBase[id] = true; return; }
+      if (!_same(a.name, b.name) || !_same(a.rarity, b.rarity) || !_same(a.subtype, b.subtype) || !_same(a.status, b.status)) {
+        marks.editedBase[id] = true;
+      }
+      if (!_rollsEqual(oldGr && oldGr[id], newGr && newGr[id])) {
+        marks.edited['corrupted:' + id] = true;
+      }
+    });
+
+    return marks;
+  }
+
+  /* ══════════ UI ══════════ */
+  function _ldEsc(e) { if (e.key === 'Escape') window.dtLoadDbClose(); }
+
+  window.dtLoadDbOpen = function() {
+    var modal = document.getElementById('dt-load-db-modal');
+    if (!modal) return;
+    _ensurePristine();
+    var resetBtn = document.getElementById('dt-ld-reset');
+    if (resetBtn) resetBtn.style.display = window._dbLoadMarks ? '' : 'none';
+    _ldShowStep(1);
+    modal.classList.add('visible');
+    document.addEventListener('keydown', _ldEsc);
+  };
+
+  window.dtLoadDbClose = function() {
+    var modal = document.getElementById('dt-load-db-modal');
+    if (modal) modal.classList.remove('visible');
+    document.removeEventListener('keydown', _ldEsc);
+    _ldPending = null;
+    _ldShowStep(1);
+  };
+
+  /* ── Шаги окна: 1 — только файл базы, 2 — запрос изображений ── */
+  function _ldShowStep(n) {
+    var s1 = document.getElementById('dt-ld-step1');
+    var s2 = document.getElementById('dt-ld-step2');
+    var f1 = document.getElementById('dt-ld-footer1');
+    var f2 = document.getElementById('dt-ld-footer2');
+    if (s1) s1.style.display = (n === 1 ? '' : 'none');
+    if (s2) s2.style.display = (n === 2 ? '' : 'none');
+    if (f1) f1.style.display = (n === 1 ? '' : 'none');
+    if (f2) f2.style.display = (n === 2 ? '' : 'none');
+  }
+
+  /* Совместимость: старый переключатель «есть ли изображения?» больше не нужен */
+  window.dtLoadDbSetImages = function() {};
+
+  window.dtLoadDbPickFile = function(input) {
+    var f = input.files && input.files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function() {
+      _ldSrc = String(reader.result || '');
+      _ldFileName = f.name;
+      /* новый файл — сбрасываем ранее приложенные изображения и ожидание */
+      _ldImgs = {};
+      _ldPending = null;
+      var il = document.getElementById('dt-ld-need-list');
+      if (il) il.innerHTML = '';
+      var ilbl = document.getElementById('dt-ld-img-label');
+      if (ilbl) ilbl.classList.remove('has-file');
+      var lbl  = document.getElementById('dt-ld-file-label');
+      var name = document.getElementById('dt-ld-file-name');
+      if (name) { name.textContent = f.name; name.removeAttribute('data-i18n'); }
+      if (lbl) lbl.classList.add('has-file');
+    };
+    reader.onerror = function() { _ldErrors([_lang('dt_load_db_err_read', 'Could not read the file')]); };
+    reader.readAsText(f);
+  };
+
+  window.dtLoadDbPickImages = function(input) {
+    var files = Array.prototype.slice.call(input.files || []);
+    if (!files.length) return;
+    files.forEach(function(f){
+      var imgId = f.name.replace(/\.[^/.]+$/, '');
+      if (f.type !== 'image/webp') {
+        _ldMarkNeedRow(imgId, false, _lang('err_cust_webp_only', 'Only .webp images are allowed'));
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function() {
+        var dataUrl = reader.result;
+        var img = new Image();
+        img.onload = function() {
+          if (img.naturalWidth !== REQ_W || img.naturalHeight !== REQ_H) {
+            _ldMarkNeedRow(imgId, false, img.naturalWidth + '×' + img.naturalHeight + ' — ' + REQ_W + '×' + REQ_H);
+            return;
+          }
+          _ldImgs[imgId] = dataUrl;
+          _ldMarkNeedRow(imgId, true, '');
+        };
+        img.onerror = function() {
+          _ldMarkNeedRow(imgId, false, _lang('err_cust_img_read_fail', 'Could not read the image'));
+        };
+        img.src = dataUrl;
+      };
+      reader.onerror = function() {
+        _ldMarkNeedRow(imgId, false, _lang('err_cust_img_read_fail', 'Could not read the image'));
+      };
+      reader.readAsDataURL(f);
+    });
+    input.value = '';
+  };
+
+  /* Отмечаем строку предмета: ✓ — верное изображение приложено, ✕ — неверное */
+  function _ldMarkNeedRow(imgId, ok, note) {
+    var list = document.getElementById('dt-ld-need-list');
+    if (!list) return;
+    Array.prototype.slice.call(list.children).forEach(function(row){
+      if (row.getAttribute('data-imgid') !== imgId) return;
+      row.className = 'dt-ld-img-row ' + (ok ? 'ok' : 'bad');
+      var note_el = row.querySelector('.dt-ld-row-note');
+      if (note_el) note_el.textContent = ok ? '' : (note || '');
+    });
+    _ldSyncImgSlot();
+  }
+
+  /* Слот справа подсвечивается, когда все нужные картинки приложены */
+  function _ldSyncImgSlot() {
+    var list = document.getElementById('dt-ld-need-list');
+    var lbl  = document.getElementById('dt-ld-img-label');
+    if (!list || !lbl) return;
+    var rows = Array.prototype.slice.call(list.children);
+    var done = rows.length > 0 && rows.every(function(r){
+      return !!_ldImgs[r.getAttribute('data-imgid')];
+    });
+    lbl.classList.toggle('has-file', done);
+  }
+
+  function _ldRenderNeeded(needed) {
+    var list = document.getElementById('dt-ld-need-list');
+    if (!list) return;
+    list.innerHTML = '';
+    needed.forEach(function(n){
+      var row = document.createElement('div');
+      row.className = 'dt-ld-img-row' + (_ldImgs[n.imgId] ? ' ok' : '');
+      row.setAttribute('data-imgid', n.imgId);
+      var main = document.createElement('span');
+      main.textContent = n.name + ' → imgId: ' + n.imgId + '.webp';
+      var note = document.createElement('span');
+      note.className = 'dt-ld-row-note';
+      main.appendChild(note);
+      row.appendChild(main);
+      list.appendChild(row);
+    });
+    _ldSyncImgSlot();
+  }
+
+  /* ══════════ Шаг 1: файл базы → валидация → (при необходимости) запрос картинок ══════════ */
+  window.dtLoadDbApply = function() {
+    if (!_ldSrc || !_ldSrc.trim()) {
+      _ldErrors([_lang('dt_load_db_err_nofile', 'Choose a database file first')]);
+      return;
+    }
+    _ensurePristine();
+
+    var parsed = _parseDbSource(_ldSrc);
+    if (parsed.errors) { _ldErrors(parsed.errors); return; }
+    if (parsed.error)  { _ldErrors([parsed.error]); return; }
+
+    var oldDb = _ldPristine.db, oldVdb = _ldPristine.vdb, oldGr = _ldPristine.gr;
+    var newDb = _c(parsed.db), newVdb = _c(parsed.vdb), newGr = _c(parsed.gr);
+
+    /* imgId, изображения которых физически уже есть на сайте */
+    var existingImgIds = {};
+    CATS.forEach(function(cat){
+      (oldDb[cat] || []).forEach(function(it){
+        var imgId = it.imgId || it.baseId || it.id;
+        if (imgId) existingImgIds[imgId] = true;
+      });
+    });
+
+    /* Какие добавленные предметы требуют нового изображения */
+    var needed = [], seen = {};
+    CATS.forEach(function(cat){
+      if (!Array.isArray(newDb[cat])) return;
+      var o = _byId(oldDb[cat]);
+      newDb[cat].forEach(function(it){
+        if (!it || o[it.id]) return;                     /* не новый */
+        var imgId = it.imgId || it.baseId || it.id;
+        if (existingImgIds[imgId]) return;               /* изображение уже есть на сайте */
+        if (seen[imgId]) return;
+        seen[imgId] = true;
+        needed.push({ imgId: imgId, name: it.name || it.id });
+      });
+    });
+
+    _ldPending = {
+      parsed: parsed, newDb: newDb, newVdb: newVdb, newGr: newGr,
+      oldDb: oldDb, oldVdb: oldVdb, oldGr: oldGr,
+      existingImgIds: existingImgIds
+    };
+
+    /* Нет новых предметов без изображения — грузим сразу */
+    if (!needed.length) { _ldCommit(); return; }
+
+    /* Иначе — второй шаг: просим приложить изображения */
+    _ldRenderNeeded(needed);
+    _ldShowStep(2);
+  };
+
+  /* ══════════ Шаг 2: пользователь нажал «Добавить» ══════════
+     Предметы, для которых изображение с совпадающим imgId так и не
+     приложено, просто не добавляются — окно закрывается без ошибок. */
+  window.dtLoadDbConfirmImages = function() {
+    if (!_ldPending) { window.dtLoadDbClose(); return; }
+    _ldCommit();
+  };
+
+  /* ══════════ Применение загруженной базы ══════════ */
+  function _ldCommit() {
+    var st = _ldPending;
+    if (!st) return;
+    var oldDb = st.oldDb, oldVdb = st.oldVdb, oldGr = st.oldGr;
+    var newDb = st.newDb, newVdb = st.newVdb, newGr = st.newGr;
+    var parsed = st.parsed;
+
+    /* Добавленные предметы без валидного изображения отбрасываются молча */
+    CATS.forEach(function(cat){
+      if (!Array.isArray(newDb[cat])) return;
+      var o = _byId(oldDb[cat]);
+      newDb[cat] = newDb[cat].filter(function(it){
+        if (o[it.id]) return true;                       /* не новый — картинка уже есть */
+        var imgId = it.imgId || it.baseId || it.id;
+        if (_ldImgs[imgId]) return true;                 /* картинка приложена пользователем */
+        if (st.existingImgIds[imgId]) return true;        /* imgId переиспользует существующее изображение */
+        if (cat === 'gear') delete newGr[it.id];
+        return false;
+      });
+    });
+    /* Варианты отброшенных элементов тоже вычищаем */
+    var keptElems = _byId(newDb.elements);
+    Object.keys(newVdb).forEach(function(v){
+      Object.keys(newVdb[v] || {}).forEach(function(id){
+        if (!keptElems[id]) delete newVdb[v][id];
+      });
+    });
+
+    var marks = _computeMarks(oldDb, oldVdb, oldGr, newDb, newVdb, newGr);
+
+    /* ── Картинки добавленных предметов доступны рендеру по imgId ── */
+    Object.keys(_ldImgs).forEach(function(imgId){ window._dbLoadImg[imgId] = _ldImgs[imgId]; });
+
+    /* ── Value Changes: базой сравнения становится оригинальный items_data2 ── */
+    window._VL_DB1          = _c(oldDb);
+    window._VL_VARIANTS_DB1 = _c(oldVdb);
+    window._VL_GEAR_ROLLS1  = _c(oldGr);
+
+    /* ── Подмена живой базы НА МЕСТЕ (ссылки закэшированы в модулях) ── */
+    _replaceInto(window.VL_DB, newDb);
+    _replaceInto(window.VL_VARIANTS_DB, newVdb);
+    _replaceInto(window.VL_GEAR_ROLLS, newGr);
+    if (parsed.rarityCfg && window.RARITY_CFG) _replaceInto(window.RARITY_CFG, parsed.rarityCfg);
+    if (parsed.statusCfg && window.STATUS_CFG) _replaceInto(window.STATUS_CFG, parsed.statusCfg);
+    if (parsed.statusDesc && window.STATUS_DESC) _replaceInto(window.STATUS_DESC, parsed.statusDesc);
+    if (parsed.rate !== undefined && parsed.rate !== null) window.ED_GOLD_RATE = parsed.rate;
+
+    window._dbLoadMarks = marks;
+
+    /* Кастомные предметы пользователя живут отдельно (localStorage) — после
+       подмены базы их записи нужно вернуть в VL_DB тем же путём, что и при
+       обычной загрузке страницы. */
+    _reinjectCustom();
+    _refreshAll();
+
+    _ldPending = null;
+    window.dtLoadDbClose();
+    try { window.dtInputCodeClose(); } catch(_) {}
+    try { window.sndPlayClick('correct'); } catch(_) {}
+  }
+
+  /* ── Вернуть оригинальную базу без перезагрузки страницы ── */
+  window.dtLoadDbReset = function() {
+    if (!_ldPristine) { window.dtLoadDbClose(); return; }
+    _replaceInto(window.VL_DB, _c(_ldPristine.db));
+    _replaceInto(window.VL_VARIANTS_DB, _c(_ldPristine.vdb));
+    _replaceInto(window.VL_GEAR_ROLLS, _c(_ldPristine.gr));
+    if (_ldPristine.rate !== undefined) window.ED_GOLD_RATE = _ldPristine.rate;
+    window._dbLoadMarks = null;
+    window._dbLoadImg = {};
+    /* Value Changes снова сравнивает items_data1 с items_data2 */
+    if (window._VL_DB1_ORIG) {
+      window._VL_DB1          = _c(window._VL_DB1_ORIG);
+      window._VL_VARIANTS_DB1 = _c(window._VL_VARIANTS_DB1_ORIG);
+      window._VL_GEAR_ROLLS1  = _c(window._VL_GEAR_ROLLS1_ORIG);
+    }
+    _reinjectCustom();
+    _refreshAll();
+    window.dtLoadDbClose();
+  };
+
+  function _reinjectCustom() {
+    try {
+      if (typeof window._edInjectRecord !== 'function' || !window._edCustomItems) return;
+      window._edCustomItems.forEach(function(rec){
+        try { window._edInjectRecord(rec); } catch(_) {}
+      });
+    } catch(_) {}
+  }
+
+  function _refreshAll() {
+    window._vlNeedsRefresh = true;
+    try {
+      var si = document.getElementById('vl-search-input');
+      if (typeof window.vlFilterItems === 'function') window.vlFilterItems(si ? si.value : '');
+    } catch(_) {}
+    try { if (typeof window._vlRefreshOpenCards === 'function') window._vlRefreshOpenCards(); } catch(_) {}
+    try {
+      var dsi = document.getElementById('dt-search-input');
+      if (typeof window.dtRender === 'function') window.dtRender(window.dtCat || 'elements', dsi ? dsi.value : '');
+    } catch(_) {}
+    try { if (typeof window._vcRunDiff === 'function') window._vcRunDiff(); } catch(_) {}
+  }
+
+})();
+</script>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   LOAD DATABASE → CODE SNIPPETS / DOWNLOAD / EDITED BADGE
+
+   После загрузки кастомной базы (Load Database) сайт живёт на новых
+   данных, но «оригиналом» остаётся нетронутый items_data2.js — его
+   снимок лежит в window._dbLdPristine.
+
+   Этот модуль даёт остальным частям страницы единую точку сравнения
+   «текущее состояние ↔ оригинал»:
+     _dbLdOrigFor()          — оригинальная запись предмета для diff'а
+                               в _dtBuildSnippets (Copy Code / Print All);
+     _dbLdOrigRolls()        — оригинальные роллы Gear;
+     _dbLdRollsDiffer()      — изменились ли роллы относительно оригинала;
+     _dbLdStillEdited()      — предмет всё ещё отличается от оригинала?
+                               (если пользователь руками вернул исходные
+                               значения — бейдж EDITED снимается);
+     _dbLdBuildAllSnippets() — код ВСЕХ изменённых/добавленных предметов
+                               (Print All работает даже если их карточки
+                               не открыты);
+     _dbLdApplyToSource()    — те же изменения, применённые к тексту
+                               items_data2.js для Download .js.
+══════════════════════════════════════════════════════════════════ */
+(function(){
+
+  var CATS_FLAT = ['cosmetic','gamepasses','chromas','other'];
+  var CATS_ALL  = ['elements','gear','cosmetic','gamepasses','chromas','other'];
+
+  function _same(a, b) {
+    return String(a === null || a === undefined ? '' : a) === String(b === null || b === undefined ? '' : b);
+  }
+  function _byId(arr) {
+    var m = {};
+    (arr || []).forEach(function(e){ if (e && e.id) m[e.id] = e; });
+    return m;
+  }
+  function _pri() {
+    return window._dbLoadMarks ? (window._dbLdPristine || null) : null;
+  }
+  function _isCustom(id) {
+    try { return !!(window._edIsCustomItem && window._edIsCustomItem(id)); } catch(e) { return false; }
+  }
+
+  /* ── Форматтеры: 1:1 с _dtBuildSnippets ── */
+  function fv(v) {
+    if (typeof v === 'string' && v.indexOf('-') !== -1) return "'" + v + "'";
+    var n = Number(v);
+    return isNaN(n) ? "'" + v + "'" : String(n);
+  }
+  function fd(d) {
+    var n = parseFloat(d);
+    if (isNaN(n)) return '0';
+    return Number.isInteger(n) ? String(n) : String(Math.round(n * 1000) / 1000);
+  }
+  function fs(st) { return st ? "'" + st + "'" : 'null'; }
+  function pad(str, len) { while (str.length < len) str += ' '; return str; }
+
+  /* ── Поиск записи предмета по id во всех категориях ── */
+  function _find(db, id) {
+    for (var i = 0; i < CATS_ALL.length; i++) {
+      var cat = CATS_ALL[i];
+      var arr = (db && db[cat]) || [];
+      for (var j = 0; j < arr.length; j++) {
+        if (arr[j] && arr[j].id === id) return { cat: cat, entry: arr[j] };
+      }
+    }
+    return null;
+  }
+
+  /* ── Текущие роллы предмета с учётом ручных правок в DT ── */
+  function _effRolls(baseId, variant) {
+    var rec = window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId];
+    var arr = (rec && rec[variant]) ? rec[variant].slice() : [];
+    var key1 = baseId.replace(/[^a-zA-Z0-9_\-]/g, '_');
+    var key2 = ('corrupted:' + baseId).replace(/[^a-zA-Z0-9_\-]/g, '_');
+    var st = window._dtRollState && (window._dtRollState[variant === 'corrupted' ? key2 : key1]
+                                  || window._dtRollState[key1]);
+    if (st && st.rolls) {
+      Object.keys(st.rolls).forEach(function(rn) {
+        var idx = parseInt(rn, 10) - 1;
+        var cur = st.rolls[rn];
+        if (idx < 0 || !cur) return;
+        var base = arr[idx] || { v: null, d: null };
+        arr[idx] = {
+          v: (cur.v !== undefined && cur.v !== null) ? cur.v : base.v,
+          d: (cur.d !== undefined && cur.d !== null) ? cur.d : base.d
+        };
+      });
+    }
+    return arr;
+  }
+  function _rollsEq(a, b) {
+    a = a || []; b = b || [];
+    var n = Math.max(a.length, b.length);
+    for (var i = 0; i < n; i++) {
+      var x = a[i] || {}, y = b[i] || {};
+      if (!_same(x.v, y.v) || !_same(x.d, y.d)) return false;
+    }
+    return true;
+  }
+
+  /* ══════════ Оригинальные данные для diff'а сниппетов ══════════ */
+  var _NOT_FOUND = { rarity: '\u0000', value: '\u0000', demand: '\u0000', status: '\u0000', name: '\u0000' };
+
+  window._dbLdOrigFor = function(cat, baseId, variant) {
+    var pri = _pri();
+    if (!pri || _isCustom(baseId)) return null;
+    var loc = _find(pri.db, baseId);
+    /* Предмет добавлен загруженной базой — оригинала нет, значит изменено
+       вообще всё и должен печататься полный код записи. */
+    if (!loc) return _NOT_FOUND;
+    var e = loc.entry;
+    if (cat === 'elements' && variant && variant !== 'regular') {
+      var pv = (pri.vdb && pri.vdb[variant] && pri.vdb[variant][baseId]) || null;
+      if (!pv) return _NOT_FOUND;
+      return { name: e.name, rarity: e.rarity, value: pv.value, demand: pv.demand, status: pv.status };
+    }
+    return { name: e.name, rarity: e.rarity, value: e.value, demand: e.demand, status: e.status };
+  };
+
+  window._dbLdOrigRolls = function(baseId, variant) {
+    var pri = _pri();
+    if (!pri) return null;
+    var rec = pri.gr && pri.gr[baseId];
+    if (!rec) return null;
+    return rec[variant] || null;
+  };
+
+  window._dbLdRollsDiffer = function(baseId, variant) {
+    var pri = _pri();
+    if (!pri) return false;
+    var o = window._dbLdOrigRolls(baseId, variant);
+    var c = (window.VL_GEAR_ROLLS && window.VL_GEAR_ROLLS[baseId] && window.VL_GEAR_ROLLS[baseId][variant]) || null;
+    if (!o && !c) return false;
+    return !_rollsEq(o, c);
+  };
+
+  /* ══════════ Всё ещё отличается от оригинала? (бейдж EDITED) ══════════ */
+  window._dbLdStillEdited = function(item) {
+    var pri = _pri();
+    if (!pri || !item) return true;
+    var rawId  = String(item.id || '');
+    var baseId = String(item.baseId || rawId).replace('corrupted:', '');
+    if (_isCustom(baseId)) return true;
+
+    var variant = null;
+    if (rawId.indexOf(':') !== -1) {
+      var pfx = rawId.split(':')[0];
+      if (pfx !== 'corrupted') variant = pfx;
+    }
+
+    var loc = _find(pri.db, baseId);
+    if (!loc) return true;                 /* добавленный предмет */
+    var a = loc.entry;
+    var curLoc = _find(window.VL_DB, baseId);
+    var c = curLoc ? curLoc.entry : null;
+
+    if (loc.cat === 'gear') {
+      if (!_same(a.name, item.name) || !_same(a.rarity, item.rarity) || !_same(a.status, item.status)) return true;
+      if (c && (!_same(a.subtype, c.subtype) || !_same(a.imgId, c.imgId))) return true;
+      return !_rollsEq((pri.gr[baseId] || {}).corrupted, _effRolls(baseId, 'corrupted'));
+    }
+
+    if (!_same(a.name, item.name) || !_same(a.rarity, item.rarity)) return true;
+    if (c && !_same(a.imgId, c.imgId)) return true;
+
+    if (variant) {
+      var pv = (pri.vdb && pri.vdb[variant] && pri.vdb[variant][baseId]) || null;
+      if (!pv) return true;
+      return !_same(pv.value, item.value) || !_same(pv.demand, item.demand) || !_same(pv.status, item.status);
+    }
+    return !_same(a.value, item.value) || !_same(a.demand, item.demand) || !_same(a.status, item.status);
+  };
+
+  /* ══════════ Полный diff загруженной базы против оригинала ══════════ */
+  function _diff(onlyBaseId) {
+    var pri = _pri();
+    if (!pri) return [];
+    var out = [];
+    var only = onlyBaseId ? String(onlyBaseId).replace('corrupted:', '') : null;
+    function skip(id) { return _isCustom(id) || (only && id !== only); }
+
+    /* elements + плоские категории */
+    ['elements'].concat(CATS_FLAT).forEach(function(cat){
+      var o = _byId(pri.db[cat]);
+      (window.VL_DB[cat] || []).forEach(function(it){
+        if (!it || !it.id || it.isCustom || skip(it.id)) return;
+        var a = o[it.id];
+        if (!a) { out.push({ kind: cat === 'elements' ? 'element' : 'flat', cat: cat, item: it, added: true }); return; }
+        if (!_same(a.name, it.name) || !_same(a.rarity, it.rarity) || !_same(a.imgId, it.imgId)
+         || !_same(a.value, it.value) || !_same(a.demand, it.demand) || !_same(a.status, it.status)) {
+          out.push({ kind: cat === 'elements' ? 'element' : 'flat', cat: cat, item: it, added: false });
+        }
+      });
+    });
+
+    /* gear — запись предмета */
+    var og = _byId(pri.db.gear);
+    (window.VL_DB.gear || []).forEach(function(it){
+      if (!it || !it.id || it.isCustom || skip(it.id)) return;
+      var a = og[it.id];
+      if (!a) { out.push({ kind: 'gear', item: it, added: true }); return; }
+      if (!_same(a.name, it.name) || !_same(a.rarity, it.rarity) || !_same(a.imgId, it.imgId)
+       || !_same(a.subtype, it.subtype) || !_same(a.status, it.status)) {
+        out.push({ kind: 'gear', item: it, added: false });
+      }
+    });
+
+    /* gear — роллы */
+    Object.keys(window.VL_GEAR_ROLLS || {}).forEach(function(id){
+      if (skip(id) || _isCustom(id)) return;
+      var cur = (window.VL_GEAR_ROLLS[id] || {}).corrupted;
+      var old = (pri.gr && pri.gr[id] || {}).corrupted;
+      if (!cur) return;
+      if (!old || !_rollsEq(old, cur)) {
+        var gEntry = _byId(window.VL_DB.gear)[id];
+        out.push({ kind: 'rolls', id: id, rolls: cur, added: !old, name: gEntry ? gEntry.name : id });
+      }
+    });
+
+    /* elements — вариации */
+    Object.keys(window.VL_VARIANTS_DB || {}).forEach(function(variant){
+      var nmap = window.VL_VARIANTS_DB[variant] || {};
+      var omap = (pri.vdb && pri.vdb[variant]) || {};
+      Object.keys(nmap).forEach(function(id){
+        var b = nmap[id];
+        if (!b || b.isCustom || skip(id) || _isCustom(id)) return;
+        var a = omap[id];
+        if (a && _same(a.value, b.value) && _same(a.demand, b.demand) && _same(a.status, b.status)) return;
+        var el = _byId(window.VL_DB.elements)[id];
+        out.push({ kind: 'variant', variant: variant, id: id, data: b, added: !a, name: el ? el.name : id });
+      });
+    });
+
+    return out;
+  }
+
+  /* ══════════ Сниппеты (Print All) ══════════ */
+  window._dbLdBuildAllSnippets = function() {
+    var pri = _pri();
+    if (!pri) return [];
+    var out = [];
+
+    _diff(null).forEach(function(d){
+      var tag = d.added ? ' (NEW)' : '';
+      if (d.kind === 'element') {
+        var it = d.item;
+        out.push({
+          label: 'VL_DB.elements' + tag + '  —  ' + it.name,
+          code: "{ id:'" + it.id + "',\t\tname:\"" + it.name + "\",\t\t"
+              + "rarity:'" + it.rarity + "', imgId:'" + (it.imgId || it.id) + "',\t\t"
+              + "demand:" + fd(it.demand) + ", value:" + fv(it.value) + ",\t\t"
+              + "status:" + fs(it.status) + " }"
+        });
+        return;
+      }
+      if (d.kind === 'gear') {
+        var g = d.item;
+        out.push({
+          label: 'VL_DB.gear' + tag + '  —  ' + g.name,
+          code: "{ id:'" + g.id + "', name:\"" + g.name + "\","
+              + " rarity:'" + g.rarity + "',"
+              + " imgId:'" + (g.imgId || g.id) + "',"
+              + " subtype:'" + (g.subtype || 'weapon') + "',"
+              + " status:" + fs(g.status) + " }"
+        });
+        return;
+      }
+      if (d.kind === 'rolls') {
+        var parts = (d.rolls || []).map(function(r){ return r ? '{v:' + r.v + ',d:' + r.d + '}' : 'null'; });
+        out.push({
+          label: 'VL_GEAR_ROLLS.' + d.id + '.corrupted' + tag + '  —  ' + d.name,
+          code: "  corrupted: [ " + parts.join(',') + " ]"
+        });
+        return;
+      }
+      if (d.kind === 'variant') {
+        out.push({
+          label: 'VL_VARIANTS_DB.' + d.variant + tag + '  —  ' + d.name,
+          code: "  " + pad(d.id + ":", 22)
+              + "{ value:" + fv(d.data.value) + ","
+              + " demand:" + fd(d.data.demand) + ","
+              + " status:" + fs(d.data.status) + " },"
+        });
+        return;
+      }
+      /* плоские категории */
+      var f = d.item;
+      out.push({
+        label: 'VL_DB.' + d.cat + tag + '  —  ' + f.name,
+        code: "{ id:'" + f.id + "',"
+            + " name:\"" + f.name + "\","
+            + " rarity:'" + f.rarity + "',"
+            + (f.imgId ? " imgId:'" + f.imgId + "'," : '')
+            + (f.subtype ? " subtype:'" + f.subtype + "'," : '')
+            + " status:" + fs(f.status) + ","
+            + " value:" + fv(f.value) + ","
+            + " demand:" + fd(f.demand) + " }"
+      });
+    });
+
+    /* Курс золота, если загруженная база его поменяла */
+    if (pri.rate !== undefined && !_same(pri.rate, window.ED_GOLD_RATE)) {
+      out.push({ label: 'ED_GOLD_RATE', code: 'window.ED_GOLD_RATE = ' + window.ED_GOLD_RATE + ';' });
+    }
+
+    return out;
+  };
+
+  /* ══════════ Применение к тексту items_data2.js (Download .js) ══════════ */
+  function _appendToArray(text, blockStart, newLine) {
+    var bi = text.indexOf(blockStart);
+    if (bi === -1) return text;
+    var start = text.indexOf('[', bi);
+    if (start === -1) return text;
+    var depth = 1, pos = start + 1;
+    while (pos < text.length && depth > 0) {
+      if (text[pos] === '[') depth++;
+      else if (text[pos] === ']') { depth--; if (depth === 0) break; }
+      pos++;
+    }
+    return text.slice(0, pos) + '    ' + newLine + '\n  ' + text.slice(pos);
+  }
+  function _appendToObject(text, blockStart, newLine) {
+    var bi = text.indexOf(blockStart);
+    if (bi === -1) return null;
+    var start = text.indexOf('{', bi);
+    if (start === -1) return text;
+    var depth = 1, pos = start + 1;
+    while (pos < text.length && depth > 0) {
+      if (text[pos] === '{') depth++;
+      else if (text[pos] === '}') { depth--; if (depth === 0) break; }
+      pos++;
+    }
+    return text.slice(0, pos) + '  ' + newLine + '\n' + text.slice(pos);
+  }
+
+  window._dbLdApplyToSource = function(src, h, onlyBaseId) {
+    var pri = _pri();
+    if (!pri || !h) return src;
+
+    _diff(onlyBaseId || null).forEach(function(d){
+      if (d.kind === 'element') {
+        var it = d.item;
+        var line = "{ id:'" + it.id + "',\t\tname:\"" + it.name + "\",\t\t"
+          + "rarity:'" + it.rarity + "', imgId:'" + (it.imgId || it.id) + "',\t\t"
+          + "demand:" + fd(it.demand) + ",\tvalue:" + fv(it.value) + ",\t\t"
+          + "status:" + fs(it.status) + " },";
+        src = d.added ? _appendToArray(src, '  elements: [', line)
+                      : h.replaceLine(src, "id:'" + it.id + "'", line);
+        return;
+      }
+      if (d.kind === 'gear') {
+        var g = d.item;
+        var gLine = "{ id:'" + g.id + "', name:\"" + g.name + "\","
+          + " rarity:'" + g.rarity + "',"
+          + " imgId:'" + (g.imgId || g.id) + "',"
+          + " subtype:'" + (g.subtype || 'weapon') + "',"
+          + " status:" + fs(g.status) + " },";
+        src = d.added ? _appendToArray(src, '  gear: [', gLine)
+                      : h.replaceLine(src, "id:'" + g.id + "'", gLine);
+        return;
+      }
+      if (d.kind === 'rolls') {
+        var parts = (d.rolls || []).map(function(r){ return r ? '{v:' + r.v + ',d:' + r.d + '}' : 'null'; });
+        if (d.added) {
+          var block = d.id + ": {\n    corrupted: [ " + parts.join(',') + " ]\n  },";
+          var applied = _appendToObject(src, 'window.VL_GEAR_ROLLS = {', block);
+          if (applied !== null) src = applied;
+        } else {
+          src = h.replaceLineInBlock(src, '  ' + d.id + ': {', 'corrupted:',
+            "corrupted: [ " + parts.join(',') + " ]");
+        }
+        return;
+      }
+      if (d.kind === 'variant') {
+        var vLine = pad(d.id + ":", 22)
+          + "{ value:" + fv(d.data.value) + ","
+          + " demand:" + fd(d.data.demand) + ","
+          + " status:" + fs(d.data.status) + " },";
+        if (d.added) {
+          var applied2 = _appendToObject(src, '  ' + d.variant + ': {', vLine);
+          if (applied2 === null) {
+            var vdbStart = src.indexOf('window.VL_VARIANTS_DB = {');
+            if (vdbStart !== -1) {
+              var closeIdx = src.indexOf('\n};', vdbStart);
+              if (closeIdx !== -1) {
+                src = src.slice(0, closeIdx) + '\n  ' + d.variant + ': {\n    ' + vLine + '\n  },\n' + src.slice(closeIdx);
+              }
+            }
+          } else src = applied2;
+        } else {
+          src = h.replaceLineInBlock(src, '  ' + d.variant + ': {', d.id + ':', vLine);
+        }
+        return;
+      }
+      var f = d.item;
+      var flatLine = "{ id:'" + f.id + "',"
+        + " name:\"" + f.name + "\","
+        + " rarity:'" + f.rarity + "',"
+        + (f.imgId ? " imgId:'" + f.imgId + "'," : '')
+        + (f.subtype ? " subtype:'" + f.subtype + "'," : '')
+        + " status:" + fs(f.status) + ","
+        + " value:" + fv(f.value) + ","
+        + " demand:" + fd(f.demand) + " },";
+      src = d.added ? _appendToArray(src, '  ' + d.cat + ': [', flatLine)
+                    : h.replaceLine(src, "id:'" + f.id + "'", flatLine);
+    });
+
+    if (pri.rate !== undefined && !_same(pri.rate, window.ED_GOLD_RATE) && !onlyBaseId) {
+      src = h.replaceLine(src, 'window.ED_GOLD_RATE', 'window.ED_GOLD_RATE = ' + window.ED_GOLD_RATE + ';');
+    }
+
+    return src;
+  };
+
+})();
+</script>
 
 <!-- ── DT Errors Modal ── -->
 <div id="dt-error-modal" role="dialog" aria-modal="true" aria-label="Errors Found">
