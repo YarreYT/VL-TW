@@ -4944,15 +4944,19 @@ body.lang-ru .value-list-btn{
 }
 .vl-card-wrap:has(.vl-roll-dropdown[style*="flex"]),
 .az-card:has(.vl-roll-dropdown[style*="flex"]),
+.vl-card-wrap:has(.vl-roll-tooltip.vl-rt-open),
+.az-card:has(.vl-roll-tooltip.vl-rt-open),
 .vl-card-wrap:has(.vl-status-tooltip.show) {
   z-index: 100;
 }
-/* VALUE CHANGES panel: снимаем overflow clip когда dropdown роллов открыт */
-.updates-body:has(.vl-roll-dropdown[style*="flex"]) {
+/* VALUE CHANGES panel: снимаем overflow clip когда dropdown/тултип роллов открыт */
+.updates-body:has(.vl-roll-dropdown[style*="flex"]),
+.updates-body:has(.vl-roll-tooltip.vl-rt-open) {
   overflow-y: visible !important;
   overflow-x: visible !important;
 }
-.updates-panel:has(.vl-roll-dropdown[style*="flex"]) {
+.updates-panel:has(.vl-roll-dropdown[style*="flex"]),
+.updates-panel:has(.vl-roll-tooltip.vl-rt-open) {
   overflow: visible !important;
 }
 .vl-card-wrap .vl-detail-card {
@@ -6214,6 +6218,9 @@ body.lang-ru .value-list-btn{
 #dt-load-db-modal { position: fixed; inset: 0; z-index: 4050; display: none; align-items: center; justify-content: center; }
 #dt-load-db-modal.visible { display: flex; }
 #dt-load-db-modal .dt-cm-panel { width: min(480px, calc(100vw - 32px)); }
+#dt-ic-newitem-modal { position: fixed; inset: 0; z-index: 4060; display: none; align-items: center; justify-content: center; }
+#dt-ic-newitem-modal.visible { display: flex; }
+#dt-ic-newitem-modal .dt-cm-panel { width: min(480px, calc(100vw - 32px)); }
 .dt-ic-loaddb {
   margin-right: auto;
   padding: 7px 18px;
@@ -9339,6 +9346,120 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 .vl-roll-drop-item.active {
   background: color-mix(in srgb, var(--border-rune) 30%, var(--gold) 70%);
   color: var(--gold-bright);
+}
+/* ── Read-only roll tooltip (VL Gear) ──
+   Точная копия .dt-roll-editor/.dt-re-row (см. ниже в файле, секция DT):
+   раскрывается slide-down на всю ширину карточки, продолжая её вниз —
+   не пилюля рядом с кнопкой. Единственное отличие от DT — тут всё
+   read-only (нет input/спиннеров), value и demand просто текст. */
+.vl-roll-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--dt-re-bg);
+  border: 1px solid var(--border-rune);
+  border-top: 2px solid rgba(120,160,255,0.6);
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.7);
+  z-index: 50;
+  pointer-events: none;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height .32s cubic-bezier(.4,0,.2,1), opacity .22s ease, padding .32s;
+  padding: 0 6px;
+  display: flex;
+  flex-direction: column;
+}
+.vl-roll-tooltip.vl-rt-open {
+  max-height: 70vh;
+  overflow-y: hidden;
+  overflow-x: hidden;
+  opacity: 1;
+  padding: 4px 6px 8px;
+  pointer-events: auto;
+}
+.vl-roll-tooltip.vl-rt-open.vl-rt-settled {
+  overflow-y: auto;
+}
+.vl-card-wrap:has(.vl-roll-tooltip.vl-rt-open) .vl-detail-card { border-radius: 20px 20px 0 0; }
+.vl-rt-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 3px 30px 3px 30px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  cursor: default;
+}
+.vl-rt-row:first-of-type { border-top: none; }
+.vl-rt-price {
+  width: 100%;
+  max-width: 120px;
+  height: 16px;
+  line-height: 16px;
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  letter-spacing: .4px;
+  font-size: 15px;
+  text-align: center;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
+}
+.vl-rt-dem {
+  position: absolute;
+  left: calc(50% + 50px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+/* Маленький квадратик с "!" — помечает конкретный ролл как отредактированный
+   (индивидуальная замена старого поведения, когда Edited-бейдж карточки
+   зависел от того, какой именно ролл сейчас выбран). Позиционирован
+   относительно всей строки .vl-rt-row: у правого края тултипа, с отступом,
+   по вертикали центрирован на строку — не приклеен к тексту demand. */
+.vl-rt-edit-mark {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: #d92b2b;
+  color: #fff;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  box-shadow: 0 0 6px rgba(217,43,43,0.7);
+  cursor: default;
+}
+/* Маркер отредактированного АКТИВНОГО (топ) ролла — теперь лежит ВНУТРИ
+   .vl-roll-slot-wrap (первым потомком, перед лейблом "ROLL"), а не как
+   отдельный сосед .vl-roll-stars-row в правом нижнем углу карточки.
+   Позиционируется по центру, чуть выше самой надписи ROLL. */
+.vl-rt-edit-mark--main {
+  position: absolute;
+  left: 50%;
+  top: -22px;
+  right: auto;
+  bottom: auto;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 18px;
+  border-radius: 5px;
+  font-size: 13px;
+  box-shadow: 0 0 8px rgba(217,43,43,0.8);
+}
+@media (max-width: 600px) {
+  .vl-rt-row { padding: 3px 26px 3px 26px; }
 }
 /* ── Theme overrides: Easter ── */
 :root.theme-easter .vl-roll-slot-btn,
@@ -14417,6 +14538,32 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     return 'vl-rc-' + rollNum;
   }
 
+  /* Оригинальное (нередактированное) value/demand конкретного ролла —
+     сырые данные из VL_GEAR_ROLLS, БЕЗ учёта DT-правок. Используется и для
+     общего Edited-бейджа карточки (проверка по всем роллам), и для
+     маленького !-значка у конкретной строки в read-only тултипе. */
+  function _vlGetOrigRollValue(item, rollNum) {
+    var _gBaseId = item.baseId || item.id.replace('corrupted:', '');
+    /* Если сейчас загружена кастомная база (Load Database), «оригиналом»
+       для сравнения должен служить нетронутый пре-загрузочный снимок
+       window._dbLdPristine.gr, а НЕ текущий VL_GEAR_ROLLS — тот уже
+       перезаписан значениями из загруженной базы, и сравнение с самим
+       собой всегда даёт "не изменено" (галочки пропадают, хотя EDITED-бейдж
+       карточки, который сверяется как раз с этим снимком, стоит верно). */
+    var _origArr = null;
+    if (window._dbLoadMarks && window._dbLdPristine && window._dbLdPristine.gr
+        && window._dbLdPristine.gr[_gBaseId]) {
+      _origArr = window._dbLdPristine.gr[_gBaseId]['corrupted'] || null;
+    }
+    if (!_origArr) {
+      _origArr = VL_GEAR_ROLLS[_gBaseId] ? VL_GEAR_ROLLS[_gBaseId]['corrupted'] : null;
+    }
+    /* И для corrupted, и для regular вариаций оригиналом всегда служат
+       сырые corrupted-данные (regular пересчитывается из них по формуле —
+       VL_GEAR_ROLLS не хранит отдельный 'regular' массив). */
+    return (_origArr && _origArr[rollNum - 1]) ? _origArr[rollNum - 1] : null;
+  }
+
   /* ── Roll slot helpers ── */
 
   /* Хранилище выбранных роллов: cardId → { rollNum, value, demand } */
@@ -14451,7 +14598,10 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     }
     var cardId = item.id.replace(/[^a-zA-Z0-9_\-]/g, '_');
 
-    /* Берём сохранённый ролл или максимальный (последний не-null) по умолчанию */
+    /* Берём сохранённый ролл или максимальный (последний не-null) по умолчанию.
+       Пользователь больше не может переключать активный ролл кликом (дропдаун
+       выбора убран) — saved.rollNum сюда может попасть только из DT-редактора
+       (dtSelectRoll/_vlSyncRegularRollState), не из клика по карточке в VL. */
     var saved = _vlRollState[cardId];
     var _defRoll = _vlDefaultRollNum(rolls);
     var initRoll = saved ? saved.rollNum : _defRoll;
@@ -14472,8 +14622,12 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 
     /* Единственный ролл — статичный слот без кнопки и списка */
     if (rolls.length === 1) {
+      var _origSingle = _vlGetOrigRollValue(item, initRoll);
+      var _singleEdited = !!(_origSingle && (String(initValue) !== String(_origSingle.v) || String(initDemand) !== String(_origSingle.d)));
+      var _singleMark = _singleEdited ? '<span class="vl-rt-edit-mark vl-rt-edit-mark--main" title="' + (window.t ? t('vl_roll_edited') : 'Ролл изменён') + '">!</span>' : '';
       return '<div class="vl-roll-stars-row">'
         + '<div class="vl-roll-slot-wrap" id="rollwrap-' + cardId + '">'
+        +   _singleMark
         +   '<div class="vl-roll-slot-label">' + (window.t ? t('vl_roll_label') : 'Ролл') + '</div>'
         +   '<div class="vl-roll-slot-static"><span class="' + initRc + '">' + initRoll + '</span></div>'
         + '</div>'
@@ -14481,71 +14635,148 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         + '</div>';
     }
 
-    var dropItems = '';
-    for (var i = 0; i < rolls.length; i++) {
-      var isActive = rolls[i].rollNum === initRoll;
-      var rc = _vlGetRollClass(rolls, rolls[i].rollNum);
-      dropItems += '<button class="vl-roll-drop-item' + (isActive ? ' active' : '') + '" onclick="vlSelectRoll(event,\'' + cardId + '\',' + rolls[i].rollNum + ',' + rolls[i].data.v + ',' + rolls[i].data.d + ')">'
-        + '<span class="' + rc + '">' + rolls[i].rollNum + '</span>'
-        + '</button>';
-    }
-
+    /* Дропдаун с выбором ролла убран: слот всегда показывает максимальный
+       заполненный ролл (initRoll = _vlDefaultRollNum). Клик по слоту открывает
+       вместо этого read-only тултип со списком ВСЕХ роллов (см. vlToggleRollTooltip
+       / _vlRollTooltipRowsHTML ниже) — просмотр значений без возможности
+       переключить активный ролл карточки. */
     var initRc = _vlGetRollClass(rolls, initRoll);
+
+    /* Активный (топ) ролл больше не показывается в тултипе (он и так виден
+       здесь) — поэтому если именно ЕГО отредактировали, единственное место
+       это показать — тут же, рядом со звёздами demand главного слота. */
+    var _origMain = _vlGetOrigRollValue(item, initRoll);
+    var _mainEdited = !!(_origMain && (String(initValue) !== String(_origMain.v) || String(initDemand) !== String(_origMain.d)));
+    var _mainMark = _mainEdited ? '<span class="vl-rt-edit-mark vl-rt-edit-mark--main" title="' + (window.t ? t('vl_roll_edited') : 'Ролл изменён') + '">!</span>' : '';
 
     return '<div class="vl-roll-stars-row">'
       + '<div class="vl-roll-slot-wrap" id="rollwrap-' + cardId + '">'
+      +   _mainMark
       +   '<div class="vl-roll-slot-label">' + (window.t ? t('vl_roll_label') : 'Ролл') + '</div>'
       +   '<div style="position:relative;">'
-      +     '<button class="vl-roll-slot-btn" id="rollbtn-' + cardId + '" onclick="vlToggleRollDropdown(event,\'' + cardId + '\')" aria-label="Выбрать ролл">'
+      +     '<button class="vl-roll-slot-btn" id="rollbtn-' + cardId + '" onclick="vlToggleRollTooltip(event,\'' + cardId + '\')" aria-label="Просмотреть роллы">'
       +       '<span id="rollval-' + cardId + '" class="' + initRc + '">' + initRoll + '</span>'
       +       '<span class="vl-roll-chevron">▼</span>'
       +     '</button>'
-      +     '<div class="vl-roll-dropdown" id="rolldrop-' + cardId + '" style="display:none;">' + dropItems + '</div>'
       +   '</div>'
       + '</div>'
       + '<div class="vl-roll-stars-side">' + vlStarsHTML(initDemand) + '</div>'
       + '</div>';
   }
 
-  window.vlToggleRollDropdown = function(e, cardId) {
+  /* ── Read-only roll tooltip ──
+     Раньше клик по roll-slot открывал dropdown, позволявший ПЕРЕКЛЮЧИТЬ
+     активный ролл карточки (vlSelectRoll → vlBuildCard → карточка "гуляла"
+     между роллами, сортировка съезжала). Теперь карточка ВСЕГДА показывает
+     максимальный заполненный ролл (_vlDefaultRollNum), а клик по слоту лишь
+     раскрывает справочный список всех роллов — по образу DT-редактора
+     (раскрывается прямо под слотом, внутри карточки, не floating), но без
+     полей ввода и без возможности что-либо изменить или выбрать. */
+
+  /* ── Read-only roll tooltip (VL Gear) ──
+     Раньше клик по roll-slot открывал dropdown, позволявший ПЕРЕКЛЮЧИТЬ
+     активный ролл карточки (vlSelectRoll → vlBuildCard → карточка "гуляла"
+     между роллами, сортировка съезжала). Теперь карточка ВСЕГДА показывает
+     максимальный заполненный ролл (_vlDefaultRollNum), а клик по слоту лишь
+     раскрывает справочный список всех роллов.
+
+     Структура и стили — точная копия DT-редактора (.dt-roll-editor/.dt-re-row,
+     см. _dtRollEditorRowsHTML и dtToggleRollDropdown): узел вставляется как
+     сосед .vl-card-wrap через card.after(...), раскрывается slide-down на
+     всю ширину карточки, продолжая её вниз — а не маленькая пилюля рядом
+     с кнопкой. Разница с DT только в том, что тут всё read-only: никаких
+     <input>, никаких demand-стрелочек — value и demand просто текст. */
+
+  function _vlRollTooltipRowsHTML(rolls, item, activeRollNum) {
+    var _rcColor = (window.RARITY_CFG && (window.RARITY_CFG[item.rarity] || window.RARITY_CFG.rare)) || { color: '#70a1ff' };
+    var _scColor = item.status && window.STATUS_CFG ? window.STATUS_CFG[item.status] : null;
+    var _reValueColor = _scColor ? _scColor.color : _rcColor.color;
+    var _reUseGradient = _rcColor.gradient && !_scColor;
+
+    var rowsHTML = '';
+    for (var i = rolls.length - 1; i >= 0; i--) {
+      var r = rolls[i];
+      if (r.rollNum === activeRollNum) continue; /* уже показан главным слотом на карточке */
+      var _rc = _vlGetRollClass(rolls, r.rollNum);
+      var _vNum = parseFloat(r.data.v) || 0;
+      var _dNum = parseFloat(r.data.d) || 0;
+      var _dLbl = Number.isInteger(_dNum) ? String(_dNum) : String(parseFloat(_dNum.toFixed(2)));
+      var _stars = window.vlStarsHTML ? window.vlStarsHTML(_dNum).replace(/<span class="vl-demand-label">[\s\S]*?<\/span>/, '').replace(/<div class="vl-stars-demand-wrap">|<\/div>$/g, '') : '';
+
+      /* Этот конкретный ролл отредактирован? — сравниваем с сырым оригиналом
+         (rolls[i].data уже учитывает любые DT-правки, см. vlGetRollsForItem) */
+      var _origRow = _vlGetOrigRollValue(item, r.rollNum);
+      var _rowEdited = !!(_origRow && (String(r.data.v) !== String(_origRow.v) || String(r.data.d) !== String(_origRow.d)));
+      var _editMark = _rowEdited ? '<span class="vl-rt-edit-mark" title="' + (window.t ? t('vl_roll_edited') : 'Ролл изменён') + '">!</span>' : '';
+
+      rowsHTML += '<div class="vl-rt-row' + (_rowEdited ? ' vl-rt-row--edited' : '') + '" data-roll="' + r.rollNum + '">'
+        +   '<span class="dt-re-num ' + _rc + '">' + r.rollNum + '</span>'
+        +   '<div class="dt-re-right">'
+        +     '<div class="vl-rt-price-wrap" style="position:relative;width:100%;max-width:120px;">'
+        +       '<div class="vl-rt-price" style="color:' + (_reUseGradient ? 'transparent' : _reValueColor) + ';">' + _vNum + '</div>'
+        +       (_reUseGradient ? '<span class="dt-re-price-grad-overlay ' + _rcColor.cls + '">' + _vNum + '</span>' : '')
+        +     '</div>'
+        +     '<div class="dt-re-stars-row">'
+        +       '<div class="dt-re-stars">' + _stars + '</div>'
+        +       '<div class="vl-rt-dem">(' + _dLbl + '/5)</div>'
+        +     '</div>'
+        +   '</div>'
+        +   _editMark
+        + '</div>';
+    }
+    return rowsHTML;
+  }
+
+  window.vlToggleRollTooltip = function(e, cardId) {
     e.stopPropagation();
-    var drop = document.getElementById('rolldrop-' + cardId);
-    if (!drop) return;
-    var isOpen = drop._teleported ? drop.style.display === 'flex' : drop.style.display === 'flex';
-    _vlCloseAllRollDropdowns();
-    if (isOpen) return;
+    var btn = document.getElementById('rollbtn-' + cardId);
+    var cardWrap = btn ? btn.closest('.vl-card-wrap') : null;
+    if (!cardWrap) return;
+    var existing = cardWrap.querySelector('.vl-roll-tooltip');
 
-    var btn = document.getElementById('rollbtn-' + cardId) || e.currentTarget || e.target;
+    if (existing && !existing._removing) {
+      existing._removing = true;
+      existing.classList.remove('vl-rt-open');
+      setTimeout(function() { if (existing.parentNode) existing.remove(); }, 320);
+      return;
+    }
+    /* Закрываем любые другие открытые тултипы на странице */
+    _vlCloseAllRollTooltips();
+    if (existing) { existing._removing = true; existing.remove(); }
 
-    /* Телепортируем dropdown в <body> чтобы вырваться из overflow:hidden предков */
-    drop._origParent = drop.parentNode;
-    drop._origNextSibling = drop.nextSibling;
-    drop._teleported = true;
-    drop._anchorBtn = btn;
-    document.body.appendChild(drop);
-
-    function _vlPositionRollDrop() {
-      var btnRect = btn.getBoundingClientRect();
-      var dropH = drop.offsetHeight;
-      var spaceBelow = window.innerHeight - btnRect.bottom;
-      var topVal = (spaceBelow < dropH + 8)
-        ? (btnRect.top - dropH - 4)
-        : (btnRect.bottom + 4);
-      drop.style.top  = topVal + 'px';
-      drop.style.left = (btnRect.left + btnRect.width / 2) + 'px';
+    var openEntry = null;
+    for (var _oi = 0; _oi < vlOpenCards.length; _oi++) {
+      if (vlOpenCards[_oi].id.replace(/[^a-zA-Z0-9_\-]/g, '_') === cardId) { openEntry = vlOpenCards[_oi]; break; }
+    }
+    if (!openEntry) return;
+    var rolls = vlGetRollsForItem(openEntry.item);
+    if (!rolls || rolls.length < 2) return; /* нечего показывать в списке */
+    var activeRollNum = _vlDefaultRollNum(rolls);
+    if (rolls.length - 1 < 2) {
+      /* Убрав активный ролл (уже виден на самой карточке), в списке остался бы
+         только 1 или 0 роллов — тултипу тогда нечего показывать. */
+      var _remainCount = 0;
+      for (var _rc0 = 0; _rc0 < rolls.length; _rc0++) { if (rolls[_rc0].rollNum !== activeRollNum) _remainCount++; }
+      if (_remainCount < 1) return;
     }
 
-    drop.style.cssText = [
-      'display:flex',
-      'pointer-events:auto',
-      'position:fixed',
-      'z-index:99',
-      'transform:translateX(-50%)'
-    ].join(';');
+    var tt = document.createElement('div');
+    tt.className = 'vl-roll-tooltip';
+    tt.id = 'rolltip-' + cardId;
+    tt.dataset.cid = cardId;
+    tt.innerHTML = _vlRollTooltipRowsHTML(rolls, openEntry.item, activeRollNum);
+    var anchor = cardWrap.querySelector('.vl-detail-card') || cardWrap;
+    anchor.after(tt);
 
-    requestAnimationFrame(_vlPositionRollDrop);
-    drop._scrollHandler = _vlPositionRollDrop;
-    window.addEventListener('scroll', _vlPositionRollDrop, { capture: true, passive: true });
+    requestAnimationFrame(function() { requestAnimationFrame(function() {
+      tt.classList.add('vl-rt-open');
+      var _onSettled = function(ev) {
+        if (ev.propertyName !== 'max-height') return;
+        tt.classList.add('vl-rt-settled');
+      };
+      tt.addEventListener('transitionend', _onSettled);
+      tt._onSettled = _onSettled;
+    }); });
 
     setTimeout(function() {
       document.addEventListener('click', _vlRollOutsideClick);
@@ -14553,74 +14784,22 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   };
 
   function _vlRollOutsideClick(e) {
-    var anyDrop = document.querySelector('.vl-roll-dropdown[style*="flex"]');
-    if (!anyDrop) return;
-    if (!anyDrop.contains(e.target)) _vlCloseAllRollDropdowns();
+    var anyTip = document.querySelector('.vl-roll-tooltip.vl-rt-open');
+    if (!anyTip) { document.removeEventListener('click', _vlRollOutsideClick); return; }
+    if (anyTip.contains(e.target)) return;
+    if (e.target.closest && e.target.closest('.vl-roll-slot-btn')) return; /* сам toggle-клик */
+    _vlCloseAllRollTooltips();
   }
 
-  function _vlCloseAllRollDropdowns() {
-    document.querySelectorAll('.vl-roll-dropdown').forEach(function(d) {
-      if (d.style.display === 'flex') {
-        d.style.display = 'none';
-        /* Снимаем scroll listener */
-        if (d._scrollHandler) {
-          window.removeEventListener('scroll', d._scrollHandler, true);
-          d._scrollHandler = null;
-        }
-        /* Возвращаем на исходное место если был телепортирован */
-        if (d._teleported && d._origParent) {
-          if (d._origNextSibling) {
-            d._origParent.insertBefore(d, d._origNextSibling);
-          } else {
-            d._origParent.appendChild(d);
-          }
-          d._teleported = false;
-          d._origParent = null;
-          d._origNextSibling = null;
-          d._anchorBtn = null;
-        }
-      }
+  function _vlCloseAllRollTooltips() {
+    document.querySelectorAll('.vl-roll-tooltip.vl-rt-open').forEach(function(tt) {
+      if (tt._removing) return;
+      tt._removing = true;
+      tt.classList.remove('vl-rt-open');
+      setTimeout(function() { if (tt.parentNode) tt.remove(); }, 320);
     });
     document.removeEventListener('click', _vlRollOutsideClick);
   }
-
-  window.vlSelectRoll = function(e, cardId, rollNum, value, demand) {
-    e.stopPropagation();
-    /* Сохраняем выбранный ролл.
-       Берём свежие value/demand из vlGetRollsForItem — HTML кнопок дропдауна может быть
-       устаревшим если DT изменил данные после последнего рендера карточки. */
-    var openEntry = null;
-    for (var _oi = 0; _oi < vlOpenCards.length; _oi++) {
-      if (vlOpenCards[_oi].id.replace(/[^a-zA-Z0-9_\-]/g, '_') === cardId) { openEntry = vlOpenCards[_oi]; break; }
-    }
-    if (openEntry) {
-      var _freshRolls = vlGetRollsForItem(openEntry.item);
-      if (_freshRolls) {
-        for (var _fri = 0; _fri < _freshRolls.length; _fri++) {
-          if (_freshRolls[_fri].rollNum === rollNum) {
-            value  = _freshRolls[_fri].data.v;
-            demand = _freshRolls[_fri].data.d;
-            break;
-          }
-        }
-      }
-    }
-    _vlRollState[cardId] = { rollNum: rollNum, value: value, demand: demand };
-    /* Закрываем дропдаун */
-    _vlCloseAllRollDropdowns();
-    /* Перестраиваем карточку целиком — vlBuildCard учтёт новый ролл,
-       обновит value/demand/gold/stars и Edited badge в одном месте */
-    var cardWrap = null;
-    document.querySelectorAll('.vl-card-wrap').forEach(function(w) {
-      if ((w.dataset.cardId || '').replace(/[^a-zA-Z0-9_\-]/g, '_') === cardId) cardWrap = w;
-    });
-    if (!cardWrap) return;
-    if (!openEntry) return;
-    var newWrap = vlBuildCard(openEntry.item);
-    cardWrap.parentNode.replaceChild(newWrap, cardWrap);
-    /* Пересортируем карточки по новому значению */
-    if (vlSortMode !== -1) vlSortCards();
-  };
 
 
   function vlBuildCard(item) {
@@ -14750,6 +14929,17 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         return;
       }
 
+      /* ── Input Copied Code: неизвестный новый предмет, добавленный после
+         запроса изображения (см. window._icHandleNewItem). Временный,
+         живёт до перезагрузки страницы — как и предметы Load Database. */
+      if (window._icAddedIds && (window._icAddedIds[_baseRawId] || window._icAddedIds[item.id])) {
+        var _belowIcA = variantBadge !== '';
+        editedBadge = '<div class="vl-added-badge'
+          + (_belowIcA ? ' vl-added-badge--below' : '')
+          + '" id="vl-added-badge-' + cardId + '">ADDED</div>';
+        return;
+      }
+
       /* ── Load Database: предметы из временно загруженной кастомной базы ──
          Помечаем ТЕМИ ЖЕ бейджами, что и обычное редактирование: изменённые —
          EDITED, добавленные — ADDED. Совпадающие по значениям предметы не
@@ -14830,55 +15020,32 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
           if (!_isEdited) {
             var _rolls = vlGetRollsForItem(item);
             if (_rolls && _rolls.length) {
-              /* Gear: value/demand текущего ролла.
-                 Номер ролла берём из _vlRollState, если он уже сохранён
-                 (пользователь выбирал ролл в VL) — иначе дефолт. Но САМИ
-                 значения value/demand для этого номера всегда подтягиваем
-                 заново из _dtRollState, если там есть более свежая правка —
-                 иначе если ролл уже был открыт в VL ДО того, как его
-                 отредактировали в DT, EDITED не появлялся, пока пользователь
-                 не переключал ролл вручную (что перезаписывало _vlRollState). */
-              var _saved = _vlRollState[cardId];
-              var _rnForFresh = _saved ? _saved.rollNum : undefined;
-              if (typeof _dtRollState !== 'undefined') {
-                /* Для Regular: cardId = baseId (без corrupted_-префикса).
-                   В _dtRollState запись лежит под corrupted_baseId — ищем по нему. */
-                var _corrStateKey = 'corrupted_' + (item.baseId || item.id).replace(/[^a-zA-Z0-9_\-]/g, '_');
-                var _dts = _dtRollState[cardId] || _dtRollState[_corrStateKey];
-                if (_dts) {
-                  var _rn  = (_rnForFresh !== undefined) ? _rnForFresh : _dts.rollNum;
-                  var _rd  = _dts.rolls && _dts.rolls[_rn];
-                  if (_rd) {
-                    _saved = { rollNum: _rn, value: (_rd.v !== null && _rd.v !== undefined) ? _rd.v : _rolls[0].data.v, demand: (_rd.d !== null && _rd.d !== undefined) ? _rd.d : _rolls[0].data.d };
-                  } else if (!_saved) {
-                    _saved = { rollNum: _rn, value: _rolls[0].data.v, demand: _rolls[0].data.d };
+              /* Gear: Edited-бейдж теперь ОБЩИЙ для карточки — раньше сравнивался
+                 только текущий выбранный ролл (_vlRollState), но с тех пор как
+                 переключение активного ролла кликом убрано (карточка всегда
+                 показывает максимальный заполненный ролл), это перестало иметь
+                 смысл: правка ЛЮБОГО ролла (не обязательно топового) должна
+                 подсвечивать карточку. Индивидуальная пометка "изменён именно
+                 этот ролл" переехала в маленький !-значок у каждой строки в
+                 read-only тултипе (см. _vlRollTooltipRowsHTML). */
+              for (var _rei = 0; _rei < _rolls.length && !_isEdited; _rei++) {
+                var _rRoll = _rolls[_rei];
+                var _curV = _rRoll.data.v, _curD = _rRoll.data.d;
+                /* Более свежая правка могла осесть в _dtRollState, а ещё не
+                   попасть в vlGetRollsForItem (тот же паттерн, что раньше
+                   применялся только к текущему ролу — теперь ко всем). */
+                if (typeof _dtRollState !== 'undefined') {
+                  var _corrStateKey2 = 'corrupted_' + (item.baseId || item.id).replace(/[^a-zA-Z0-9_\-]/g, '_');
+                  var _dts2 = _dtRollState[cardId] || _dtRollState[_corrStateKey2];
+                  var _rd2 = _dts2 && _dts2.rolls && _dts2.rolls[_rRoll.rollNum];
+                  if (_rd2) {
+                    if (_rd2.v !== null && _rd2.v !== undefined) _curV = _rd2.v;
+                    if (_rd2.d !== null && _rd2.d !== undefined) _curD = _rd2.d;
                   }
                 }
-              }
-              if (_saved) {
-                var _gBaseId = item.baseId || item.id.replace('corrupted:', '');
-                var _isCorr  = item.id.indexOf('corrupted:') !== -1;
-                /* Для corrupted: сравниваем с сырыми VL_GEAR_ROLLS данными.
-                   Для regular: VL_GEAR_ROLLS не содержит 'regular' массива —
-                   используем сырые corrupted значения напрямую. */
-                var _origR = null;
-                if (_isCorr) {
-                  var _origArr = VL_GEAR_ROLLS[_gBaseId] ? VL_GEAR_ROLLS[_gBaseId]['corrupted'] : null;
-                  _origR = (_origArr && _saved) ? _origArr[_saved.rollNum - 1] : null;
-                } else {
-                  /* Regular: используем сырые corrupted значения для конкретного rollNum */
-                  var _rawCorrArr = VL_GEAR_ROLLS[_gBaseId] ? VL_GEAR_ROLLS[_gBaseId]['corrupted'] : null;
-                  if (_rawCorrArr && _rawCorrArr[_saved.rollNum - 1]) {
-                    var _rawCorr = _rawCorrArr[_saved.rollNum - 1];
-                    _origR = {
-                      v: _rawCorr.v,
-                      d: _rawCorr.d
-                    };
-                  }
-                }
-                if (_origR) {
-                  _isEdited = (String(_saved.value)  !== String(_origR.v))
-                           || (String(_saved.demand) !== String(_origR.d));
+                var _origR2 = _vlGetOrigRollValue(item, _rRoll.rollNum);
+                if (_origR2 && (String(_curV) !== String(_origR2.v) || String(_curD) !== String(_origR2.d))) {
+                  _isEdited = true;
                 }
               }
             } else {
@@ -19253,6 +19420,10 @@ function toggleEasterTheme() {
     };
     dtAddCard(it);
   }
+  /* Нужна снаружи модуля — см. _icCommit (Input Copied Code → новый предмет),
+     который живёт в отдельном <script> и раньше не открывал DT-карточку
+     после добавления нового предмета. */
+  window._dtIcOpenCard = _dtIcOpenCard;
 
   /* Находит rec кастомного предмета по ЭКСПОРТНОМУ id (тому, что видит
      пользователь в сгенерированном code-input снипете — "zhivoder" и т.п.),
@@ -19268,11 +19439,37 @@ function toggleEasterTheme() {
        бывает для gear/variant записей, где экспортный id строится иначе). */
     var direct = (typeof window._edFindItem === 'function') ? window._edFindItem(exportId) : null;
     if (direct) return direct;
-    if (typeof window._edComputeExportIds !== 'function' || !window._edCustomItems) return null;
-    var map = window._edComputeExportIds(); // rec.id -> exportId
-    for (var i = 0; i < window._edCustomItems.length; i++) {
-      var rec = window._edCustomItems[i];
+    /* Ищем и среди подтверждённых (_edCustomItems), и среди черновиков
+       (_edDrafts) — предмет, временно открытый на редактирование через
+       edUnlockItem, вынимается из _edCustomItems (см. edUnlockItem), и без
+       этого паст кода СВОЕГО ЖЕ предмета в этот момент не находил его тут,
+       хотя _icIsKnownLocally (соседний модуль, «новый предмет от чужого
+       кода») его прекрасно находил — та же гонка ошибочно превращала правку
+       собственного предмета в добавление нового с дефолтными полями. */
+    var recs = (window._edCustomItems || []).slice();
+    try {
+      if (window._edDrafts) Object.keys(window._edDrafts).forEach(function(k){
+        if (window._edDrafts[k]) recs.push(window._edDrafts[k]);
+      });
+    } catch(_) {}
+    if (!recs.length) return null;
+    var map = (typeof window._edComputeExportIds === 'function') ? window._edComputeExportIds() : {};
+    for (var i = 0; i < recs.length; i++) {
+      var rec = recs[i];
       if (map[rec.id] === exportId) return rec;
+    }
+    /* Фолбэк — совпадение по слагу имени (тот же алгоритм, что и в
+       _edComputeExportIds/_icSlug). Ловит случаи, где карта id→exportId по
+       какой-то причине не успела посчитаться/не совпала (например суффикс
+       _2/_3 разошёлся из-за порядка перебора), но имя предмета в коде и в
+       rec совпадает буквально — этого достаточно, чтобы не спутать правку
+       своего предмета с добавлением нового. */
+    var slug = (typeof window._edSlugify === 'function') ? window._edSlugify : function(s){ return String(s||'').trim().toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,''); };
+    var wantSlug = slug(exportId);
+    for (var j = 0; j < recs.length; j++) {
+      var r = recs[j];
+      var rSlug = slug(r.name);
+      if (rSlug && rSlug === wantSlug) return r;
     }
     return null;
   }
@@ -19689,6 +19886,27 @@ function toggleEasterTheme() {
       return; /* всё-или-ничего: ничего не применяем, пока не исправят все ошибки */
     }
 
+    /* ── Настоящие новые предметы (не принадлежат кастомным предметам ЭТОГО
+       браузера — см. _dtIcValidateBlock/_edFindItemByExportId) — вместо
+       того чтобы молча игнорировать их (старое поведение), выделяем их из
+       общего списка действий и отдельно проводим через флоу "нужна картинка"
+       (аналог Load Database, см. window._icHandleNewItem). Для gear нужно
+       спарить db(NEW)-блок с соответствующим rollsNew-блоком того же id —
+       оба генерируются вместе в _edBuildCustomItemSnippets под одним eid. */
+    var _icRollsByBaseId = {};
+    actions = actions.filter(function(a) {
+      if (a.type === 'rollsNew') { _icRollsByBaseId[a.baseId] = a.corrupted; return false; }
+      return true;
+    });
+    var _icNewItems = [];
+    actions = actions.filter(function(a) {
+      if (a.type === 'db' && a.isNew) {
+        _icNewItems.push({ cat: a.cat, obj: a.data, rolls: (a.cat === 'gear') ? _icRollsByBaseId[a.id] : null });
+        return false;
+      }
+      return true;
+    });
+
     /* Каждое действие изолировано: раньше исключение внутри одного блока
        (например Gear) обрывало весь forEach — остальные карточки не
        открывались, а модалка оставалась висеть. Теперь сбой одного блока не
@@ -19711,6 +19929,13 @@ function toggleEasterTheme() {
        устареть — данные и открытые карточки изменились. */
     if (typeof dtRender === 'function') dtRender(dtCat);
     _dtSyncPrintAllBtn();
+
+    /* Настоящие новые предметы — по одному в очередь на картинку. Если у
+       предмета уже есть подходящее изображение на сайте (совпал imgId),
+       _icHandleNewItem добавит его сразу, без вопроса. */
+    _icNewItems.forEach(function(ni) {
+      if (typeof window._icHandleNewItem === 'function') window._icHandleNewItem(ni.cat, ni.obj, ni.rolls);
+    });
 
     /* Модалка закрывается всегда — даже если часть блоков не применилась
        (об этом скажет окно ошибок), чтобы не оставлять её висеть без
@@ -23110,6 +23335,378 @@ function toggleEasterTheme() {
   </div>
 </div>
 
+<!-- ── Input Copied Code: неизвестный НОВЫЙ предмет — запрос изображения ──
+     Срабатывает, когда вставленный код содержит (NEW)-блок, который НЕ
+     принадлежит кастомному предмету этого браузера (т.е. чужой/незнакомый
+     новый предмет). Аналогично Load Database: временно, до перезагрузки. -->
+<div id="dt-ic-newitem-modal" role="dialog" aria-modal="true" aria-label="New item image">
+  <div class="dt-cm-backdrop" onclick="dtIcNewItemSkip()"></div>
+  <div class="dt-cm-panel">
+    <div class="dt-cm-header">
+      <span class="dt-cm-title" data-i18n="dt_ic_newitem_title">New item found</span>
+      <button class="dt-cm-close" onclick="dtIcNewItemSkip()" title="Close">✕</button>
+    </div>
+    <div class="dt-ic-body dt-ld-split">
+      <div class="dt-ld-col-text">
+        <div class="dt-ic-hint" data-i18n="dt_ic_newitem_hint">This pasted code references an item that isn't in your database yet. Attach its 1024×1024 .webp image to add it temporarily — it will disappear on reload.</div>
+        <div class="dt-ld-q"><span id="dt-ic-ni-name">—</span></div>
+        <div class="dt-ld-img-list">
+          <div class="dt-ld-img-row" id="dt-ic-ni-row">
+            <span id="dt-ic-ni-imgid">—</span>
+          </div>
+        </div>
+      </div>
+      <label class="dt-ld-drop" id="dt-ic-ni-drop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-11 10"/></svg>
+        <span class="dt-ld-drop-name" id="dt-ic-ni-file-name" data-i18n="dt_load_db_pick_imgs">Choose image</span>
+        <span class="dt-ld-drop-sub">.webp · 1024×1024</span>
+        <input type="file" accept="image/webp" id="dt-ic-ni-file" onchange="dtIcNewItemPickImage(this)">
+      </label>
+    </div>
+    <div class="dt-cm-footer">
+      <div class="dt-ic-footer-row">
+        <button class="dt-ic-cancel" onclick="dtIcNewItemSkip()" data-i18n="dt_ic_newitem_skip">Skip this item</button>
+        <button class="dt-ic-apply" id="dt-ic-ni-confirm" disabled onclick="dtIcNewItemConfirm()" data-i18n="dt_load_db_continue">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   INPUT COPIED CODE → НОВЫЙ НЕИЗВЕСТНЫЙ ПРЕДМЕТ
+
+   Если вставленный (NEW)-блок ссылается на предмет, которого нет ни в
+   VL_DB, ни среди кастомных предметов ЭТОГО браузера (т.е. это не сам
+   разработчик, вставляющий код своего же предмета) — вместо молчаливого
+   игнора спрашиваем изображение, точно как в Load Database, и добавляем
+   предмет ВРЕМЕННО (до перезагрузки страницы), с зелёным бейджем ADDED.
+
+   Если у предмета уже есть картинка на сайте (совпадает imgId с уже
+   существующим предметом) — вопрос не задаём, добавляем сразу. Так же —
+   если картинка для этого imgId уже была приложена раньше в этой же
+   сессии (Load Database или предыдущий такой же paste). */
+(function(){
+  var _icQueue = [];      /* [{cat,obj,rolls,imgId}] — предметы, ожидающие картинку */
+  var _icCurrent = null;
+  var _icSessionImgs = {}; /* imgId → dataURL, приложенные в рамках этой сессии через это окно */
+
+  /* ── Слаг имени: тот же алгоритм, что используется при экспорте кастомных
+     предметов (_edSlugify → _edComputeExportIds). Нужен, чтобы узнать «свой»
+     предмет даже если экспортные id разошлись. ── */
+  function _icSlug(name) {
+    try { if (typeof window._edSlugify === 'function') return window._edSlugify(name); } catch(_) {}
+    return String(name || '').trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+  }
+
+  /* ── Принадлежит ли этот (NEW)-блок кастомному предмету ЭТОГО браузера? ──
+     Это и есть та самая «дополнительная проверка личных переменных
+     пользователя»: разработчик, вставляющий код своего же предмета, не должен
+     получать вопрос про картинку — для него блок просто игнорируется.
+     Проверяем ВСЕ доступные признаки, потому что промах любого одного из них
+     раньше приводил к созданию предмета-призрака поверх настоящего:
+       • внутренний rec.id            (custom_xxxxxxx);
+       • экспортный id                (_edComputeExportIds — то, что реально
+                                       стоит в скопированном коде);
+       • слаг имени                   (на случай, если экспортные id разошлись
+                                       из-за суффиксов _2/_3 или переименования);
+       • само имя                     (точное совпадение).
+     Черновики (_edDrafts) учитываются наравне с подтверждёнными: предмет,
+     который пользователь ещё не подтвердил галочкой, всё равно «его». */
+  function _icLocalRecs() {
+    var recs = (window._edCustomItems || []).slice();
+    try {
+      if (window._edDrafts) Object.keys(window._edDrafts).forEach(function(k){
+        if (window._edDrafts[k]) recs.push(window._edDrafts[k]);
+      });
+    } catch(_) {}
+    return recs;
+  }
+
+  function _icIsKnownLocally(cat, obj) {
+    if (!obj || !obj.id) return false;
+    var id = String(obj.id);
+    var nameSlug = obj.name ? _icSlug(obj.name) : '';
+    var map = {};
+    try { if (typeof window._edComputeExportIds === 'function') map = window._edComputeExportIds(); } catch(_) {}
+    var recs = _icLocalRecs();
+    for (var i = 0; i < recs.length; i++) {
+      var r = recs[i];
+      if (!r) continue;
+      if (cat && r.cat && r.cat !== cat) continue;
+      if (String(r.id) === id) return true;
+      if (map[r.id] && String(map[r.id]) === id) return true;
+      var rSlug = _icSlug(r.name);
+      if (rSlug && (rSlug === id || (nameSlug && rSlug === nameSlug))) return true;
+      if (obj.name && r.name && String(r.name).trim() === String(obj.name).trim()) return true;
+    }
+    return false;
+  }
+
+  function _icCommit(cat, obj, rollsCorrupted, imgDataUrl) {
+    if (!window.VL_DB[cat]) window.VL_DB[cat] = [];
+    /* Не дублируем, если между постановкой в очередь и подтверждением
+       предмет каким-то образом уже появился (например второй paste). */
+    var already = window.VL_DB[cat].some(function(e){ return e && e.id === obj.id; });
+    if (!already) window.VL_DB[cat].push(obj);
+
+    if (cat === 'gear' && rollsCorrupted) {
+      window.VL_GEAR_ROLLS = window.VL_GEAR_ROLLS || {};
+      window.VL_GEAR_ROLLS[obj.id] = { corrupted: rollsCorrupted };
+    }
+
+    /* Без cat карточка не знает, из какой папки брать картинку
+       ('images/<cat>/<imgId>.webp') и рисуется без изображения. */
+    if (!obj.cat) obj.cat = cat;
+
+    var imgId = obj.imgId || obj.baseId || obj.id;
+    if (imgDataUrl) {
+      window._dbLoadImg = window._dbLoadImg || {};
+      window._dbLoadImg[imgId] = imgDataUrl;
+    }
+
+    window._icAddedIds = window._icAddedIds || {};
+    window._icAddedIds[obj.id] = true;
+
+    /* Регистрируем как настоящий кастомный предмет (_edCustomItems), а не
+       только как голую запись в VL_DB — иначе предмет считается "добавленным"
+       на экране, но полностью невидим для системы кастомных предметов:
+       не попадает в Code Snippets (ни свой, ни общий список), не переживает
+       обычный экспорт ZIP, не привязан к rec._orig/черновикам. Пропускаем,
+       если запись с таким id (или совпадающим слагом имени) уже есть —
+       на случай повторного paste того же блока. */
+    try {
+      if (!window._edCustomItems) window._edCustomItems = [];
+      var _icAlreadyRec = window._edCustomItems.some(function(r){ return r && r.id === obj.id; });
+      if (!_icAlreadyRec && typeof window._edInjectRecord === 'function') {
+        /* Если картинка не грузилась вручную — это переиспользованный сайт-
+           арт (см. _icProbeImage): к моменту коммита window._dbLoadImg[imgId]
+           уже может содержать готовый путь ('images/<найденная категория>/
+           <imgId>.webp'), если файл лежит НЕ в собственной папке этого
+           предмета. Без сохранения этого пути прямо в rec картинка работала
+           бы только до перезагрузки — window._dbLoadImg это рантайм-кэш,
+           localStorage не переживает. */
+        var _icResolvedImgSrc = !imgDataUrl && window._dbLoadImg ? (window._dbLoadImg[imgId] || null) : null;
+        var _icResolvedIsPath = _icResolvedImgSrc && typeof _icResolvedImgSrc === 'string' && _icResolvedImgSrc.indexOf('data:') !== 0;
+        var _icRec = {
+          id: obj.id, cat: cat, isCustom: true, variant: (cat === 'elements') ? 'regular' : null,
+          name: obj.name, rarity: obj.rarity, demand: obj.demand, value: obj.value, status: obj.status || null,
+          subtype: obj.subtype, imgData: imgDataUrl || null,
+          /* Если картинка не грузилась (файл уже существует на сайте под
+             этим же именем — см. _icProbeImage) — сохраняем именно тот
+             imgId в imgFileName, чтобы экспорт/снипет продолжил
+             ссылаться на переиспользуемый арт, а не на export-id предмета. */
+          imgFileName: imgDataUrl ? null : imgId,
+          /* imgId — восстанавливается на baseEntry при каждом _edInjectRecord
+             (иначе после reload baseEntry создаётся заново вообще без него —
+             см. _edInjectRecord). Нужен даже когда файл лежит в СВОЕЙ же
+             папке предмета — обычный фолбэк тоже строится по item.imgId. */
+          imgId: imgId,
+          /* _customImgSrc — только если файл нашёлся в ЧУЖОЙ категории:
+             тогда обычного фолбэка 'images/<своя категория>/<imgId>.webp'
+             недостаточно, нужен точный путь (см. _edInjectRecord). */
+          _customImgSrc: _icResolvedIsPath ? _icResolvedImgSrc : null
+        };
+        if (cat === 'gear') _icRec.rolls = rollsCorrupted ? rollsCorrupted.map(function(r){ return r ? { v: r.v, d: r.d } : null; }) : null;
+        _icRec._orig = { name: _icRec.name, rarity: _icRec.rarity, demand: _icRec.demand, value: _icRec.value, status: _icRec.status };
+        if (cat === 'gear') _icRec._orig.rolls = _icRec.rolls ? JSON.parse(JSON.stringify(_icRec.rolls)) : null;
+        window._edCustomItems.push(_icRec);
+        obj.isCustom = true; /* та же VL_DB-запись, что уже запушена выше — теперь официально кастомная */
+        window._edInjectRecord(_icRec); /* синхронизирует baseEntry (=obj) с rec — единый источник истины */
+        if (typeof window.edSaveCustomItems === 'function') window.edSaveCustomItems();
+      }
+    } catch(_) {}
+
+    /* Автооткрытие DT-карточки — как у обычных отредактированных предметов
+       (см. _dtIcApplyAction → _dtIcOpenCard). origData = текущие же значения
+       obj: предмет и так временный (живёт до reload, помечен _icAddedIds),
+       закрытие карточки не должно откатывать никакие поля — только оставить
+       его как есть. */
+    try {
+      if (typeof window._dtIcOpenCard === 'function' && !(window.dtCards && window.dtCards[obj.id])) {
+        window._dtIcOpenCard(obj.id, cat, obj, { value: obj.value, rarity: obj.rarity, demand: obj.demand, status: obj.status });
+      }
+    } catch(_) {}
+
+    /* ВАЖНО: dtCat/dtRender/vlRender живут в ЧУЖИХ замыканиях — обращение к
+       голому dtCat отсюда бросало ReferenceError прямо посреди коммита. Из-за
+       этого предмет добавлялся, но список не перерисовывался, очередь
+       оставшихся новых предметов обрывалась, а само окно Input Copied Code
+       зависало неприменённым. Только через window.* и только под try/catch. */
+    window._vlNeedsRefresh = true;
+    try { if (typeof window.dtRender === 'function') window.dtRender(window.dtCat || 'elements'); } catch(_) {}
+    try {
+      var _si = document.getElementById('vl-search-input');
+      if (typeof window.vlFilterItems === 'function') window.vlFilterItems(_si ? _si.value : '');
+      else if (typeof window.vlRender === 'function') window.vlRender();
+    } catch(_) {}
+    try { if (typeof window._vlRefreshOpenCards === 'function') window._vlRefreshOpenCards(); } catch(_) {}
+    try { if (typeof window._vcRunDiff === 'function') window._vcRunDiff(); } catch(_) {}
+  }
+
+  function _icCloseModal() {
+    var modal = document.getElementById('dt-ic-newitem-modal');
+    if (modal) modal.classList.remove('visible');
+    _icCurrent = null;
+  }
+
+  /* ── Есть ли на сайте реальный файл images/<cat>/<imgId>.webp ──
+     Нового предмета может «хватать» уже лежащая на сервере картинка: автор
+     кода мог указать imgId существующего предмета намеренно (вариация,
+     переиспользование арта). Проверяем это не по совпадению imgId в базе —
+     такое совпадение ничего не гарантирует, — а честной загрузкой файла.
+     Результат кэшируем, чтобы не дёргать сеть на каждый предмет. */
+  var _icPathProbe = {};
+  /* Все категории, где физически могут лежать images/<cat>/<imgId>.webp.
+     Новый предмет может намеренно переиспользовать арт ЛЮБОЙ другой
+     категории (например elements-предмет ссылается на imgId, реально
+     лежащий в images/chromas/), поэтому проверять только папку САМОГО
+     нового предмета (peek.cat) недостаточно — раньше это давало ложный
+     "файла нет" и лишний вопрос про картинку, хотя файл на сайте есть. */
+  var _ICP_ALL_CATS = ['elements', 'gear', 'cosmetic', 'chromas', 'gamepasses', 'other'];
+  function _icProbeImage(cat, imgId, cb) {
+    /* Ключ кэша — по imgId, а не по cat/imgId: ищем по всем папкам,
+       результат один и тот же независимо от того, с какой стороны спросили. */
+    var key = imgId;
+    if (key in _icPathProbe) { cb(_icPathProbe[key]); return; }
+    /* Свою категорию проверяем первой — самый частый случай (обычный не-
+       переиспользованный арт), остальные — по порядку следом. */
+    var order = [cat].concat(_ICP_ALL_CATS.filter(function(c){ return c !== cat; }));
+    var idx = 0;
+    function tryNext() {
+      if (idx >= order.length) { _icPathProbe[key] = false; cb(false); return; }
+      var c = order[idx++];
+      var path = 'images/' + c + '/' + imgId + '.webp';
+      var img = new Image();
+      var done = false;
+      function finish(v) {
+        if (done) return; done = true;
+        if (v) {
+          _icPathProbe[key] = true;
+          /* Файл нашёлся не в собственной папке нового предмета — без этого
+             карточка продолжит рендериться по пути 'images/<cat>/<imgId>.webp'
+             (собственная категория), которого не существует, и останется
+             пустой, хотя пробник только что подтвердил, что файл ЕСТЬ (просто
+             в другой папке). Прописываем прямой путь как обычный дата-URL. */
+          if (c !== cat) {
+            window._dbLoadImg = window._dbLoadImg || {};
+            if (!window._dbLoadImg[imgId]) window._dbLoadImg[imgId] = path;
+          }
+          cb(true);
+          return;
+        }
+        tryNext();
+      }
+      img.onload  = function() { finish(img.naturalWidth > 0); };
+      img.onerror = function() { finish(false); };
+      setTimeout(function() { finish(false); }, 1500); /* сеть молчит для этой папки — пробуем следующую */
+      img.src = path;
+    }
+    tryNext();
+  }
+
+  function _icShowNext() {
+    if (!_icQueue.length) { _icCloseModal(); return; }
+    var peek = _icQueue[0];
+    /* Файл уже лежит на сайте → вопрос не задаём, предмет заберёт картинку
+       по обычному пути images/<cat>/<imgId>.webp. */
+    _icProbeImage(peek.cat, peek.imgId, function(exists) {
+      if (exists && _icQueue[0] === peek) {
+        _icQueue.shift();
+        _icCommit(peek.cat, peek.obj, peek.rolls, null);
+        _icShowNext();
+        return;
+      }
+      _icShowNextModal();
+    });
+  }
+
+  function _icShowNextModal() {
+    if (!_icQueue.length) { _icCloseModal(); return; }
+    _icCurrent = _icQueue.shift();
+    var modal = document.getElementById('dt-ic-newitem-modal');
+    var nameEl = document.getElementById('dt-ic-ni-name');
+    var imgEl = document.getElementById('dt-ic-ni-imgid');
+    var fi = document.getElementById('dt-ic-ni-file');
+    var ok = document.getElementById('dt-ic-ni-confirm');
+    if (nameEl) nameEl.textContent = _icCurrent.obj.name || _icCurrent.obj.id;
+    if (imgEl) imgEl.textContent = _icCurrent.imgId + '.webp';
+    if (fi) fi.value = '';
+    var fnEl = document.getElementById('dt-ic-ni-file-name');
+    if (fnEl) fnEl.textContent = _icCurrent.imgId + '.webp';
+    if (ok) ok.disabled = true;
+    if (modal) modal.classList.add('visible');
+  }
+
+  /* ── Точка входа: вызывается из dtInputCodeApply для каждого настоящего
+     нового предмета (обнаруженного, не принадлежащего этому браузеру). ── */
+  window._icHandleNewItem = function(cat, obj, rollsCorrupted) {
+    /* Свой собственный кастомный предмет — полный no-op (см. _icIsKnownLocally). */
+    if (_icIsKnownLocally(cat, obj)) return;
+
+    var imgId = obj.imgId || obj.baseId || obj.id;
+    /* Картинка уже приложена В ЭТОЙ СЕССИИ (Load Database или предыдущий
+       такой же paste) — второй раз не спрашиваем.
+       Раньше здесь была ещё одна ветка: если imgId совпадал с imgId любого
+       уже существующего предмета сайта — вопрос не задавался вовсе. Но у
+       нового предмета своя собственная картинка, и «совпал imgId» вовсе не
+       значит, что файл для него есть: предмет добавлялся молча и рисовался
+       пустым квадратом. Теперь для любого настоящего нового предмета
+       спрашиваем изображение — ровно как Load Database. */
+    var known = (window._dbLoadImg && window._dbLoadImg[imgId]) || _icSessionImgs[imgId] || null;
+    if (known) { _icCommit(cat, obj, rollsCorrupted, known); return; }
+
+    _icQueue.push({ cat: cat, obj: obj, rolls: rollsCorrupted, imgId: imgId });
+    if (!_icCurrent) _icShowNext();
+  };
+
+  window.dtIcNewItemPickImage = function(input) {
+    var f = input.files && input.files[0];
+    if (!f || !_icCurrent) return;
+    var nameEl = document.getElementById('dt-ic-ni-file-name');
+    var ok = document.getElementById('dt-ic-ni-confirm');
+    if (ok) ok.disabled = true;
+    function fail(msg) {
+      input.value = '';
+      if (nameEl) nameEl.textContent = _icCurrent ? (_icCurrent.imgId + '.webp') : '';
+      try { if (typeof window.showSiteError === 'function') window.showSiteError(msg); } catch(_) {}
+    }
+    if (f.type !== 'image/webp') { fail('.webp'); return; }
+    var reader = new FileReader();
+    reader.onload = function() {
+      var dataUrl = reader.result;
+      var img = new Image();
+      img.onload = function() {
+        /* Те же требования, что и у Load Database: ровно 1024×1024 .webp. */
+        if (img.naturalWidth !== 1024 || img.naturalHeight !== 1024) {
+          fail(img.naturalWidth + '×' + img.naturalHeight + ' → 1024×1024');
+          return;
+        }
+        _icSessionImgs[_icCurrent.imgId] = dataUrl;
+        if (nameEl) nameEl.textContent = f.name;
+        if (ok) ok.disabled = false;
+      };
+      img.onerror = function() { fail('.webp'); };
+      img.src = dataUrl;
+    };
+    reader.onerror = function() { fail('.webp'); };
+    reader.readAsDataURL(f);
+  };
+
+  window.dtIcNewItemConfirm = function() {
+    if (!_icCurrent) return;
+    var img = _icSessionImgs[_icCurrent.imgId] || null;
+    if (!img) return; /* кнопка и так задизейблена без картинки, но подстрахуемся */
+    _icCommit(_icCurrent.cat, _icCurrent.obj, _icCurrent.rolls, img);
+    _icShowNext();
+  };
+
+  window.dtIcNewItemSkip = function() {
+    _icShowNext();
+  };
+})();
+</script>
+
 <script>
 /* ══════════════════════════════════════════════════════════════════
    LOAD DATABASE (Input Copied Code → Load Database)
@@ -23320,7 +23917,14 @@ function toggleEasterTheme() {
         marks.editedBase[id] = true;
       }
       if (!_rollsEqual(oldGr && oldGr[id], newGr && newGr[id])) {
-        marks.edited['corrupted:' + id] = true;
+        /* Relic-предметы не имеют отдельной Corrupted-карточки — у них
+           единственная карточка живёт под "чистым" id, без префикса
+           "corrupted:". Раньше пометка всегда ставилась под 'corrupted:'+id,
+           из-за чего у Relic бейдж EDITED никогда не находил соответствие
+           (item.id у Relic — это просто id), хотя галочки на роллах
+           (сверяются напрямую с _dbLdPristine.gr по baseId, без префикса)
+           показывались верно. */
+        marks.edited[(b.subtype === 'relic' ? id : 'corrupted:' + id)] = true;
       }
     });
 
@@ -25013,7 +25617,25 @@ function toggleEasterTheme() {
     if (rec.imgData) {
       window._edCustomImg[rec.id] = rec.imgData;
       window._edCustomImg[_edCompositeId(rec)] = rec.imgData;
+    } else if (rec._customImgSrc) {
+      /* Предмет не грузил свою картинку — он ПЕРЕИСПОЛЬЗУЕТ уже существующий
+         на сайте файл (см. Input Copied Code → новый предмет, _icCommit).
+         rec._customImgSrc — заранее вычисленный при коммите путь к этому
+         файлу (в т.ч. если он лежит в ДРУГОЙ категории, чем сам предмет —
+         обычный фолбэк 'images/<своя категория>/<imgId>.webp' его не найдёт).
+         Без этого блока картинка отображалась только до перезагрузки
+         страницы: window._edCustomImg — рантайм-кэш, из localStorage не
+         восстанавливается сам по себе, а rec._customImgSrc как раз и есть
+         то, что переживает reload (сохраняется вместе с rec-ом). */
+      window._edCustomImg[rec.id] = rec._customImgSrc;
+      window._edCustomImg[_edCompositeId(rec)] = rec._customImgSrc;
     }
+    /* imgId тоже нужно восстанавливать на baseEntry при каждой загрузке —
+       иначе после reload baseEntry пересоздаётся заново БЕЗ imgId вообще
+       (см. ветки выше: они пишут name/rarity/value/demand/status, но не
+       imgId), и обычный фолбэк-путь строится из itemMeta.id вместо
+       настоящего imgId — картинка ищется под несуществующим именем файла. */
+    if (rec.imgId) baseEntry.imgId = rec.imgId;
   }
   window._edInjectRecord = _edInjectRecord; /* нужен снаружи модуля — см. dtRemoveCard */
   window.edSaveCustomItems = edSaveCustomItems; /* нужен снаружи модуля — см. _dtIcApplyAction (Input Copied Code) */
@@ -25145,6 +25767,7 @@ function toggleEasterTheme() {
     }
     return null;
   }
+  window._edSlugify = _edSlugify; /* нужен снаружи модуля — см. Input Copied Code → новый предмет */
   window._edFindRealBaseId = _edFindRealBaseId;
 
   /* Считаем экспортные id для ВСЕХ кастомных предметов разом (а не по одному) —
@@ -25676,8 +26299,18 @@ function toggleEasterTheme() {
         if (_oldReup) _oldReup.remove();
       }
     } else {
+      /* "Картинка уже есть" — не только загруженный файл (rec.imgData), но и
+         переиспользованный сайт-арт (rec._customImgSrc/rec.imgId — см.
+         Input Copied Code → новый предмет, _icCommit). Раньше здесь
+         проверялся только rec.imgData, из-за чего у предмета с переиспользо-
+         ванной картинкой не показывалась ни зона загрузки (условие ниже
+         формально верно — !rec.imgData — но реально место уже занято
+         картинкой), ни кнопка замены (её условие требовало rec.imgData) —
+         визуально казалось, что менять картинку вообще нельзя. */
+      var _hasImg = !!(rec.imgData || rec._customImgSrc || rec.imgId);
+
       /* Картинка — если не загружена, зона загрузки поверх рамки */
-      if (imgBox && !rec.imgData && !imgBox.querySelector('.dt-cust-img-upload')) {
+      if (imgBox && !_hasImg && !imgBox.querySelector('.dt-cust-img-upload')) {
         var up = document.createElement('label');
         up.className = 'dt-cust-img-upload';
         up.innerHTML = '<span class="dt-cust-upload-icon">⬆</span><span class="dt-cust-upload-req">.webp · 1024×1024</span>'
@@ -25685,8 +26318,11 @@ function toggleEasterTheme() {
         imgBox.appendChild(up);
       }
 
-      /* Картинка уже загружена — маленькая кнопка замены (верхний левый угол рамки) */
-      if (imgBox && rec.imgData && !imgBox.querySelector('.dt-cust-reupload-btn')) {
+      /* Картинка уже есть (своя или переиспользованная) — маленькая кнопка
+         замены (верхний левый угол рамки). Замена всегда грузит НОВЫЙ файл
+         как rec.imgData — после этого предмет больше не "переиспользует"
+         чужой арт, а несёт свою картинку (edHandleImageUpload сам её пишет). */
+      if (imgBox && _hasImg && !imgBox.querySelector('.dt-cust-reupload-btn')) {
         var reup = document.createElement('label');
         reup.className = 'dt-cust-reupload-btn';
         reup.title = t('dt_cust_reupload_title');
@@ -25901,7 +26537,7 @@ function toggleEasterTheme() {
       window.showSiteError(t('err_cust_name_required'));
       return;
     }
-    if (!rec.imgData) {
+    if (!rec.imgData && !rec._customImgSrc && !rec.imgId) {
       window.showSiteError(t('err_cust_img_required'));
       return;
     }
@@ -26038,6 +26674,10 @@ function toggleEasterTheme() {
           return;
         }
         rec.imgData = dataUrl;
+        /* Раньше был переиспользованный сайт-арт (Input Copied Code) — теперь
+           своя картинка, старая ссылка больше не нужна и не должна висеть
+           мёртвым грузом в записи. */
+        rec._customImgSrc = null;
         /* Имя файла картинки (без расширения) — используется как imgId при
            экспорте в items_data.js, чтобы совпадало с тем, как называл
            картинку сам разработчик. */
@@ -26084,7 +26724,7 @@ function toggleEasterTheme() {
       window.showSiteError(t('err_cust_name_required'));
       return;
     }
-    if (!rec.imgData) {
+    if (!rec.imgData && !rec._customImgSrc && !rec.imgId) {
       window.showSiteError(t('err_cust_img_required'));
       return;
     }
