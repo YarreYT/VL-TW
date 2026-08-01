@@ -23521,10 +23521,31 @@ function toggleEasterTheme() {
        (см. _dtIcApplyAction → _dtIcOpenCard). origData = текущие же значения
        obj: предмет и так временный (живёт до reload, помечен _icAddedIds),
        закрытие карточки не должно откатывать никакие поля — только оставить
-       его как есть. */
+       его как есть.
+
+       Gear (кроме Relic) — ОСОБЫЙ случай: DT всегда открывает Gear под
+       составным id 'corrupted:<id>' (тумблер Corrupted/Regular залочен —
+       см. _edCompositeId/_dtIcGearCardId), а не под голым entry.id. Раньше
+       здесь карточка открывалась под голым obj.id — она визуально
+       появлялась, но DOM-id получался 'dt-card-pidorasina' вместо
+       ожидаемого 'dt-card-corrupted_pidorasina', и MutationObserver
+       (_edRescanOpenCards), который donастраивает режим черновика (кнопки,
+       блокировка полей), искал карточку не под тем id и никогда её не
+       находил — отсюда «предмет добавлен, но без черновик-режима до
+       перезагрузки», хотя у Elements всё работало сразу. */
     try {
-      if (typeof window._dtIcOpenCard === 'function' && !(window.dtCards && window.dtCards[obj.id])) {
-        window._dtIcOpenCard(obj.id, cat, obj, { value: obj.value, rarity: obj.rarity, demand: obj.demand, status: obj.status });
+      var _icCardId = obj.id;
+      var _icCardData = obj;
+      if (cat === 'gear' && obj.subtype !== 'relic') {
+        _icCardId = 'corrupted:' + obj.id;
+        _icCardData = {
+          id: _icCardId, baseId: obj.id, imgId: obj.imgId, name: obj.name,
+          subtype: obj.subtype, rarity: obj.rarity, value: obj.value,
+          demand: obj.demand, status: obj.status, isCustom: !!obj.isCustom
+        };
+      }
+      if (typeof window._dtIcOpenCard === 'function' && !(window.dtCards && window.dtCards[_icCardId])) {
+        window._dtIcOpenCard(_icCardId, cat, _icCardData, { value: _icCardData.value, rarity: _icCardData.rarity, demand: _icCardData.demand, status: _icCardData.status });
       }
     } catch(_) {}
 
