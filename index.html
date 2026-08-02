@@ -9391,8 +9391,10 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   align-items: center;
   padding: 3px 30px 3px 30px;
   border-top: 1px solid rgba(255,255,255,0.07);
-  cursor: default;
+  cursor: pointer;
+  transition: background 0.15s;
 }
+.vl-rt-row:hover { background: rgba(255,255,255,0.06); }
 .vl-rt-row:first-of-type { border-top: none; }
 .vl-rt-price {
   width: 100%;
@@ -12327,9 +12329,6 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         badge.className = 'vl-variant-badge';
         badge.title = vDef.name;
         badge.style.background = _panelBg;
-        if (vDef.name.length > 16) badge.style.fontSize = '11.5px';
-        else if (vDef.name.length > 13) badge.style.fontSize = '12.5px';
-        else if (vDef.name.length > 10) badge.style.fontSize = '13.5px';
         badge.textContent = vDef.name;
         el.appendChild(badge);  /* absolute поверх карточки, left:0 */
         el.classList.add('has-badge');
@@ -14651,7 +14650,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 
     return '<div class="vl-roll-stars-row">'
       + '<div class="vl-roll-slot-wrap" id="rollwrap-' + cardId + '">'
-      +   _mainMark
+      +   '<span id="rollmark-' + cardId + '" class="vl-rt-edit-mark vl-rt-edit-mark--main" title="' + (window.t ? t('vl_roll_edited') : 'Ролл изменён') + '" style="' + (_mainEdited ? '' : 'display:none;') + '">!</span>'
       +   '<div class="vl-roll-slot-label">' + (window.t ? t('vl_roll_label') : 'Ролл') + '</div>'
       +   '<div style="position:relative;">'
       +     '<button class="vl-roll-slot-btn" id="rollbtn-' + cardId + '" onclick="vlToggleRollTooltip(event,\'' + cardId + '\')" aria-label="Просмотреть роллы">'
@@ -14660,7 +14659,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       +     '</button>'
       +   '</div>'
       + '</div>'
-      + '<div class="vl-roll-stars-side">' + vlStarsHTML(initDemand) + '</div>'
+      + '<div class="vl-roll-stars-side" id="rollstars-' + cardId + '">' + vlStarsHTML(initDemand) + '</div>'
       + '</div>';
   }
 
@@ -14687,7 +14686,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
      с кнопкой. Разница с DT только в том, что тут всё read-only: никаких
      <input>, никаких demand-стрелочек — value и demand просто текст. */
 
-  function _vlRollTooltipRowsHTML(rolls, item, activeRollNum) {
+  function _vlRollTooltipRowsHTML(rolls, item, activeRollNum, cardId) {
     var _rcColor = (window.RARITY_CFG && (window.RARITY_CFG[item.rarity] || window.RARITY_CFG.rare)) || { color: '#70a1ff' };
     var _scColor = item.status && window.STATUS_CFG ? window.STATUS_CFG[item.status] : null;
     var _reValueColor = _scColor ? _scColor.color : _rcColor.color;
@@ -14709,7 +14708,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       var _rowEdited = !!(_origRow && (String(r.data.v) !== String(_origRow.v) || String(r.data.d) !== String(_origRow.d)));
       var _editMark = _rowEdited ? '<span class="vl-rt-edit-mark" title="' + (window.t ? t('vl_roll_edited') : 'Ролл изменён') + '">!</span>' : '';
 
-      rowsHTML += '<div class="vl-rt-row' + (_rowEdited ? ' vl-rt-row--edited' : '') + '" data-roll="' + r.rollNum + '">'
+      rowsHTML += '<div class="vl-rt-row' + (_rowEdited ? ' vl-rt-row--edited' : '') + '" data-roll="' + r.rollNum + '" onclick="vlSelectRollFromTooltip(event,\'' + cardId + '\',' + r.rollNum + ')">'
         +   '<span class="dt-re-num ' + _rc + '">' + r.rollNum + '</span>'
         +   '<div class="dt-re-right">'
         +     '<div class="vl-rt-price-wrap" style="position:relative;width:100%;max-width:120px;">'
@@ -14751,7 +14750,13 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     if (!openEntry) return;
     var rolls = vlGetRollsForItem(openEntry.item);
     if (!rolls || rolls.length < 2) return; /* нечего показывать в списке */
-    var activeRollNum = _vlDefaultRollNum(rolls);
+    /* Активный ролл — тот, что реально сейчас показан на главном слоте карточки
+       (пользователь мог выбрать его кликом по строке тултипа), а не всегда
+       дефолтный максимум — иначе после выбора, например, ролла 6 тултип
+       продолжал бы прятать 11-й вместо 6-го. */
+    var activeRollNum = (_vlRollState[cardId] && _vlRollState[cardId].rollNum !== undefined)
+      ? _vlRollState[cardId].rollNum
+      : _vlDefaultRollNum(rolls);
     if (rolls.length - 1 < 2) {
       /* Убрав активный ролл (уже виден на самой карточке), в списке остался бы
          только 1 или 0 роллов — тултипу тогда нечего показывать. */
@@ -14764,7 +14769,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     tt.className = 'vl-roll-tooltip';
     tt.id = 'rolltip-' + cardId;
     tt.dataset.cid = cardId;
-    tt.innerHTML = _vlRollTooltipRowsHTML(rolls, openEntry.item, activeRollNum);
+    tt.innerHTML = _vlRollTooltipRowsHTML(rolls, openEntry.item, activeRollNum, cardId);
     var anchor = cardWrap.querySelector('.vl-detail-card') || cardWrap;
     anchor.after(tt);
 
@@ -14781,6 +14786,75 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     setTimeout(function() {
       document.addEventListener('click', _vlRollOutsideClick);
     }, 0);
+  };
+
+  /* Выбор ролла кликом по строке read-only тултипа (VL Gear).
+     Переносит выбранное значение на главный слот карточки (число, класс
+     цвета, !-значок редактирования, звёзды demand), закрывает тултип и
+     обновляет _vlRollState — от него зависят и сортировка (vlSortCards/
+     vlCompareItems), и то, какой ролл тултип спрячет при следующем
+     открытии (см. activeRollNum в vlToggleRollTooltip выше). */
+  window.vlSelectRollFromTooltip = function(e, cardId, rollNum) {
+    e.stopPropagation();
+    var openEntry = null;
+    for (var _oi = 0; _oi < vlOpenCards.length; _oi++) {
+      if (vlOpenCards[_oi].id.replace(/[^a-zA-Z0-9_\-]/g, '_') === cardId) { openEntry = vlOpenCards[_oi]; break; }
+    }
+    if (!openEntry) return;
+    var item = openEntry.item;
+    var rolls = vlGetRollsForItem(item);
+    var rollData = null;
+    for (var i = 0; i < rolls.length; i++) {
+      if (rolls[i].rollNum === rollNum) { rollData = rolls[i].data; break; }
+    }
+    if (!rollData) return;
+    var value  = rollData.v;
+    var demand = rollData.d;
+
+    /* Сохраняем выбор — сортировка (_vlGetItemValue/_vlGetItemDemand) и
+       следующее открытие тултипа читают отсюда */
+    _vlRollState[cardId] = { rollNum: rollNum, value: value, demand: demand };
+
+    /* Главный слот: число + цветовой класс */
+    var valEl = document.getElementById('rollval-' + cardId);
+    if (valEl) {
+      valEl.textContent = rollNum;
+      valEl.className = _vlGetRollClass(rolls, rollNum);
+    }
+
+    /* Большое число цены (Value) над gold-строкой */
+    var valNumEl = document.getElementById('valnum-' + cardId);
+    if (valNumEl && typeof vlFmtValue === 'function') valNumEl.textContent = vlFmtValue(value);
+
+    /* Gold-эквивалент под ценой */
+    var goldEl = document.getElementById('goldval-' + cardId);
+    if (goldEl && window.vlFmtGold) {
+      var _goldIcon = goldEl.querySelector('.vl-gold-value-icon');
+      goldEl.setAttribute('data-tp-val', value);
+      goldEl.textContent = window.vlFmtGold(value);
+      if (_goldIcon) goldEl.insertBefore(_goldIcon, goldEl.firstChild);
+    }
+
+    /* !-значок редактирования — показываем только если выбранный ролл
+       реально отличается от нередактированного оригинала; для роллов
+       без правок значок скрываем (даже если раньше был виден у другого ролла) */
+    var markEl = document.getElementById('rollmark-' + cardId);
+    if (markEl) {
+      var _orig = _vlGetOrigRollValue(item, rollNum);
+      var _edited = !!(_orig && (String(value) !== String(_orig.v) || String(demand) !== String(_orig.d)));
+      markEl.style.display = _edited ? '' : 'none';
+    }
+
+    /* Звёзды demand */
+    var starsEl = document.getElementById('rollstars-' + cardId);
+    if (starsEl && window.vlStarsHTML) starsEl.innerHTML = window.vlStarsHTML(demand);
+
+    /* Закрываем тултип */
+    _vlCloseAllRollTooltips();
+
+    /* Перестраиваем порядок карточек под новый ролл (сортировка зависит
+       от _vlRollState, который мы только что обновили) */
+    vlSortCards();
   };
 
   function _vlRollOutsideClick(e) {
@@ -14854,8 +14928,8 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     var valueColor = sc ? sc.color : rc.color;
     var useGradient = rc.gradient && !sc;
     var valueNumOpen = useGradient
-      ? '<span class="vl-detail-value-big '+rc.cls+'">'
-      : '<span class="vl-detail-value-big" style="color:'+valueColor+'">';
+      ? '<span id="valnum-'+cardId+'" class="vl-detail-value-big '+rc.cls+'">'
+      : '<span id="valnum-'+cardId+'" class="vl-detail-value-big" style="color:'+valueColor+'">';
 
     var statusInline = '';
     if (sc) {
@@ -15111,7 +15185,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       +   '<div class="vl-detail-value-row">'
       +     (valueNumOpen + vlFmtValue(_displayValue) + '</span>')
       +   '</div>'
-      +   '<div class="vl-gold-value" data-tp-val="'+_displayValue+'">'
+      +   '<div class="vl-gold-value" id="goldval-'+cardId+'" data-tp-val="'+_displayValue+'">'
       +     '<span class="vl-gold-value-icon"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="7" fill="#d4a017" stroke="#a07010" stroke-width="1"/><circle cx="8" cy="8" r="5" fill="#e8c040" opacity="0.5"/><text x="8" y="12" text-anchor="middle" font-family="serif" font-size="9" font-weight="900" fill="#7a4a00">$</text></svg></span>'
       +     vlFmtGold(_displayValue)
       +   '</div>'
@@ -15833,7 +15907,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     { id:'kronax',        name:'Kronax'       },
     { id:'viltron',       name:'Viltron'      },
     { id:'nuclear',       name:'Nuclear'      },
-    { id:'corruptedinfernal', name:'Corrupted Infernal' },
+    { id:'corrupted_infernal', name:'Corrupted Infernal' },
   ];
 
   // ── Стикеры: системные/сайт ──
@@ -15873,43 +15947,46 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   var vlActiveVariant = 'regular';
 
   function vlGetVariantMaxValue(variantId) {
+    /* Несмотря на имя (оставлено для совместимости с местами, где эта
+       функция ещё вызывается), теперь считает СУММУ value по всем
+       предметам вариации, а не максимум одного предмета. */
     if (variantId === 'regular') {
       var base = VL_DB.elements;
-      var max = 0;
+      var sum = 0;
       for (var i = 0; i < base.length; i++) {
-        if (base[i].value > max) max = base[i].value;
+        sum += base[i].value || 0;
       }
-      return max;
+      return sum;
     }
     var vdata = VL_VARIANTS_DB[variantId];
     if (!vdata) return 0;
     var keys = Object.keys(vdata);
-    var max = 0;
+    var sum = 0;
     for (var j = 0; j < keys.length; j++) {
-      var val = vdata[keys[j]].value;
-      if (val > max) max = val;
+      sum += vdata[keys[j]].value || 0;
     }
-    return max;
+    return sum;
   }
 
   function vlGetVariantMaxDemand(variantId) {
+    /* Аналогично: сумма demand по всем предметам вариации (используется
+       как tie-breaker при равной суммарной стоимости). */
     if (variantId === 'regular') {
       var base = VL_DB.elements;
-      var max = 0;
+      var sum = 0;
       for (var i = 0; i < base.length; i++) {
-        if ((base[i].demand || 0) > max) max = base[i].demand;
+        sum += base[i].demand || 0;
       }
-      return max;
+      return sum;
     }
     var vdata = VL_VARIANTS_DB[variantId];
     if (!vdata) return 0;
     var keys = Object.keys(vdata);
-    var max = 0;
+    var sum = 0;
     for (var j = 0; j < keys.length; j++) {
-      var d = vdata[keys[j]].demand || 0;
-      if (d > max) max = d;
+      sum += vdata[keys[j]].demand || 0;
     }
-    return max;
+    return sum;
   }
 
   function vlBuildVariantGrid() {
@@ -19603,7 +19680,88 @@ function toggleEasterTheme() {
          (dtCards[vCardId].item), как и обычный ручной ввод в карточке. */
       var vEntry = (window.VL_VARIANTS_DB && window.VL_VARIANTS_DB[action.variant] && window.VL_VARIANTS_DB[action.variant][action.baseId]) || {};
       var vElEntry = (window.VL_DB.elements || []).filter(function(e) { return e.id === action.baseId; })[0];
-      if (vElEntry && vElEntry.isCustom) return; /* кастомные предметы полностью обходим стороной */
+      /* Раньше здесь было "if (vElEntry && vElEntry.isCustom) return" — любой
+         кастомный БАЗОВЫЙ предмет полностью выключал этот блок, даже если
+         конкретно ЭТОЙ вариации у него ещё не было (например: кастомный
+         "Infernal" уже существует в regular, но вариации "Time" у него нет —
+         код с "(existing item)" для неё должен заводить НОВУЮ приклеенную
+         вариацию-черновик, а не молчать). Различаем два случая: вариация
+         УЖЕ существует как кастомная запись (правится только через
+         карандаш/черновик — молчим) — или вариации ЕЩЁ НЕТ (заводим её). */
+      if (vEntry && vEntry.isCustom) return; /* эта вариация уже кастомная — правка только через черновик */
+      if (vElEntry && action.variant !== 'regular' && !(vEntry && 'value' in vEntry)) {
+        /* Вариации ЕЩЁ НЕТ (базовый предмет может быть как кастомным, так и
+           настоящим предметом сайта — например "Time" × corrupted_infernal).
+           Раньше эта ветка работала только для кастомного базового предмета,
+           а для настоящего код молча уходил в overlay-путь: запись не
+           появлялась ни в списке DT/VL, ни как черновик, и удалить её было
+           нечем. Теперь любая НЕсуществующая вариация заводится как
+           полноценный ГОТОВЫЙ кастомный предмет — так же, как _icCommit
+           заводит новые предметы из блока "VL_DB.<cat> (NEW)": сразу с
+           rec._orig и _subtypeLocked, БЕЗ регистрации в _edDrafts. Режим
+           черновика здесь неуместен: подтверждать нечего (все данные пришли
+           из кода), а зелёная галочка всё равно требовала бы загрузки
+           картинки, хотя арт вариации уже есть на сайте. */
+        if (typeof window._edInjectRecord !== 'function') return;
+        window._edCustomItems = window._edCustomItems || [];
+        var vNewId = 'custom_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        /* Арт вариации уже лежит на сайте (images/elements/<variant>_<base>.webp
+           либо арт базового предмета) — imgId/imgFileName проставляем сразу,
+           иначе карточка считает, что изображение не загружено. */
+        var vImgId = vElEntry.imgId || action.baseId;
+        var vNewRec = {
+          id: vNewId, cat: 'elements', isCustom: true, variant: action.variant,
+          name: vElEntry.name || action.baseId,
+          rarity: vElEntry.rarity || 'rare',
+          value: 'value' in action.data ? action.data.value : 0,
+          demand: 'demand' in action.data ? action.data.demand : 0,
+          status: 'status' in action.data ? action.data.status : null,
+          imgData: null,
+          imgId: vImgId,
+          imgFileName: vImgId,
+          _subtypeLocked: true,
+          _realBaseId: action.baseId /* приклеиваем сразу — id базового предмета уже известен из label */
+        };
+        /* Снапшот "как создано" — источник правды для ADDED vs EDITED в VL. */
+        vNewRec._orig = { name: vNewRec.name, rarity: vNewRec.rarity, demand: vNewRec.demand, value: vNewRec.value, status: vNewRec.status, rolls: null };
+        window._edCustomItems.push(vNewRec);
+        window._edInjectRecord(vNewRec);
+        if (typeof window.edSaveCustomItems === 'function') window.edSaveCustomItems();
+        var vNewCardId = (typeof window._edCompositeId === 'function') ? window._edCompositeId(vNewRec) : (action.variant + ':' + action.baseId);
+        if (typeof window._dtIcOpenCard === 'function' && !(dtCards && dtCards[vNewCardId])) {
+          window._dtIcOpenCard(vNewCardId, 'elements', {
+            id: vNewCardId, baseId: action.baseId, name: vNewRec.name, rarity: vNewRec.rarity,
+            value: vNewRec.value, demand: vNewRec.demand, status: vNewRec.status, isCustom: true
+          }, { value: vNewRec.value, rarity: vNewRec.rarity, demand: vNewRec.demand, status: vNewRec.status });
+        }
+        /* Без перерисовки список DT/VL продолжает показывать старый снимок
+           (в т.ч. "No results" в DT, раз новая запись физически появилась
+           только что) — та же пара вызовов, что и в _icCommit для обычных
+           новых кастомных предметов. */
+        try { if (typeof window.dtRender === 'function') window.dtRender(window.dtCat || 'elements'); } catch(_) {}
+        try {
+          var _vNewSi = document.getElementById('vl-search-input');
+          if (typeof window.vlFilterItems === 'function') window.vlFilterItems(_vNewSi ? _vNewSi.value : '');
+          else if (typeof window.vlRender === 'function') window.vlRender();
+        } catch(_) {}
+        /* Value Changes строится отдельным диффом (_vcRunDiff) и не слушает
+           dtRender/vlRender — без этих двух вызовов новая вариация попадала
+           в список Value Changes как Added/Custom только после перезагрузки
+           страницы. Те же вызовы делает _icCommit для обычных новых
+           кастомных предметов. */
+        try { if (typeof window._vlRefreshOpenCards === 'function') window._vlRefreshOpenCards(); } catch(_) {}
+        try { if (typeof window._vcRunDiff === 'function') window._vcRunDiff(); } catch(_) {}
+        /* Донастройка режима черновика (кнопки/блокировка полей на карточке) —
+           обычный create-flow (edCreateCustomItem) запускает её сама через
+           requestAnimationFrame сразу после открытия карточки; здесь карточка
+           тоже открывается только что, тот же вызов нужен и тут, иначе кнопки
+           черновика не появляются до перезагрузки страницы. */
+        if (typeof window.edEnhanceCustomCard === 'function') {
+          requestAnimationFrame(function(){ requestAnimationFrame(function(){ window.edEnhanceCustomCard(vNewCardId, vNewId); }); });
+        }
+        window._vlNeedsRefresh = true;
+        return;
+      }
       var vCardId = action.variant + ':' + action.baseId;
 
       var vOrigSnapshot = {
@@ -21190,31 +21348,34 @@ function toggleEasterTheme() {
 
 
   function _dtVariantMaxValue(variantId) {
+    /* Имя сохранено для совместимости, но теперь это СУММА value по
+       всем предметам вариации (mirrors vlGetVariantMaxValue). */
     if (variantId === 'regular') {
       var base = window.VL_DB.elements || [];
-      var max = 0;
-      for (var i = 0; i < base.length; i++) { if ((base[i].value||0) > max) max = base[i].value; }
-      return max;
+      var sum = 0;
+      for (var i = 0; i < base.length; i++) { sum += base[i].value || 0; }
+      return sum;
     }
     var vdata = window.VL_VARIANTS_DB && window.VL_VARIANTS_DB[variantId];
     if (!vdata) return 0;
-    var max = 0;
-    Object.keys(vdata).forEach(function(k){ if ((vdata[k].value||0) > max) max = vdata[k].value; });
-    return max;
+    var sum = 0;
+    Object.keys(vdata).forEach(function(k){ sum += vdata[k].value || 0; });
+    return sum;
   }
 
   function _dtVariantMaxDemand(variantId) {
+    /* Сумма demand по всем предметам вариации (tie-breaker). */
     if (variantId === 'regular') {
       var base = window.VL_DB.elements || [];
-      var max = 0;
-      for (var i = 0; i < base.length; i++) { if ((base[i].demand||0) > max) max = base[i].demand; }
-      return max;
+      var sum = 0;
+      for (var i = 0; i < base.length; i++) { sum += base[i].demand || 0; }
+      return sum;
     }
     var vdata = window.VL_VARIANTS_DB && window.VL_VARIANTS_DB[variantId];
     if (!vdata) return 0;
-    var max = 0;
-    Object.keys(vdata).forEach(function(k){ if ((vdata[k].demand||0) > max) max = vdata[k].demand; });
-    return max;
+    var sum = 0;
+    Object.keys(vdata).forEach(function(k){ sum += vdata[k].demand || 0; });
+    return sum;
   }
 
   // ── Render item list ──
@@ -25278,7 +25439,10 @@ function toggleEasterTheme() {
 
   window._edCustomItems = window._edCustomItems || [];  // финализированные (Create нажат)
   window._edIsCustomItem = function(baseId) {
-    return !!(window._edCustomItems && window._edCustomItems.some(function(r){ return r.id === baseId; }));
+    if (!window._edCustomItems) return false;
+    return window._edCustomItems.some(function(r){
+      return r.id === baseId || r._realBaseId === baseId;
+    });
   };
   /* true — предмет всё ещё равен своим исходным (на момент Create) значениям → ADDED.
      false — что-то из name/rarity/demand/value/status изменили → EDITED.
@@ -25557,7 +25721,7 @@ function toggleEasterTheme() {
        её rarity/name показывались вместо введённых в черновике, а сам
        черновик тем самым появлялся в dtGetList как видимый вариант реального
        предмета, хотя ни разу не был подтверждён. См. историю бага "Time". */
-    var realBaseId = (isVariantEl && rec._orig) ? _edFindRealBaseId(rec) : null;
+    var realBaseId = rec._realBaseId || ((isVariantEl && rec._orig) ? _edFindRealBaseId(rec) : null);
     rec._realBaseId = realBaseId; /* нужно для edDeleteCustomItem и экспорта */
     var entryId = realBaseId || rec.id;
 
@@ -25785,6 +25949,21 @@ function toggleEasterTheme() {
     var list = (window.VL_DB && window.VL_DB.elements) || [];
     for (var i = 0; i < list.length; i++) {
       if (list[i].id === slug && !list[i].isCustom) return slug;
+    }
+    /* Раньше здесь останавливались — приклеивание работало только к "родным"
+       (не-custom) предметам из items_data2.js. Из-за этого новая вариация
+       для УЖЕ СУЩЕСТВУЮЩЕГО кастомного базового предмета (например, добавить
+       вариацию "Time" к ранее созданному кастомному "Infernal") никогда не
+       находила его: слаг совпадал по имени, но list[i].isCustom был true и
+       цикл выше его пропускал. В итоге создавался несвязанный rec-дубликат
+       с новым id ('custom_xxxx') и без rec._realBaseId — визуально то же имя,
+       но структурно отдельный, "чужой" предмет (отсюда баг с Edited вместо
+       Added в VL, и Input Copied Code, который не мог его найти). Теперь ищем
+       совпадение и среди кастомных предметов — но только если это ДРУГАЯ
+       запись (id отличается от нашей же rec.id), иначе черновик приклеивался
+       бы сам к себе при первом же совпадении имени. */
+    for (var j = 0; j < list.length; j++) {
+      if (list[j].id === slug && list[j].isCustom && list[j].id !== rec.id) return slug;
     }
     return null;
   }
@@ -26914,9 +27093,21 @@ function toggleEasterTheme() {
       });
     }
     if (window.VL_VARIANTS_DB) {
-      Object.keys(window.VL_VARIANTS_DB).forEach(function(v){
-        if (window.VL_VARIANTS_DB[v] && (entryId in window.VL_VARIANTS_DB[v])) delete window.VL_VARIANTS_DB[v][entryId];
-      });
+      if (rec && rec.variant) {
+        /* Удаляем ТОЛЬКО ту вариацию, которая была выбрана в карточке —
+           entryId может совпадать (это id самого предмета) в нескольких
+           независимых вариациях (corrupted_infernal, mutated и т.д.),
+           поэтому нельзя чистить его во всех подряд. */
+        if (window.VL_VARIANTS_DB[rec.variant] && (entryId in window.VL_VARIANTS_DB[rec.variant])) {
+          delete window.VL_VARIANTS_DB[rec.variant][entryId];
+        }
+      } else {
+        /* Фоллбек на старое поведение, если вариация по какой-то причине
+           неизвестна (не должно происходить в норме). */
+        Object.keys(window.VL_VARIANTS_DB).forEach(function(v){
+          if (window.VL_VARIANTS_DB[v] && (entryId in window.VL_VARIANTS_DB[v])) delete window.VL_VARIANTS_DB[v][entryId];
+        });
+      }
     }
     if (window.VL_GEAR_ROLLS && rec && rec.cat === 'gear') {
       delete window.VL_GEAR_ROLLS[baseId];
