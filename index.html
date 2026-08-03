@@ -19343,7 +19343,7 @@ function toggleEasterTheme() {
   }
 
   /* ── Валидировать + подготовить один блок. Возвращает { ok, error, action } ── */
-  function _dtIcValidateBlock(block) {
+  function _dtIcValidateBlock(block, pendingNewElementIds) {
     var target = _dtIcParseLabel(block.label);
     if (!target) {
       return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_unknown_target', 'Unrecognized target type') + ': "// ' + block.label + '"' };
@@ -19370,7 +19370,8 @@ function toggleEasterTheme() {
       var vBaseId = vMatch[1];
       var vVariant = target.variant;
       var elEntry = (window.VL_DB.elements || []).filter(function(e) { return e.id === vBaseId; })[0];
-      if (!elEntry) {
+      var isPendingNew = pendingNewElementIds && pendingNewElementIds[vBaseId];
+      if (!elEntry && !isPendingNew) {
         return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_unknown_id', 'Unknown element') + ': "' + vBaseId + '"' };
       }
       return { ok: true, action: { type: 'variant', variant: vVariant, baseId: vBaseId, data: vObj } };
@@ -19583,6 +19584,15 @@ function toggleEasterTheme() {
     if (entry.subtype === 'relic') return entry.id;
     return (dtGearVariant === 'corrupted') ? ('corrupted:' + entry.id) : entry.id;
   }
+
+  /* Нужна снаружи модуля: _icCommit (Input Copied Code → новый предмет) живёт
+     в ДРУГОМ <script>/замыкании и раньше обращался к голому _dtIcApplyAction —
+     там это undefined, а проверка `typeof _dtIcApplyAction === 'function'`
+     молча возвращала false. Из-за этого отложенные variant-блоки нового
+     предмета (например "VL_VARIANTS_DB.corrupted — Lunar" сразу после
+     "VL_DB.elements (NEW) — Lunar") НИКОГДА не применялись: обычный предмет
+     добавлялся, а его вариация тихо исчезала. */
+  window._dtIcApplyAction = function(action) { return _dtIcApplyAction(action); };
 
   function _dtIcApplyAction(action) {
     if (action.type === 'rate') {
@@ -20031,10 +20041,28 @@ function toggleEasterTheme() {
       return;
     }
 
+    /* Собираем id всех elements-предметов, которые вводятся КАК НОВЫЕ этим же
+       вставленным пакетом (блоки "VL_DB.elements (NEW) — Name"), ДО валидации
+       остальных блоков. Без этого variant-блок вида
+       "VL_VARIANTS_DB.corrupted (NEW) — Lunar" для только что описанного здесь
+       же предмета "lunar" ошибочно считался "Unknown element": на момент
+       валидации сам db(NEW)-блок ещё не применён к VL_DB.elements (все блоки
+       валидируются одним проходом, "всё-или-ничего", и только потом
+       применяются — см. ниже), поэтому прямой поиск elEntry в VL_DB.elements
+       промахивался мимо предмета, которого там физически ещё нет. */
+    var _icPendingNewElementIds = {};
+    blocks.forEach(function(block) {
+      var t = _dtIcParseLabel(block.label);
+      if (t && t.kind === 'db' && t.cat === 'elements' && t.isNew) {
+        var m = block.code.match(/id\s*:\s*'([^']+)'/) || block.code.match(/id\s*:\s*"([^"]+)"/);
+        if (m) _icPendingNewElementIds[m[1]] = true;
+      }
+    });
+
     var errors = [];
     var actions = [];
     blocks.forEach(function(block) {
-      var res = _dtIcValidateBlock(block);
+      var res = _dtIcValidateBlock(block, _icPendingNewElementIds);
       if (res.ok) actions.push(res.action);
       else errors.push({ line: res.line, msg: res.msg });
     });
@@ -20070,8 +20098,34 @@ function toggleEasterTheme() {
        открывались, а модалка оставалась висеть. Теперь сбой одного блока не
        мешает остальным: применяем ВСЕ блоки за один раз, а упавшие
        показываем в окне ошибок после применения. */
+    /* Variant-действия, чей baseId — это предмет, введённый этим же пакетом
+       как (NEW) (см. _icPendingNewElementIds выше), нельзя применять прямо
+       сейчас: сам новый предмет ещё не запушен в VL_DB.elements — он
+       коммитится позже и АСИНХРОННО, через _icHandleNewItem → _icProbeImage
+       (проверка готовой картинки на сайте, до 1.5с) или даже через ручной
+       выбор файла пользователем в модалке (может занять сколько угодно).
+       Применить variant-действие прямо здесь означало бы читать vElEntry
+       из VL_DB.elements, где предмета ещё физически нет — то же самое
+       "Unknown element" по сути, только на этапе apply, а не validate.
+       Откладываем такие действия и подвязываем их на завершение коммита
+       конкретно ЭТОГО baseId (см. _icRegisterPendingVariant ниже). */
     var runtimeErrors = [];
     actions.forEach(function(action, idx) {
+      /* Откладываем ТОЛЬКО если базовый предмет действительно будет
+         закоммичен этим пакетом. Если он уже существует (например его
+         вариацию удалили, а сам базовый предмет остался, либо это свой
+         собственный кастом — тогда _icHandleNewItem делает полный no-op и
+         _icCommit никогда не вызовется), очередь никто не разберёт и
+         variant-блок молча терялся: вариация не создавалась и карточка не
+         открывалась. В этом случае применяем действие сразу — vElEntry уже
+         находится в VL_DB.elements. */
+      if (action.type === 'variant' && _icPendingNewElementIds[action.baseId]
+          && !(typeof window._icBaseAlreadyExists === 'function' && window._icBaseAlreadyExists(action.baseId))) {
+        if (typeof window._icRegisterPendingVariant === 'function') {
+          window._icRegisterPendingVariant(action.baseId, action);
+        }
+        return;
+      }
       try {
         _dtIcApplyAction(action);
       } catch (e) {
@@ -20094,6 +20148,12 @@ function toggleEasterTheme() {
     _icNewItems.forEach(function(ni) {
       if (typeof window._icHandleNewItem === 'function') window._icHandleNewItem(ni.cat, ni.obj, ni.rolls);
     });
+
+    /* Страховка: если какой-то (NEW)-блок оказался no-op'ом (свой кастом,
+       уже существующий предмет), его _icCommit не выполнится никогда —
+       разбираем оставшиеся отложенные variant-действия, чьи базовые
+       предметы уже физически есть в VL_DB.elements. */
+    if (typeof window._icFlushPendingVariants === 'function') window._icFlushPendingVariants();
 
     /* Модалка закрывается всегда — даже если часть блоков не применилась
        (об этом скажет окно ошибок), чтобы не оставлять её висеть без
@@ -23604,6 +23664,64 @@ function toggleEasterTheme() {
     return false;
   }
 
+  /* ── Реестр variant-действий, отложенных до коммита их base-предмета ──
+     Ключ — id нового предмета (obj.id, как он придёт в _icCommit), значение —
+     массив action'ов { type:'variant', variant, baseId, data }, которые
+     нужно применить сразу после того, как этот предмет реально появится
+     в VL_DB.elements. См. dtInputCodeApply (место постановки в очередь) и
+     конец _icCommit (место разбора очереди). */
+  var _icPendingVariantsByBaseId = {};
+  window._icRegisterPendingVariant = function(baseId, action) {
+    (_icPendingVariantsByBaseId[baseId] = _icPendingVariantsByBaseId[baseId] || []).push(action);
+  };
+
+  /* Базовый предмет с таким id уже реально есть в VL_DB.elements? Проверяем и
+     прямой id, и экспортный id кастомного предмета (_edFindItemByExportId). */
+  window._icBaseAlreadyExists = function(baseId) {
+    if (!baseId) return false;
+    var list = (window.VL_DB && window.VL_DB.elements) || [];
+    for (var i = 0; i < list.length; i++) {
+      if (list[i] && String(list[i].id) === String(baseId)) return true;
+    }
+    try {
+      if (typeof window._edFindItemByExportId === 'function') {
+        var rec = window._edFindItemByExportId(baseId);
+        if (rec) {
+          for (var j = 0; j < list.length; j++) {
+            if (list[j] && String(list[j].id) === String(rec.id)) return true;
+          }
+        }
+      }
+    } catch(_) {}
+    return false;
+  };
+
+  /* Разобрать отложенные variant-действия, чей базовый предмет уже
+     существует (его _icCommit не будет вызван — см. dtInputCodeApply). */
+  window._icFlushPendingVariants = function() {
+    var ids = Object.keys(_icPendingVariantsByBaseId);
+    var applied = false;
+    ids.forEach(function(baseId) {
+      if (!window._icBaseAlreadyExists(baseId)) return;
+      var queue = _icPendingVariantsByBaseId[baseId] || [];
+      delete _icPendingVariantsByBaseId[baseId];
+      queue.forEach(function(pAction) {
+        applied = true;
+        try { if (typeof window._dtIcApplyAction === 'function') window._dtIcApplyAction(pAction); }
+        catch(e) { try { console.error('[InputCopiedCode] pending variant failed', pAction, e); } catch(_) {} }
+      });
+    });
+    if (!applied) return;
+    try { if (typeof window.dtRender === 'function') window.dtRender(window.dtCat || 'elements'); } catch(_) {}
+    try {
+      var _fSi = document.getElementById('vl-search-input');
+      if (typeof window.vlFilterItems === 'function') window.vlFilterItems(_fSi ? _fSi.value : '');
+      else if (typeof window.vlRender === 'function') window.vlRender();
+    } catch(_) {}
+    try { if (typeof window._vlRefreshOpenCards === 'function') window._vlRefreshOpenCards(); } catch(_) {}
+    try { if (typeof window._vcRunDiff === 'function') window._vcRunDiff(); } catch(_) {}
+  };
+
   function _icCommit(cat, obj, rollsCorrupted, imgDataUrl) {
     if (!window.VL_DB[cat]) window.VL_DB[cat] = [];
     /* Не дублируем, если между постановкой в очередь и подтверждением
@@ -23724,6 +23842,24 @@ function toggleEasterTheme() {
     } catch(_) {}
     try { if (typeof window._vlRefreshOpenCards === 'function') window._vlRefreshOpenCards(); } catch(_) {}
     try { if (typeof window._vcRunDiff === 'function') window._vcRunDiff(); } catch(_) {}
+
+    /* Этот предмет только что реально появился в VL_DB.elements — если его
+       ждали отложенные variant-действия (см. _icRegisterPendingVariant в
+       dtInputCodeApply), применяем их теперь, когда vElEntry уже найдётся. */
+    var _icPendingV = _icPendingVariantsByBaseId[obj.id];
+    if (_icPendingV && _icPendingV.length) {
+      delete _icPendingVariantsByBaseId[obj.id];
+      _icPendingV.forEach(function(pAction) {
+        try { if (typeof window._dtIcApplyAction === 'function') window._dtIcApplyAction(pAction); } catch(e) { try { console.error('[InputCopiedCode] pending variant failed', pAction, e); } catch(_) {} }
+      });
+      try { if (typeof window.dtRender === 'function') window.dtRender(window.dtCat || 'elements'); } catch(_) {}
+      try {
+        var _pSi = document.getElementById('vl-search-input');
+        if (typeof window.vlFilterItems === 'function') window.vlFilterItems(_pSi ? _pSi.value : '');
+        else if (typeof window.vlRender === 'function') window.vlRender();
+      } catch(_) {}
+      try { if (typeof window._vcRunDiff === 'function') window._vcRunDiff(); } catch(_) {}
+    }
   }
 
   function _icCloseModal() {
@@ -23787,11 +23923,35 @@ function toggleEasterTheme() {
     tryNext();
   }
 
+  /* Есть ли в базе сайта УЖЕ существующий предмет с таким же imgId
+     (исключая сам добавляемый предмет и ранее добавленные через код). */
+  function _icImgIdUsedByExistingItem(imgId, selfObj) {
+    if (!imgId) return false;
+    var db = window.VL_DB || {};
+    var added = window._icAddedIds || {};
+    var cats = Object.keys(db);
+    for (var i = 0; i < cats.length; i++) {
+      var list = db[cats[i]];
+      if (!Array.isArray(list)) continue;
+      for (var j = 0; j < list.length; j++) {
+        var e = list[j];
+        if (!e || (selfObj && e.id === selfObj.id) || added[e.id] || e.isCustom) continue;
+        if ((e.imgId || e.id) === imgId) return true;
+      }
+    }
+    return false;
+  }
+
   function _icShowNext() {
     if (!_icQueue.length) { _icCloseModal(); return; }
     var peek = _icQueue[0];
     /* Файл уже лежит на сайте → вопрос не задаём, предмет заберёт картинку
        по обычному пути images/<cat>/<imgId>.webp. */
+    /* Переиспользование арта считается законным только если в ОФИЦИАЛЬНОЙ
+       базе (VL_DB из items_data2.js) реально есть предмет с таким же imgId.
+       Иначе — это собственная картинка нового предмета, и её надо спросить,
+       даже если файл с таким именем случайно нашёлся на сайте. */
+    if (!_icImgIdUsedByExistingItem(peek.imgId, peek.obj)) { _icShowNextModal(); return; }
     _icProbeImage(peek.cat, peek.imgId, function(exists) {
       if (exists && _icQueue[0] === peek) {
         _icQueue.shift();
@@ -25965,6 +26125,24 @@ function toggleEasterTheme() {
     for (var j = 0; j < list.length; j++) {
       if (list[j].id === slug && list[j].isCustom && list[j].id !== rec.id) return slug;
     }
+    /* Ни в "родных", ни в уже сохранённых кастомных записях VL_DB.elements
+       совпадения нет — но предмет может быть создан ПРЯМО СЕЙЧАС, в этой же
+       сессии редактора, и ещё не влит в VL_DB.elements (это просто черновик
+       в window._edCustomItems: например, ты создал "Lunar" (regular) и сразу
+       же, не сохраняя, добавляешь ему вариацию "corrupted"). Ищем такой
+       черновик — regular-предмет с тем же именем — и используем его же
+       export id, чтобы не плодить дублирующую базовую запись вида lunar_2. */
+    var drafts = window._edCustomItems || [];
+    var exportIds = (typeof _edComputeExportIds === 'function') ? _edComputeExportIds() : {};
+    for (var k = 0; k < drafts.length; k++) {
+      var d = drafts[k];
+      if (d.id === rec.id) continue;
+      if (d.cat !== 'elements') continue;
+      if (d.variant && d.variant !== 'regular') continue; /* нужен именно base-предмет */
+      if (_edSlugify(d.name) === slug) {
+        return exportIds[d.id] || slug;
+      }
+    }
     return null;
   }
   window._edSlugify = _edSlugify; /* нужен снаружи модуля — см. Input Copied Code → новый предмет */
@@ -26298,6 +26476,39 @@ function toggleEasterTheme() {
 
   function edInitAll() {
     window._edCustomItems = edLoadCustomItems();
+
+    /* ── Чистка «сирот» ──
+       Вариативная кастомная запись хранит _realBaseId — id базового предмета.
+       Если базовый предмет был кастомным и его удалили (или запись пережила
+       старую версию удаления без каскада), _realBaseId больше не резолвится
+       ни в официальную базу, ни в другой кастомный предмет. Такие записи
+       рендерились как "Undefined" и ломали открытие вариаций — выбрасываем их
+       из хранилища при загрузке. */
+    (function _edPruneOrphans() {
+      var all = window._edCustomItems || [];
+      var ownIds = {};
+      all.forEach(function(r){ if (r && r.id) ownIds[r.id] = true; });
+      var kept = all.filter(function(rec){
+        if (!rec || !rec._realBaseId || rec._realBaseId === rec.id) return true;
+        if (ownIds[rec._realBaseId]) return true;
+        var found = false;
+        if (window.VL_DB) {
+          Object.keys(window.VL_DB).forEach(function(cat){
+            if (found || !Array.isArray(window.VL_DB[cat])) return;
+            if (window.VL_DB[cat].some(function(e){ return e && e.id === rec._realBaseId; })) found = true;
+          });
+        }
+        if (!found && window.VL_VARIANTS_DB && rec.variant && window.VL_VARIANTS_DB[rec.variant]) {
+          delete window.VL_VARIANTS_DB[rec.variant][rec._realBaseId];
+        }
+        return found;
+      });
+      if (kept.length !== all.length) {
+        window._edCustomItems = kept;
+        try { if (typeof window.edSaveCustomItems === 'function') window.edSaveCustomItems(); } catch(_) {}
+      }
+    })();
+
     var _promoted = [];
     window._edCustomItems.forEach(function(rec) {
       if (_edIsPromoted(rec)) { _promoted.push(rec); return; } /* официально добавлен в базу — не дублируем на экране */
@@ -27059,6 +27270,26 @@ function toggleEasterTheme() {
   window.edDeleteCustomItem = function(baseId) {
     var rec = _edFindItem(baseId);
     var compositeId = rec ? _edCompositeId(rec) : baseId;
+
+    /* ── Каскад: вариации, приклеенные к УДАЛЯЕМОМУ КАСТОМНОМУ базовому предмету ──
+       Вариативная запись (например "Corrupted Infernal — Lunar") живёт в
+       _edCustomItems как ОТДЕЛЬНАЯ запись со своим id (custom_xxx) и полем
+       _realBaseId = id базового предмета. Если базовый предмет кастомный и его
+       удаляют, такие записи оставались висеть: их VL_VARIANTS_DB[variant][baseId]
+       никто не чистил, база в VL_DB уже удалена → карточка вариации после
+       перезагрузки показывалась как "Undefined" и ломала списки Regular/
+       Corrupted Infernal (vlGetList/dtGetList не находили базовый предмет).
+       Поэтому сначала рекурсивно удаляем все привязанные вариации. */
+    if (rec && (!rec.variant || rec.variant === 'regular')) {
+      var _attached = (window._edCustomItems || []).filter(function(x){
+        return x && x.id !== baseId && x._realBaseId === baseId;
+      }).map(function(x){ return x.id; });
+      Object.keys(_edDrafts || {}).forEach(function(k){
+        var d = _edDrafts[k];
+        if (d && d.id !== baseId && d._realBaseId === baseId && _attached.indexOf(d.id) === -1) _attached.push(d.id);
+      });
+      _attached.forEach(function(aid){ try { window.edDeleteCustomItem(aid); } catch(_) {} });
+    }
     if (rec) {
       _edVlCandidateIds(rec).forEach(function(vid) {
         if (typeof window._vlForceUnlike === 'function') { try { window._vlForceUnlike(vid); } catch(_) {} }
