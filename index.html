@@ -33,6 +33,27 @@
   });
 })();
 </script>
+<script>
+/* ── Единый резолвер картинки предмета ──
+   Вариация (composite id "variant:baseId") своей картинки не имеет —
+   она должна брать арт базового предмета. Поэтому кроме самого id
+   пробуем id без префикса варианта и imgId/baseId. */
+(function(){
+  window._edPickImg = function(id, imgId, cat){
+    var C = window._edCustomImg || {}, L = window._dbLoadImg || {};
+    var ids = [];
+    if (id) {
+      ids.push(id);
+      var s = String(id), p = s.indexOf(':');
+      if (p > -1) ids.push(s.slice(p + 1));
+    }
+    if (imgId && ids.indexOf(imgId) === -1) ids.push(imgId);
+    for (var i = 0; i < ids.length; i++) if (C[ids[i]]) return C[ids[i]];
+    for (var j = 0; j < ids.length; j++) if (L[ids[j]]) return L[ids[j]];
+    return 'images/' + (cat || 'elements') + '/' + (imgId || ids[ids.length - 1] || id) + '.webp';
+  };
+})();
+</script>
 <title>Values & Trading Website - (Birthday!)</title>
 <link rel="icon" type="image/webp" href="images/chromas/og_phantom.webp">
 <!-- ── EARLY THEME: применяем класс темы ДО рендера страницы, без мигания ── -->
@@ -12665,7 +12686,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       var RC = window.RARITY_CFG || {};
       var rc = RC[itemMeta.rarity] || RC.rare || { color: '#70a1ff', glow: 'rgba(112,161,255,0.20)' };
       var _imgLookupId = itemMeta.itemId || itemMeta.id;
-      var imgSrc = (window._edCustomImg && window._edCustomImg[_imgLookupId]) || (window._dbLoadImg && window._dbLoadImg[itemMeta.imgId]) || ('images/' + itemMeta.category + '/' + itemMeta.imgId + '.webp');
+      var imgSrc = window._edPickImg(_imgLookupId, itemMeta.imgId, itemMeta.category);
       var _cls = document.documentElement.classList;
       var _isEaster   = _cls.contains('theme-easter');
       var _isBaldi    = _cls.contains('theme-baldi');
@@ -14949,7 +14970,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         +(filled?' style="--bar-color:'+rc.color+'"':'')+' ></span>';
     }
 
-    var imgSrc = (window._edCustomImg && window._edCustomImg[item.id]) || (window._dbLoadImg && window._dbLoadImg[item.imgId || item.baseId || item.id]) || ('images/' + (item.category || 'elements') + '/' + (item.imgId || item.baseId || item.id) + '.webp');
+    var imgSrc = window._edPickImg(item.id, item.imgId || item.baseId || item.id, item.category || 'elements');
     var imgBoxClass = 'vl-detail-img-box';
     var imgBoxStyle = '';
     var imgWrapOpen = '';
@@ -22528,7 +22549,7 @@ function toggleEasterTheme() {
     var imgWrapClose = useWrap ? '</div>' : '';
 
     /* Image src */
-    var imgSrc = (window._edCustomImg && window._edCustomImg[it.id]) || (window._dbLoadImg && window._dbLoadImg[it.imgId||it.baseId||it.id]) || ('images/' + (it.cat||dtCat) + '/' + (it.imgId||it.baseId||it.id) + '.webp');
+    var imgSrc = window._edPickImg(it.id, it.imgId || it.baseId || it.id, it.cat || dtCat);
 
     /* Variant badge */
     var variantBadge = _dtVariantBadgeInlineHTML(it);
