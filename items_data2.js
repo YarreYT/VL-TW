@@ -82,7 +82,7 @@ window.VL_DB = {
     { id:'cupidfury',     name:"Cupid's Fury",                 rarity:'ascended',  imgId:'cupidfury',      subtype:'weapon', status:null },
     { id:'cupidwrath',    name:"Cupid's Wrath",                rarity:'secret',    imgId:'cupidwrath',     subtype:'weapon', status:null },
     { id:'tlconqblade',   name:"Timelost Conqueror's Blade",   rarity:'mythic',    imgId:'tlconqblade',    subtype:'weapon', status:null },
-    { id:'tlconqbladele', name:"Timelost Conqueror's Blade LE", rarity:'mythic', imgId:'tlconqblade', subtype:'weapon', status:'hyped' },
+    { id:'tlconqbladele', name:"Timelost Conqueror's Blade LE", rarity:'mythic', imgId:'tlconqblade', subtype:'weapon', status:'unstable' },
     { id:'glitchedstaff', name:"Glitched Staff",               rarity:'secret',    imgId:'glitchedstaff',  subtype:'weapon', status:null },
     { id:'viltronstaff',  name:"Viltron Staff",                rarity:'ascended',  imgId:'glitchedstaff',  subtype:'weapon', status:null },
     { id:'seriously',     name:"Serious Staff",                rarity:'secret',    imgId:'seriously',      subtype:'weapon', status:null },
@@ -333,7 +333,8 @@ window.VL_VARIANTS_DB = {
     fire:      { value:0,      demand:0,   status:null       },
     sand:      { value:0,      demand:0,   status:null       },
     air:       { value:0,      demand:0,   status:null       },
-  },
+    lunar:                { value:65000, demand:4, status:null },
+},
 
   infernal: {
     reaper:               { value:30, demand:2, status:null },
@@ -484,7 +485,8 @@ window.VL_VARIANTS_DB = {
     nature:               { value:0, demand:0, status:null },
     air:                  { value:0, demand:0, status:null },
     infinity:             { value:550000, demand:5, status:null },
-  },
+    infinity:             { value:550000, demand:5, status:null },
+},
 
   jumpscared: {
     sunlar:               { value:45000, demand:3.5, status:'rising' },
@@ -624,7 +626,6 @@ window.VL_VARIANTS_DB = {
   },
   corrupted_infernal: {
     time:                 { value:50000, demand:3, status:'inprocess' },
-    lunar:                { value:65000, demand:4, status:'inprocess' },
 },
 
 };
@@ -688,7 +689,7 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:500,d:1},{v:700,d:1},{v:1000,d:1} ]
   },
   tlconqbladele: {
-    corrupted: [ {v:13000,d:2},{v:14000,d:2},{v:15000,d:2},{v:16000,d:2},{v:17000,d:2},{v:18000,d:2},{v:19000,d:2},{v:20000,d:2},{v:25000,d:2},{v:30000,d:2},{v:40000,d:3.5} ]
+    corrupted: [ {v:22000,d:3},{v:23500,d:3},{v:25000,d:3},{v:26500,d:3},{v:28000,d:3},{v:30000,d:3},{v:32000,d:3},{v:35000,d:3},{v:40000,d:3},{v:45000,d:3},{v:55000,d:4} ]
   },
   glitchedstaff: {
     corrupted: [ null,null,null,null,null,{v:1000,d:1.5},{v:1100,d:1.5},{v:1200,d:1.5},{v:1300,d:1.5},{v:1500,d:1.5},{v:2000,d:2} ]
@@ -733,7 +734,7 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:6250,d:2},{v:6500,d:2},{v:6750,d:2},{v:7000,d:2},{v:7250,d:2},{v:7500,d:2},{v:7750,d:2},{v:8000,d:2},{v:9000,d:2},{v:10000,d:2},{v:12000,d:2.5} ]
   },
   terrablade_le: {
-    corrupted: [ {v:70000,d:4},{v:73000,d:4},{v:76000,d:4},{v:79000,d:4},{v:82000,d:4},{v:85000,d:4},{v:88000,d:4},{v:91000,d:4},{v:95000,d:4},{v:100000,d:4},{v:110000,d:4.5} ]
+    corrupted: [ {v:54000,d:4},{v:57000,d:4},{v:60000,d:4},{v:63000,d:4},{v:66000,d:4},{v:69000,d:4},{v:72000,d:4},{v:75000,d:4},{v:85000,d:4},{v:95000,d:4},{v:110000,d:4.5} ]
   },
   pool_noodle: {
     corrupted: [ {v:25,d:0.25},{v:32.5,d:0.25},{v:40,d:0.25},{v:47.5,d:0.25},{v:55,d:0.25},{v:65,d:0.35},{v:75,d:0.35},{v:85,d:0.35},{v:100,d:0.5},{v:115,d:0.5},{v:125,d:0.5} ]
@@ -745,13 +746,13 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:900,d:2},{v:950,d:2},{v:1000,d:2},{v:1050,d:2},{v:1100,d:2},{v:1150,d:2},{v:1200,d:2},{v:1250,d:2},{v:1300,d:2},{v:1500,d:2},{v:2000,d:2.5} ]
   },
   hydromaxx_lr: {
-    corrupted: [ {v:24000,d:1.75},{v:24500,d:1.75},{v:25000,d:1.75},{v:25500,d:2},{v:26000,d:2},{v:26500,d:2.25},{v:27000,d:2.25},{v:27500,d:2.25},{v:28000,d:2.5},{v:30000,d:2.5},{v:35000,d:2.5} ]
+    corrupted: [ {v:17000,d:3},{v:18000,d:3},{v:19000,d:3},{v:20000,d:3},{v:21000,d:3},{v:22000,d:3},{v:23000,d:3},{v:24000,d:3},{v:26000,d:3},{v:30000,d:3.25},{v:40000,d:3.5} ]
   },
   hydromaxx_cqb: {
     corrupted: [ {v:800,d:1.5},{v:850,d:1.5},{v:900,d:1.5},{v:950,d:1.5},{v:1000,d:1.5},{v:1050,d:1.5},{v:1100,d:1.5},{v:1150,d:1.5},{v:1200,d:1.5},{v:1300,d:1.5},{v:1500,d:2} ]
   },
   lord_prisma_ring: {
-    corrupted: [ {v:29500,d:3},{v:30000,d:3},{v:30500,d:3},{v:31000,d:3},{v:31500,d:3},{v:32000,d:3},{v:32500,d:3},{v:33000,d:3},{v:35000,d:3.5},{v:40000,d:3.5},{v:45000,d:4} ]
+    corrupted: [ {v:15000,d:3},{v:16000,d:3},{v:17000,d:3},{v:18000,d:3},{v:19000,d:3},{v:20000,d:3},{v:22000,d:3},{v:25000,d:3},{v:27000,d:3.5},{v:30000,d:3.5},{v:35000,d:4} ]
   },
   lucky_banner_charm: {
     corrupted: [ {v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1.5},{v:500,d:1.5},{v:500,d:1.5},{v:600,d:1.5},{v:700,d:1.5},{v:1000,d:2} ]
@@ -772,10 +773,10 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:2550,d:1},{v:2600,d:1},{v:2650,d:1},{v:2700,d:1},{v:2750,d:1},{v:2800,d:1},{v:2850,d:1},{v:2900,d:1},{v:3000,d:1},{v:3500,d:1.5},{v:4000,d:2} ]
   },
   gubby_launcher: {
-    corrupted: [ {v:190000,d:3},{v:190000,d:3},{v:190000,d:3},{v:190000,d:3},{v:190000,d:3},{v:190000,d:3},{v:190000,d:3},{v:190000,d:3},{v:200000,d:3},{v:210000,d:3.5},{v:220000,d:4} ]
+    corrupted: [ {v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:220000,d:3},{v:250000,d:3} ]
   },
   fission_ring: {
-    corrupted: [ {v:24500,d:2.5},{v:25000,d:2.5},{v:25500,d:2.5},{v:26000,d:2.5},{v:26500,d:2.5},{v:27000,d:2.5},{v:27500,d:2.5},{v:28000,d:2.5},{v:30000,d:3},{v:35000,d:3},{v:40000,d:3.5} ]
+    corrupted: [ {v:15000,d:3},{v:16000,d:3},{v:17000,d:3},{v:18000,d:3},{v:19000,d:3},{v:20000,d:3},{v:22000,d:3},{v:25000,d:3},{v:27000,d:3.5},{v:30000,d:3.5},{v:35000,d:4} ]
   },
   wise_necklace: {
     corrupted: [ {v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0} ]
@@ -805,10 +806,10 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:2000,d:3},{v:2250,d:3},{v:2500,d:3},{v:2750,d:3},{v:3000,d:3},{v:3250,d:3},{v:3500,d:3},{v:4000,d:3},{v:5000,d:3},{v:6000,d:3},{v:8000,d:3.5} ]
   },
   hydromaxx_mini: {
-    corrupted: [ {v:50000,d:2},{v:52500,d:2.25},{v:55000,d:2.25},{v:57500,d:2.25},{v:60000,d:2.25},{v:65000,d:2.5},{v:70000,d:2.5},{v:75000,d:2.5},{v:80000,d:2.75},{v:85000,d:2.75},{v:90000,d:2.75} ]
+    corrupted: [ {v:64000,d:4},{v:67000,d:4},{v:70000,d:4},{v:73000,d:4},{v:76000,d:4},{v:79000,d:4},{v:82000,d:4},{v:85000,d:4},{v:95000,d:4},{v:110000,d:4.5},{v:130000,d:5} ]
   },
   hydromaxx_lrxl: {
-    corrupted: [ {v:29000,d:2.5},{v:29500,d:2.5},{v:30000,d:2.5},{v:30500,d:2.5},{v:31000,d:2.5},{v:31500,d:2.5},{v:32000,d:2.5},{v:32500,d:2.5},{v:33000,d:2.5},{v:35000,d:2.5},{v:40000,d:3} ]
+    corrupted: [ {v:29000,d:3},{v:30000,d:3},{v:32000,d:3},{v:34000,d:3},{v:36000,d:3},{v:38000,d:3},{v:40000,d:3},{v:42000,d:3},{v:45000,d:3},{v:50000,d:3.5},{v:60000,d:4} ]
   },
   ascendant_vanquisher: {
     corrupted: [ {v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:2700,d:2},{v:2900,d:2},{v:3100,d:2},{v:3300,d:2},{v:3500,d:2},{v:4000,d:2.5} ]
