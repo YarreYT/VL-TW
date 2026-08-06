@@ -5023,6 +5023,7 @@ body.lang-ru .value-list-btn{
 .az-card:has(.vl-roll-dropdown[style*="flex"]),
 .vl-card-wrap:has(.vl-roll-tooltip.vl-rt-open),
 .az-card:has(.vl-roll-tooltip.vl-rt-open),
+.vl-card-wrap.vl-rt-owner-open,
 .vl-card-wrap:has(.vl-status-tooltip.show) {
   z-index: 100;
 }
@@ -5035,6 +5036,17 @@ body.lang-ru .value-list-btn{
 .updates-panel:has(.vl-roll-dropdown[style*="flex"]),
 .updates-panel:has(.vl-roll-tooltip.vl-rt-open) {
   overflow: visible !important;
+}
+
+/* На мобильном тултип переносится в body как fixed-слой. Так он не попадает
+   под overflow контейнеров карточек и не меняет высоту области над консолью. */
+@media(max-width:988px){
+  .vl-roll-tooltip.vl-rt-mobile-portal{
+    position: fixed !important;
+    right: auto !important;
+    bottom: auto !important;
+    z-index: 10000 !important;
+  }
 }
 .vl-card-wrap .vl-detail-card {
   width: 100%;
@@ -11659,6 +11671,111 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 
 /* ── Value List $ and lines: match icon color ── */
 </style>
+
+<style id="compact-card-scaling">
+/* ══════════════════════════════════════════════════════════════════════
+   COMPACT CARD SCALING
+   Диапазоны, где карточка физически узкая и элементы не влезают:
+     • 0–480px      — телефоны (1–2 карточки в ряд)
+     • 640–800px    — 3 карточки в ряд, каждая ~190–240px
+     • 1060–1150px  — 3 карточки в ряд в сайдбар-раскладке, та же теснота
+   Масштабируем: roll-slot, value, название, редкость, текст бейджей,
+   звёзды и demand-спиннер в DT.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── DT: roll-slot ставим СЛЕВА от звёзд, а не поверх них ── */
+#page-devtool .vl-roll-slot-wrap {
+  left: calc(50% - var(--vl-stars-half, 51px) - var(--dt-roll-size, 34px) - 6px) !important;
+  top: -24px !important;
+}
+#page-devtool .vl-roll-slot-btn,
+#page-devtool .vl-roll-slot-static {
+  width: var(--dt-roll-size, 34px);
+  height: var(--dt-roll-size, 34px);
+}
+/* demand-спиннер прижимаем к звёздам (offset считается от полуширины звёзд) */
+#page-devtool { --dt-dem-off: calc(var(--vl-stars-half, 51px) + 7px); }
+
+@media(max-width:480px),
+       (min-width:640px) and (max-width:800px),
+       (min-width:1060px) and (max-width:1150px) {
+
+  /* Полуширина ряда звёзд для расчётов (5 звёзд + 4 гэпа) */
+  #page-valuelist, #page-devtool { --vl-stars-half: 39px; }
+
+  /* ── Название предмета / редкость ── */
+  .vl-detail-card .vl-detail-name {
+    font-size: 13px !important;
+    height: calc(13px * 1.25) !important;
+    letter-spacing: .2px !important;
+  }
+  .vl-detail-card .vl-detail-rarity {
+    font-size: 9.5px !important;
+    letter-spacing: 1.2px !important;
+    margin-bottom: 8px !important;
+  }
+
+  /* ── Value ── */
+  .vl-detail-card .vl-detail-value-title { font-size: 15px !important; letter-spacing: 1.2px !important; }
+  .vl-detail-card .vl-detail-value-title-row { min-height: 20px !important; height: 20px !important; }
+  .vl-detail-card .vl-detail-value-row { min-height: 28px !important; height: 28px !important; padding: 0 2px !important; }
+  .vl-detail-card .vl-detail-value-big,
+  .vl-detail-card .dt-val-input,
+  .vl-detail-card .dt-val-grad-overlay { font-size: 20px !important; }
+  .vl-detail-card .vl-value-part-label,
+  .vl-detail-card .vl-value-part-mirror { font-size: 10px !important; }
+  .vl-detail-card .vl-gold-value { font-size: 10.5px !important; }
+  .vl-detail-card .vl-gold-value-icon { width: 13px !important; height: 13px !important; }
+
+  /* ── Текст бейджей: Corrupted / Infernal / Radiant / Edited / Added ── */
+  .vl-detail-card .vl-variant-badge,
+  .vl-detail-card .vl-edited-badge,
+  .vl-detail-card .vl-added-badge {
+    font-size: 13px !important;
+    height: 22px !important;
+    padding: 0 8px 0 20px !important;
+    letter-spacing: 0 !important;
+    width: 80% !important;
+  }
+  .vl-detail-card .vl-edited-badge.vl-edited-badge--below,
+  .vl-detail-card .vl-added-badge.vl-added-badge--below { top: 34px !important; }
+  .vl-detail-card .vl-status-inline { font-size: 7px !important; padding: 1px 4px !important; letter-spacing: .5px !important; }
+  .vl-detail-card .vl-status-help { width: 13px !important; height: 13px !important; font-size: 8.5px !important; }
+
+  /* ── Звёзды ── */
+  .vl-detail-card .vl-star { width: 14px !important; height: 14px !important; }
+  .vl-detail-card .vl-star svg,
+  .vl-detail-card .vl-star-fill svg { width: 14px !important; height: 14px !important; }
+  .vl-detail-card .vl-stars { gap: 2px !important; }
+  .vl-detail-card .vl-demand-label { font-size: 8.5px !important; left: calc(50% + 42px) !important; }
+
+  /* ── Roll-slot (VL) ── */
+  .vl-detail-card .vl-roll-slot-btn,
+  .vl-detail-card .vl-roll-slot-static {
+    width: 30px !important; height: 30px !important;
+    font-size: 15px !important; border-radius: 8px !important;
+  }
+  .vl-detail-card .vl-roll-slot-label { font-size: 7.5px !important; letter-spacing: 1px !important; margin-bottom: 2px !important; }
+  .vl-detail-card .vl-roll-slot-wrap { left: -2px !important; top: -22px !important; }
+  .vl-detail-card .vl-roll-drop-item { width: 30px !important; height: 30px !important; font-size: 14px !important; border-radius: 8px !important; }
+  .vl-detail-card .vl-roll-dropdown { width: 44px !important; max-height: calc(4 * 30px + 3 * 4px + 10px) !important; }
+
+  /* ── Roll-slot + demand (DT) ── */
+  #page-devtool { --dt-roll-size: 28px; }
+  #page-devtool .vl-detail-card .vl-roll-slot-btn,
+  #page-devtool .vl-detail-card .vl-roll-slot-static {
+    width: 28px !important; height: 28px !important;
+    font-size: 14px !important; border-radius: 8px !important;
+  }
+  #page-devtool .vl-detail-card .vl-roll-slot-wrap {
+    left: calc(50% - var(--vl-stars-half, 39px) - 28px - 4px) !important;
+    top: -20px !important;
+  }
+  #page-devtool .vl-detail-card .dt-dem-input { width: 22px !important; height: 22px !important; font-size: 11px !important; }
+  #page-devtool .vl-detail-card .dt-dem-arrow { width: 14px !important; height: 10px !important; font-size: 5px !important; }
+  #page-devtool .vl-detail-card .dt-rar-chip { font-size: 6.5px !important; padding: 2px 5px !important; }
+}
+</style>
 </head>
 <body>
 <div class="page-bg"></div>
@@ -14819,7 +14936,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     if (existing && !existing._removing) {
       existing._removing = true;
       existing.classList.remove('vl-rt-open');
-      setTimeout(function() { if (existing.parentNode) existing.remove(); }, 320);
+      setTimeout(function() { _vlRemoveRollTooltip(existing); }, 320);
       return;
     }
     /* Закрываем любые другие открытые тултипы на странице */
@@ -14855,6 +14972,35 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     tt.innerHTML = _vlRollTooltipRowsHTML(rolls, openEntry.item, activeRollNum, cardId);
     var anchor = cardWrap.querySelector('.vl-detail-card') || cardWrap;
     anchor.after(tt);
+
+    /* На мобильном выносим тултип из сетки карточек в body. Fixed-слой
+       перекрывает VALUE CHANGES, но не расширяет страницу и не создаёт
+       невидимую «призрачную» зону между карточкой и консолью. */
+    if (window.innerWidth <= 988) {
+      tt._anchorWrap = cardWrap;
+      cardWrap.classList.add('vl-rt-owner-open');
+      tt.classList.add('vl-rt-mobile-portal');
+      document.body.appendChild(tt);
+      tt._syncPosition = function() {
+        if (!tt._anchorWrap || !tt.isConnected) return;
+        var mobileAnchor = tt._anchorWrap.querySelector('.vl-detail-card') || tt._anchorWrap;
+        var rect = mobileAnchor.getBoundingClientRect();
+        var viewportH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+        var viewportTop = window.visualViewport ? window.visualViewport.offsetTop : 0;
+        var top = Math.max(viewportTop + 4, Math.min(rect.bottom, viewportTop + viewportH - 64));
+        tt.style.left = Math.max(4, rect.left) + 'px';
+        tt.style.top = top + 'px';
+        tt.style.width = Math.min(rect.width, window.innerWidth - 8) + 'px';
+        tt.style.maxHeight = Math.max(60, viewportTop + viewportH - top - 6) + 'px';
+      };
+      tt._syncPosition();
+      window.addEventListener('resize', tt._syncPosition);
+      window.addEventListener('scroll', tt._syncPosition, true);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', tt._syncPosition);
+        window.visualViewport.addEventListener('scroll', tt._syncPosition);
+      }
+    }
 
     requestAnimationFrame(function() { requestAnimationFrame(function() {
       tt.classList.add('vl-rt-open');
@@ -14953,9 +15099,23 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       if (tt._removing) return;
       tt._removing = true;
       tt.classList.remove('vl-rt-open');
-      setTimeout(function() { if (tt.parentNode) tt.remove(); }, 320);
+      setTimeout(function() { _vlRemoveRollTooltip(tt); }, 320);
     });
     document.removeEventListener('click', _vlRollOutsideClick);
+  }
+
+  function _vlRemoveRollTooltip(tt) {
+    if (!tt) return;
+    if (tt._syncPosition) {
+      window.removeEventListener('resize', tt._syncPosition);
+      window.removeEventListener('scroll', tt._syncPosition, true);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', tt._syncPosition);
+        window.visualViewport.removeEventListener('scroll', tt._syncPosition);
+      }
+    }
+    if (tt._anchorWrap) tt._anchorWrap.classList.remove('vl-rt-owner-open');
+    if (tt.parentNode) tt.remove();
   }
 
 
@@ -22686,7 +22846,7 @@ function toggleEasterTheme() {
           /* Gear: vl-roll-stars-row уже position:relative+width:100%.
              Обрезаем последний </div> и вставляем спиннер внутрь */
           ? rollStarsRow.slice(0, -6)
-            + '<div style="position:absolute;left:calc(50% + 58px);top:50%;transform:translateY(-50%);">'
+            + '<div class="dt-dem-anchor" style="position:absolute;left:calc(50% + var(--dt-dem-off, 58px));top:50%;transform:translateY(-50%);">'
             +   '<div class="dt-demand-spinner">'
             +     '<input type="text" id="dt-inp-dem-' + cid + '" class="dt-dem-input"'
             +       ' value="' + dLbl + '" maxlength="4"'
@@ -22701,7 +22861,7 @@ function toggleEasterTheme() {
           /* Non-gear: оригинальный layout без изменений */
           : '<div style="position:relative;height:22px;margin-top:4px;">'
             + '<div class="vl-stars" id="dt-stars-' + cid + '" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);">' + starsHTML + '</div>'
-            + '<div style="position:absolute;left:calc(50% + 58px);top:50%;transform:translateY(-50%);">'
+            + '<div class="dt-dem-anchor" style="position:absolute;left:calc(50% + var(--dt-dem-off, 58px));top:50%;transform:translateY(-50%);">'
             +   '<div class="dt-demand-spinner">'
             +     '<input type="text" id="dt-inp-dem-' + cid + '" class="dt-dem-input"'
             +       ' value="' + dLbl + '" maxlength="4"'
