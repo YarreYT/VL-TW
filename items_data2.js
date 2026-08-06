@@ -623,7 +623,7 @@ window.VL_VARIANTS_DB = {
     dragon:               { value:25000, demand:4, status:null },
   },
   corrupted_infernal: {
-    time:                 { value:35000, demand:2.5, status:null },
+    time:                 { value:50000, demand:3, status:'inprocess' },
     lunar:                { value:65000, demand:4, status:'inprocess' },
 },
 
