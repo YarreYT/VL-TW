@@ -63,6 +63,7 @@ window.VL_DB = {
     { id:'fools_phantom',		name:"Fool's Phantom",		rarity:'exclusive', imgId:'fools_phantom',		demand:2.5,	value:15000,		status:'rare' },
     { id:'sunshine',	   name:"Sunshine",  rarity:'exclusive', imgId:'lebronmeme',    demand:5, value:30121982,    status:'inflated' },
       { id:'lunar',		name:"Lunar",		rarity:'mythic', imgId:'lunar',		demand:4, value:4500,		status:'unstable' },
+      { id:'lunar_2',		name:"Lunar",		rarity:'mythic', imgId:'solar',		demand:4, value:4500,		status:'unstable' },
   ],
   gear: [
     /* ── Weapons ── */
@@ -334,6 +335,7 @@ window.VL_VARIANTS_DB = {
     sand:      { value:0,      demand:0,   status:null       },
     air:       { value:0,      demand:0,   status:null       },
     lunar:                { value:65000, demand:4, status:null },
+    lunar_2:              { value:65000, demand:4, status:null },
 },
 
   infernal: {
@@ -626,6 +628,7 @@ window.VL_VARIANTS_DB = {
   },
   corrupted_infernal: {
     time:                 { value:50000, demand:3, status:'inprocess' },
+    lunar_2:              { value:65000, demand:4, status:null },
 },
 
 };
