@@ -12877,7 +12877,8 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
          titleW берём через getBoundingClientRect() на самом элементе —
          это уже экранные пиксели с учётом zoom/scale/scrollbar, как в vlFitNameEl. */
       if (_fitTitleEl) {
-        var baseTitleFs = 15; /* vc-diff-name: font-size: 15px */
+        _fitTitleEl.style.removeProperty('font-size');
+        var baseTitleFs = parseFloat(getComputedStyle(_fitTitleEl).fontSize) || 15;
         var titleW = _fitTitleEl.getBoundingClientRect().width;
         if (titleW <= 0) titleW = _fitTitleEl.offsetWidth || 180;
         probe.style.fontWeight    = '800';
@@ -12887,7 +12888,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         var titleTextW = probe.getBoundingClientRect().width;
         if (titleTextW > titleW) {
           var titleFs = Math.max(8, Math.floor((titleW / titleTextW) * baseTitleFs * 2) / 2);
-          _fitTitleEl.style.fontSize   = titleFs + 'px';
+          _fitTitleEl.style.setProperty('font-size', titleFs + 'px', 'important');
           _fitTitleEl.style.textOverflow = 'clip';
         } else {
           _fitTitleEl.style.fontSize   = '';
@@ -15486,13 +15487,19 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     nameEl.style.whiteSpace = 'nowrap';
     nameEl.style.overflow   = 'visible';
 
+    /* Базовый кегль берём из CSS, а не из константы 17px: на узких диапазонах
+       (<=480, 640-800, 1060-1150) медиазапросы задают 13px !important, и
+       подгонка от 17px давала завышенный результат + перебивалась !important. */
+    nameEl.style.removeProperty('font-size');
+    var baseFs = parseFloat(getComputedStyle(nameEl).fontSize) || 17;
+
     var available = nameEl.getBoundingClientRect().width;
     if (available <= 0) available = nameEl.offsetWidth || 224;
 
-    var cacheKey = text + '|' + Math.round(available);
+    var cacheKey = text + '|' + Math.round(available) + '|' + baseFs;
     if (_vlFitNameCache[cacheKey] !== undefined) {
       nameEl.textContent      = text;
-      nameEl.style.fontSize   = _vlFitNameCache[cacheKey] + 'px';
+      nameEl.style.setProperty('font-size', _vlFitNameCache[cacheKey] + 'px', 'important');
       nameEl.style.overflow   = 'hidden';
       nameEl.style.visibility = '';
       return;
@@ -15506,19 +15513,19 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     span.style.fontFamily    = cs.fontFamily;
     span.style.fontWeight    = cs.fontWeight;
     span.style.letterSpacing = cs.letterSpacing;
-    span.style.fontSize      = '17px';
+    span.style.fontSize      = baseFs + 'px';
     document.body.appendChild(span);
     var textW = span.getBoundingClientRect().width;
     document.body.removeChild(span);
 
-    var fs = 17;
+    var fs = baseFs;
     if (textW > available) {
-      fs = Math.max(8, Math.floor((available / textW) * 17 * 2) / 2);
+      fs = Math.max(7, Math.floor((available / textW) * baseFs * 2) / 2);
     }
 
     _vlFitNameCache[cacheKey] = fs;
     nameEl.textContent      = text;
-    nameEl.style.fontSize   = fs + 'px';
+    nameEl.style.setProperty('font-size', fs + 'px', 'important');
     nameEl.style.overflow   = 'hidden';
     nameEl.style.visibility = '';
   }
@@ -15550,27 +15557,31 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       available = cardW - 36;
     }
 
-    var cacheKey = text + '|' + Math.round(available);
+    el.style.removeProperty('font-size');
+    var baseVFs = parseFloat(getComputedStyle(el).fontSize) || 30;
+
+    var cacheKey = text + '|' + Math.round(available) + '|' + baseVFs;
     if (_vlFitValueCache[cacheKey] !== undefined) {
-      el.style.fontSize = _vlFitValueCache[cacheKey] + 'px';
+      el.style.setProperty('font-size', _vlFitValueCache[cacheKey] + 'px', 'important');
       return;
     }
 
     /* Один span, одно измерение при fs=30, потом математика — без цикла while */
     var span = document.createElement('span');
-    span.style.cssText = 'display:inline-block;white-space:nowrap;visibility:hidden;position:absolute;pointer-events:none;font-family:Cinzel,serif;font-weight:900;letter-spacing:.5px;font-size:30px;';
+    span.style.cssText = 'display:inline-block;white-space:nowrap;visibility:hidden;position:absolute;pointer-events:none;font-family:Cinzel,serif;font-weight:900;letter-spacing:.5px;';
+    span.style.fontSize = baseVFs + 'px';
     span.textContent = text;
     document.body.appendChild(span);
     var textW = span.offsetWidth;
     document.body.removeChild(span);
 
-    var fs = 30;
+    var fs = baseVFs;
     if (textW > available) {
-      fs = Math.max(14, Math.floor((available / textW) * 30 * 2) / 2);
+      fs = Math.max(11, Math.floor((available / textW) * baseVFs * 2) / 2);
     }
 
     _vlFitValueCache[cacheKey] = fs;
-    el.style.fontSize = fs + 'px';
+    el.style.setProperty('font-size', fs + 'px', 'important');
   }
 
   function vlRefitAllNames() {
@@ -22063,16 +22074,18 @@ function toggleEasterTheme() {
     span.style.fontFamily    = cs.fontFamily;
     span.style.fontWeight    = cs.fontWeight;
     span.style.letterSpacing = cs.letterSpacing;
-    span.style.fontSize      = '17px';
+    nameEl.style.removeProperty('font-size');
+    var baseDtFs = parseFloat(getComputedStyle(nameEl).fontSize) || 17;
+    span.style.fontSize      = baseDtFs + 'px';
     document.body.appendChild(span);
     var textW = span.offsetWidth;
     document.body.removeChild(span);
-    var fs = 17;
+    var fs = baseDtFs;
     if (textW > available) {
-      fs = Math.max(8, Math.floor((available / textW) * 17 * 2) / 2);
+      fs = Math.max(7, Math.floor((available / textW) * baseDtFs * 2) / 2);
     }
     nameEl.textContent = text;
-    nameEl.style.fontSize = fs + 'px';
+    nameEl.style.setProperty('font-size', fs + 'px', 'important');
     nameEl.style.overflow = 'hidden';
   }
 
@@ -28063,5 +28076,87 @@ function toggleEasterTheme() {
 })();
 </script>
 
+
+<script>
+/* ── Авто-подгонка шрифта названий в списке предметов ──────────────────────
+   На узких раскладках .vl-item-btn верстается блоком с text-overflow:ellipsis,
+   из-за чего длинные названия обрезались в «Название...». Вместо обрезки
+   уменьшаем кегль ровно настолько, чтобы имя влезло в одну строку целиком.
+   Базовый кегль берём из CSS (медиазапросы задают 13px !important), поэтому
+   inline-значение ставим тоже с priority important. */
+(function(){
+  var MIN_FS = 8;
+  var probe = null;
+  function getProbe(){
+    if (!probe) {
+      probe = document.createElement('span');
+      probe.style.cssText = 'display:inline-block;white-space:nowrap;visibility:hidden;position:absolute;left:-9999px;top:-9999px;pointer-events:none;';
+      document.body.appendChild(probe);
+    }
+    return probe;
+  }
+  function fitBtn(b){
+    if (!b || !b.isConnected) return;
+    if (b.querySelector('input')) return;
+    b.style.removeProperty('font-size');
+    var cs = getComputedStyle(b);
+    /* Фитим только там, где иначе была бы обрезка многоточием */
+    if (cs.textOverflow !== 'ellipsis') return;
+    var base = parseFloat(cs.fontSize) || 13;
+    var avail = b.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0) - 1;
+    var gap = parseFloat(cs.columnGap) || parseFloat(cs.gap) || 0;
+    for (var i = 0; i < b.children.length; i++) {
+      var w = b.children[i].getBoundingClientRect().width;
+      if (w) avail -= (w + gap);
+    }
+    if (avail <= 0) return;
+    var txt = '';
+    for (var j = 0; j < b.childNodes.length; j++) {
+      if (b.childNodes[j].nodeType === 3) txt += b.childNodes[j].textContent;
+    }
+    txt = txt.trim() || b.textContent.trim();
+    if (!txt) return;
+    var p = getProbe();
+    p.style.fontFamily    = cs.fontFamily;
+    p.style.fontWeight    = cs.fontWeight;
+    p.style.letterSpacing = cs.letterSpacing;
+    p.style.textTransform = cs.textTransform;
+    p.style.fontSize      = base + 'px';
+    p.textContent = txt;
+    var textW = p.getBoundingClientRect().width;
+    if (textW > avail) {
+      var fs = Math.max(MIN_FS, Math.floor((avail / textW) * base * 2) / 2);
+      b.style.setProperty('font-size', fs + 'px', 'important');
+    }
+  }
+  var raf = null;
+  function fitAll(){
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(function(){
+      raf = requestAnimationFrame(function(){
+        var list = document.querySelectorAll('.vl-item-btn');
+        for (var i = 0; i < list.length; i++) fitBtn(list[i]);
+        raf = null;
+      });
+    });
+  }
+  window.vlFitItemBtns = fitAll;
+  function observe(id){
+    var el = document.getElementById(id);
+    if (!el) return false;
+    new MutationObserver(fitAll).observe(el, { childList: true, subtree: true });
+    return true;
+  }
+  function start(){
+    observe('vl-items-scroll');
+    observe('dt-items-scroll');
+    fitAll();
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+  else start();
+  window.addEventListener('resize', fitAll);
+  window.addEventListener('load', fitAll);
+})();
+</script>
 </body>
 </html>
