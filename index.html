@@ -12654,6 +12654,14 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
+/* На десктопе панель прижата к верхней навигации — верхняя кровавая
+   обводка там создавала лишний "срез", будто панель отдельный элемент.
+   На мобиле (снизу экрана) верхняя обводка уместна — не трогаем её там. */
+@media(min-width:989px){
+  :root.theme-postal #dt-feedback-panel{
+    border-top: none !important;
+  }
+}
 :root.theme-postal .item-list-panel {
   background: #5A2E1C !important;
   border: 2px solid #8B0A0A !important;
