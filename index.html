@@ -8938,7 +8938,12 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   border-radius:20px;
   white-space:nowrap; flex-shrink:0;
   text-shadow: 0 1px 4px rgba(0,0,0,.55);
-  box-shadow: 0 0 0 0.35px rgba(0,0,0,0.7), inset 0 0 0 0.35px rgba(0,0,0,0.7);
+  box-shadow:
+    0 0 2px rgba(0,0,0,.38),
+    0 1px 3px rgba(0,0,0,.35),
+    inset 0 0 2px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.12);
+  filter: drop-shadow(0 0 1px rgba(0,0,0,.30));
 }
 .vl-status-help{
   width:16px; height:16px; border-radius:50%;
@@ -8951,9 +8956,13 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   color:inherit;
   transition:transform .15s, background .15s;
   padding:0; margin-left:2px;
-  box-shadow: 0 0 0 0.35px rgba(0,0,0,0.7), inset 0 0 0 0.35px rgba(0,0,0,0.7);
-  text-shadow: -0.3px -0.3px 0 rgba(0,0,0,.7), 0.3px -0.3px 0 rgba(0,0,0,.7),
-               -0.3px  0.3px 0 rgba(0,0,0,.7), 0.3px  0.3px 0 rgba(0,0,0,.7);
+  box-shadow:
+    0 0 2px rgba(0,0,0,.38),
+    0 1px 3px rgba(0,0,0,.35),
+    inset 0 0 2px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.12);
+  filter: drop-shadow(0 0 1px rgba(0,0,0,.30));
+  text-shadow: 0 1px 0 rgba(0,0,0,.45), 0 0 3px rgba(0,0,0,.40);
 }
 .vl-status-help:hover{ transform:scale(1.1); background:rgba(255,255,255,.08); }
 .vl-stars-demand-wrap{
@@ -9018,6 +9027,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   font-family:'Cinzel', serif;
   font-size:12px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
   margin-bottom:5px;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
 }
 .vl-status-tooltip-text{
   font-family:'Share Tech Mono', monospace;
@@ -9058,6 +9068,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 .vl-status-modal-title{
   font-family:'Cinzel', serif;
   font-size:16px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.5)) drop-shadow(0 2px 4px rgba(0,0,0,.3));
   margin-bottom:10px; padding-right:24px;
 }
 .vl-status-modal-text{
@@ -9305,7 +9316,12 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   padding: 2px 8px;
   border: 1px solid;
   border-radius: 20px;
-  box-shadow: 0 0 0 0.35px rgba(0,0,0,0.7), inset 0 0 0 0.35px rgba(0,0,0,0.7);
+  box-shadow:
+    0 0 2px rgba(0,0,0,.38),
+    0 1px 3px rgba(0,0,0,.35),
+    inset 0 0 2px rgba(0,0,0,.28),
+    inset 0 1px 0 rgba(255,255,255,.12);
+  filter: drop-shadow(0 0 1px rgba(0,0,0,.30));
 }
 .vl-status-icon {
   display: inline-flex; align-items: center;
@@ -9314,7 +9330,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 }
 .vl-status-icon svg {
   width: 100%; height: 100%;
-  filter: drop-shadow(0 0 0.4px rgba(0,0,0,0.9)) drop-shadow(0 0 0.4px rgba(0,0,0,0.7));
+  filter: drop-shadow(0 0 1.5px rgba(0,0,0,.45)) drop-shadow(0 1px 2px rgba(0,0,0,.38)) drop-shadow(0 0 1px rgba(255,255,255,.10));
 }
 
 /* ── Roll slot (Gear cards) ── */
