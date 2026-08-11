@@ -85,6 +85,7 @@
   if (t === 'galaxy')  document.documentElement.classList.add('theme-galaxy');
   if (t === 'atlantic') document.documentElement.classList.add('theme-atlantic');
   if (t === 'birthday') document.documentElement.classList.add('theme-birthday');
+  if (t === 'postal')   document.documentElement.classList.add('theme-postal');
   // ── Аватарка: устанавливаем src до рендера страницы, чтобы не мелькал avatar2 ──
   window._edEarlyTheme = t;
   var _earlyAV = {
@@ -92,6 +93,7 @@
     easter:'images/Home Page/avatar3.webp', classic:'images/Home Page/avatar4.webp',
     baldi:'images/Home Page/avatar5.webp', discord:'images/Home Page/avatar6.webp',
     atlantic:'images/Home Page/avatar7.webp', birthday:'images/Home Page/avatar8.webp',
+    postal:'images/Home Page/avatar9.webp',
   };
   document.addEventListener('DOMContentLoaded', function() {
     var av = document.getElementById('main-avatar');
@@ -108,6 +110,7 @@
     discord: 'images/Home Page/banner1_1.webp',
     atlantic:'images/Home Page/banner7_1.webp',
     birthday:'images/Home Page/banner8_1.webp',
+    postal:  'images/Home Page/banner9_1.webp',
   };
   var _b1 = _earlyBanner[t];
   if (_b1) {
@@ -1273,6 +1276,10 @@ body{background:var(--bg-void);color:var(--text-primary);font-family:'Rajdhani',
   border-color: #C84766;
   box-shadow: 0 0 14px #C84766, 0 0 5px #C84766;
 }
+.palette-item[data-theme="postal"]:hover img{
+  border-color: #A80F12;
+  box-shadow: 0 0 14px #A80F12, 0 0 5px #A80F12;
+}
 .palette-item:hover{
   transform: scale(1.07);
   background: rgba(255,255,255,0.04);
@@ -1308,6 +1315,7 @@ body{background:var(--bg-void);color:var(--text-primary);font-family:'Rajdhani',
 .palette-item[data-theme="discord"]{ --pal-glow: #5865F2; }
 .palette-item[data-theme="atlantic"]{ --pal-glow: #C84766; }
 .palette-item[data-theme="birthday"]{ --pal-glow: #FF4500; }
+.palette-item[data-theme="postal"]{ --pal-glow: #A80F12; }
 
 .palette-label{
   font-family: 'Rajdhani', sans-serif;
@@ -7308,7 +7316,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 :root.theme-easter   .vc-diff-img-box { background: linear-gradient(135deg, #f4ede8 0%, #ede4de 100%); }
 :root.theme-baldi    .vc-diff-img-box { background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%); }
 :root.theme-birthday .vc-diff-img-box { background: linear-gradient(135deg, #FFE8F0 0%, #F0E0FF 50%, #E0F4FF 100%); }
-/* Внутри wrap — border убирается, размер заполняет wrap */
+/* Внутри wrap-ascended/wrap-exclusive — border убирается, размер заполняет wrap */
 .vc-diff-img-wrap.wrap-ascended .vc-diff-img-box,
 .vc-diff-img-wrap.wrap-exclusive .vc-diff-img-box {
   width: 100%; height: 100%;
@@ -10790,6 +10798,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
 :root.theme-classic         { --nav-dot-bg: #0f1822; }
 :root.theme-easter          { --nav-dot-bg: #DCE8D8; }
 :root.theme-birthday        { --nav-dot-bg: #F0E8FF; }
+:root.theme-postal          { --nav-dot-bg: #2A170F; }
 
 /* ════════════════════════════════════════════════════════════════
    BIRTHDAY THEME — пастельный праздничный
@@ -11776,6 +11785,1018 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   #page-devtool .vl-detail-card .dt-rar-chip { font-size: 6.5px !important; padding: 2px 5px !important; }
 }
 </style>
+<style id="postal-theme">
+/* ═══ POSTAL THEME ═══ */
+:root.theme-postal { --ghost-border:rgba(168,15,18,.18); --ghost-line-a:rgba(168,15,18,0.07); --ghost-line-b:rgba(168,15,18,0.12); --ghost-dot:rgba(168,15,18,0.07); }
+:root.theme-postal .nav-discord-btn {--dc-glow:#A80F12;}
+:root.theme-postal .nav-discord-btn .tooltip {background:#B79683!important;border-color:#8B0A0A!important;color:#8B0A0A!important;box-shadow:0 2px 12px rgba(139,10,10,0.30)!important;}
+:root.theme-postal .vl-detail-card.vl-liked {
+  background: linear-gradient(160deg, #7a1012 0%, #661012 50%, #4d0c0e 100%) !important;
+  box-shadow: 0 6px 28px rgba(26,18,8,0.30), 0 0 0 2px rgba(168,15,18,0.90), 0 0 24px rgba(168,15,18,0.45) !important;
+}
+:root.theme-postal .vl-card-wrap:has(.vl-detail-card.vl-liked) .vl-roll-slot-btn,
+:root.theme-postal .vl-card-wrap:has(.vl-detail-card.vl-liked) .vl-roll-slot-static,
+:root.theme-postal .vl-card-wrap:has(.vl-detail-card.vl-liked) .vl-roll-drop-item {
+  background: #5A2E1C !important;
+}
+:root.theme-postal .vl-card-wrap:has(.vl-detail-card.vl-liked) .vl-roll-dropdown {
+  background: #5A2E1C !important;
+}
+:root.theme-postal .vl-card-wrap:has(.vl-detail-card.vl-liked) .vl-status-tooltip {
+  background: linear-gradient(180deg, #7a1012 0%, #4d0c0e 100%) !important;
+}
+:root.theme-postal .vl-card-wrap:has(.vl-detail-card.vl-liked) .vl-roll-tooltip {
+  background: linear-gradient(160deg, #7a1012 0%, #661012 50%, #4d0c0e 100%) !important;
+}
+:root.theme-postal .vl-like-btn {
+  border-color: rgba(168,15,18,0.55);
+  background: rgba(168,15,18,0.13);
+  color: #a80f12;
+}
+:root.theme-postal .vl-like-btn:hover {
+  background: rgba(168,15,18,0.26);
+  box-shadow: 0 0 12px rgba(168,15,18,0.55);
+  border-color: rgba(168,15,18,0.90);
+}
+:root.theme-postal .vl-like-btn.liked {
+  background: #a80f12;
+  border-color: #ff2b2b;
+  color: #ffe0e0;
+  box-shadow: 0 0 20px rgba(168,15,18,0.95), 0 0 4px rgba(255,80,80,0.80);
+}
+:root.theme-postal .vl-like-btn svg { fill: #a80f12; stroke: #a80f12; }
+:root.theme-postal .vl-like-btn.liked svg { fill: #ffe0e0; stroke: #ffe0e0; }
+:root.theme-postal #dt-feedback-panel {background:linear-gradient(180deg,rgba(160,60,40,0.95) 0%,rgba(140,45,30,0.97) 100%)!important;border:1px solid rgba(194,65,12,0.50)!important;box-shadow:0 0 0 1px rgba(200,120,80,0.18) inset,0 8px 32px rgba(80,20,12,0.22),0 0 40px rgba(160,60,40,0.15)!important;}
+:root.theme-postal .fb-panel-header {background:linear-gradient(180deg,rgba(160,60,40,0.55),rgba(130,40,28,0.80))!important;border-color:rgba(194,65,12,0.35)!important;}
+:root.theme-postal .fb-panel-header * {color:#F1E4CB!important;}
+:root.theme-postal .fb-panel-header .fb-panel-title {color:#1A1208!important;}
+:root.theme-postal .fb-header-center .fb-panel-title {color:#1A1208!important;}
+:root.theme-postal .fb-panel-header .online-dot {background:#C1121F!important;box-shadow:0 0 6px rgba(193,18,31,0.80)!important;}
+:root.theme-postal .fb-panel-header .online-icon {color:#C1121F!important;fill:#C1121F!important;}
+:root.theme-postal .fb-panel-header .online-count {color:#C1121F!important;}
+:root.theme-postal .fb-panel-header .fb-live-badge {color:#C1121F!important;}
+:root.theme-postal .fb-panel-header .fb-live-badge span {color:#C1121F!important;}
+:root.theme-postal .fb-panel-header .fb-live-dot {background:#C1121F!important;box-shadow:0 0 8px rgba(193,18,31,0.70)!important;}
+:root.theme-postal .fb-header-center .fb-panel-title {color:#1A1208!important;}
+:root.theme-postal .fb-send-btn {background:rgba(168,15,18,0.12)!important;border-color:rgba(250,203,226,0.35)!important;color:#F1E4CB!important;}
+:root.theme-postal .fb-send-btn:hover {background:rgba(168,15,18,0.22)!important;}
+:root.theme-postal .fb-list {scrollbar-color:rgba(168,15,18,0.40) transparent;}
+:root.theme-postal .fb-list::-webkit-scrollbar-thumb {background:rgba(168,15,18,0.40)!important;}
+:root.theme-postal .fb-item {border-color:rgba(160,60,40,0.40)!important;background:#EFE3CC!important;}
+:root.theme-postal .fb-item:hover {background:#F5EBD8!important;border-color:rgba(160,60,40,0.70)!important;}
+:root.theme-postal .fb-item-title {color:#1A1208!important;}
+:root.theme-postal .fb-item-body {color:rgba(58,26,90,0.72)!important;}
+:root.theme-postal .fb-item-author {color:rgba(58,26,90,0.72)!important;}
+:root.theme-postal .fb-item-time {color:rgba(58,26,90,0.55)!important;}
+:root.theme-postal .vc-diff-value-title--value,
+:root.theme-postal .vc-diff-value-title--rolls { color: rgba(26,18,8,0.60) !important; }
+:root.theme-postal .vc-diff-liked-icon { color: #a80f12; }
+:root.theme-postal .vc-diff-img-wrap.wrap-ascended::after,
+:root.theme-postal .vc-diff-img-wrap.wrap-exclusive::after {
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.65), inset 0 0 40px rgba(160,100,220,.22), inset 0 0 18px rgba(168,15,18,.14);
+}
+:root.theme-postal .vc-diff-img-box { box-shadow: 0 0 10px rgba(168,15,18,0.45), inset 0 0 16px rgba(168,15,18,.10),   0 0 0 1px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(0,0,0,0.65) !important; }
+:root.theme-postal .vc-diff-img-box { background: linear-gradient(135deg, #221E1B 0%, #1A1613 50%, #171310 100%); }
+:root.theme-postal .vc-diff-img-box.border-mythic {
+  background-image: linear-gradient(135deg,#221E1B,#1A1613,#171310), linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323));
+  background-origin: border-box; background-clip: padding-box, border-box;
+}
+:root.theme-postal .vc-diff-img-box img { filter: drop-shadow(0 2px 8px rgba(168,15,18,.5)); }
+:root.theme-postal .vl-variant-popup-inner {
+  background: #B79683;
+  border: 2px solid #8B0A0A;
+  box-shadow: 0 8px 32px rgba(26,18,8,0.22), 0 0 24px rgba(168,15,18,0.35);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:root.theme-postal .vl-variant-arrow { border-right-color: #8B0A0A; }
+:root.theme-postal .vl-variant-arrow::after { display: none !important; content: none !important; }
+:root.theme-postal .vl-variant-arrow.vl-variant-arrow--right { border-left-color: #8B0A0A; }
+:root.theme-postal { --vl-popup-border: #8B0A0A; }
+:root.theme-postal .vl-detail-img-wrap::after {
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.65), inset 0 0 40px rgba(160,100,220,.22), inset 0 0 18px rgba(168,15,18,.14);
+}
+:root.theme-postal { --nav-dot-bg: #2A170F; }
+:root.theme-postal {
+  
+  --gold:           #A80F12;   
+  --gold-bright:    #A80F12;   
+  --gold-glow:      #E0574F;   
+  --amber:          #8B0A0A;   
+  --cyan-rune:      #A80F12;
+  --green-stat:     #3EAA7A;
+  --border-gold:    #8B0A0A;
+  --border-rune:    #A80F12;
+  --bg-void:        #B79683;
+  --theme-bg-image: url('images/Home Page/banner9_5.webp');
+  --theme-name:     postal;
+  --theme-switch-glow: #A80F12;
+  --gold-rgb:       168, 15, 18;
+  
+  --text-primary:   #1A1208;
+  --text-muted:     #4A3626;
+  --text-dim:       #7A6046;
+  
+  --color-dmg:    #E04040;
+  --color-hp:     #3EAA7A;
+  --color-upg:    #B4530C;
+  --color-corr:   #C1121F;
+  --color-reforge:#A80F12;
+  
+  --vl-accent:    #A80F12;
+}
+:root.theme-postal body { background: #B79683 !important; color: var(--text-primary) !important; }
+:root.theme-postal .page-bg { background-image: url('images/Home Page/banner9_5.webp') !important; background-size: cover !important; background-position: center !important; background-attachment: scroll !important; }
+:root.theme-postal .page-bg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 65% 45% at 80% 10%,  rgba(122,43,26,0.90) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 55% at 5%  40%,  rgba(169,215,245,0.85) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 40% at 90% 78%,  rgba(147,197,253,0.80) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 50% at 50% 0%,   rgba(255,182,193,0.50) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 60% at 15% 82%,  rgba(168,230,207,0.70) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 35% at 55% 60%,  rgba(186,230,253,0.65) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(255,230,220,0.55) 0%, rgba(190,230,255,0.60) 50%, rgba(200,255,235,0.55) 100%);
+  will-change: transform;
+  pointer-events: none;
+}
+:root.theme-postal #page-home { background: transparent !important; }
+:root.theme-postal nav { background: linear-gradient(180deg, #3B2317, #2A170F) !important; border-color: rgba(90,40,20,0.50) !important; box-shadow: 0 2px 20px rgba(40,18,10,0.35), 0 1px 0 rgba(196,120,60,0.20) !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+:root.theme-postal nav::after { background: linear-gradient(90deg, transparent, rgba(196,120,60,0.25), rgba(214,140,70,0.35), rgba(196,120,60,0.25), transparent) !important; }
+:root.theme-postal .nav-btn { color: #B79683 !important; background: none !important; }
+:root.theme-postal .nav-btn:hover { background: none !important; }
+:root.theme-postal #settings-btn { color: rgba(255,130,130,0.60) !important; }
+:root.theme-postal #navbtn-home { color: rgba(110,175,255,0.60) !important; }
+:root.theme-postal #navbtn-rolls { color: rgba(90,215,130,0.60)  !important; }
+:root.theme-postal #navbtn-analyze { color: rgba(255,215,80,0.60)  !important; }
+:root.theme-postal #navbtn-stuff { color: rgba(50,220,210,0.60)  !important; }
+:root.theme-postal #navbtn-compare { color: rgba(140,225,185,0.60) !important; }
+:root.theme-postal #settings-btn:hover { color: rgba(255,100,100,0.95) !important; text-shadow: 0 0 10px rgba(255,60,60,0.55) !important; }
+:root.theme-postal #navbtn-home:hover { color: rgba(90,160,255,0.95)  !important; text-shadow: 0 0 10px rgba(60,130,255,0.55) !important; }
+:root.theme-postal #navbtn-rolls:hover { color: rgba(70,210,110,0.95)  !important; text-shadow: 0 0 10px rgba(40,195,90,0.55) !important; }
+:root.theme-postal #navbtn-analyze:hover { color: rgba(255,205,50,0.95)  !important; text-shadow: 0 0 10px rgba(255,185,20,0.55) !important; }
+:root.theme-postal #navbtn-stuff:hover { color: rgba(30,215,205,0.95)  !important; text-shadow: 0 0 10px rgba(0,200,190,0.55) !important; }
+:root.theme-postal #navbtn-compare:hover { color: rgba(110,225,170,0.95) !important; text-shadow: 0 0 10px rgba(80,210,145,0.55) !important; }
+:root.theme-postal #settings-btn.active { color: #FF4040 !important; background: none !important; filter: none !important; }
+:root.theme-postal #navbtn-home.active { color: #60B0FF !important; background: none !important; filter: none !important; }
+:root.theme-postal #navbtn-rolls.active { color: #40E870 !important; background: none !important; filter: none !important; }
+:root.theme-postal #navbtn-analyze.active { color: #E2650F !important; background: none !important; filter: none !important; }
+:root.theme-postal #navbtn-stuff.active { color: #10D8D0 !important; background: none !important; filter: none !important; }
+:root.theme-postal #navbtn-compare.active { color: #60EEA8 !important; background: none !important; filter: none !important; }
+:root.theme-postal #settings-btn.active svg { overflow: visible !important; filter: drop-shadow(0 0 3px #FF8080) drop-shadow(0 0 8px #FF4040) drop-shadow(0 0 16px rgba(255,0,0,0.90)) !important; }
+:root.theme-postal #navbtn-home.active svg { overflow: visible !important; filter: drop-shadow(0 0 3px #A0D0FF) drop-shadow(0 0 8px #60B0FF) drop-shadow(0 0 16px rgba(40,120,255,0.90)) !important; }
+:root.theme-postal #navbtn-rolls.active svg { overflow: visible !important; filter: drop-shadow(0 0 3px #90FFB0) drop-shadow(0 0 8px #40E870) drop-shadow(0 0 16px rgba(20,220,70,0.90)) !important; }
+:root.theme-postal #navbtn-analyze.active svg { overflow: visible !important; filter: drop-shadow(0 0 3px #FFE880) drop-shadow(0 0 8px #E2650F) drop-shadow(0 0 16px rgba(255,180,0,0.90)) !important; }
+:root.theme-postal #navbtn-stuff.active svg { overflow: visible !important; filter: drop-shadow(0 0 3px #80FFFA) drop-shadow(0 0 8px #10D8D0) drop-shadow(0 0 16px rgba(0,210,200,0.90)) !important; }
+:root.theme-postal #navbtn-compare.active svg { overflow: visible !important; filter: drop-shadow(0 0 3px #B0FFD8) drop-shadow(0 0 8px #60EEA8) drop-shadow(0 0 16px rgba(40,220,140,0.90)) !important; }
+:root.theme-postal #navbtn-valuelist { color: rgba(90,215,130,0.60)  !important; }
+:root.theme-postal #navbtn-valuelist:hover { color: rgba(70,210,110,0.95)  !important; text-shadow: 0 0 10px rgba(40,195,90,0.55) !important; }
+:root.theme-postal #navbtn-valuelist.active { color: #40E870 !important; background: none !important; filter: none !important; }
+:root.theme-postal #navbtn-valuelist.active svg { overflow: visible !important; filter: drop-shadow(0 0 3px #90FFB0) drop-shadow(0 0 8px #40E870) drop-shadow(0 0 16px rgba(20,220,70,0.90)) !important; }
+:root.theme-postal #navbtn-tradeforum { color: rgba(255,215,80,0.60)  !important; }
+:root.theme-postal #navbtn-tradeforum:hover { color: rgba(255,205,50,0.95)  !important; text-shadow: 0 0 10px rgba(255,185,20,0.55) !important; background: none !important; }
+:root.theme-postal #navbtn-tradeforum.active { color: #E2650F !important; background: none !important; filter: none !important; }
+:root.theme-postal #navbtn-tradeforum.active svg { overflow: visible !important; filter: drop-shadow(0 0 3px #FFE880) drop-shadow(0 0 8px #E2650F) drop-shadow(0 0 16px rgba(255,180,0,0.90)) !important; }
+:root.theme-postal #navbtn-tradechat { color: rgba(50,220,210,0.60)  !important; }
+:root.theme-postal #navbtn-tradechat:hover { color: rgba(30,215,205,0.95)  !important; text-shadow: 0 0 10px rgba(0,200,190,0.55) !important; background: none !important; }
+:root.theme-postal #navbtn-tradechat.active { color: #10D8D0 !important; background: none !important; filter: none !important; }
+:root.theme-postal #navbtn-tradechat.active svg { overflow: visible !important; filter: drop-shadow(0 0 3px #80FFFA) drop-shadow(0 0 8px #10D8D0) drop-shadow(0 0 16px rgba(0,210,200,0.90)) !important; }
+:root.theme-postal .nav-btn-soon { opacity: 0.55 !important; cursor: not-allowed !important; }
+:root.theme-postal .nav-btn-soon:hover { background: none !important; }
+:root.theme-postal .nav-btn.active .tooltip { filter: none !important; text-shadow: none !important; position: absolute !important; z-index: 200 !important; isolation: isolate !important; }
+:root.theme-postal .nav-btn .tooltip { background: #B79683 !important; border-color: #8B0A0A !important; color: #8B0A0A !important; box-shadow: 0 2px 12px rgba(139,10,10,0.30) !important; }
+:root.theme-postal .game-banner { border: 2px solid #8B0A0A !important; box-shadow: 0 0 24px rgba(139,10,10,0.50), 0 0 48px rgba(139,10,10,0.20) !important; }
+:root.theme-postal .banner-bg::before { content: '' !important; position: absolute !important; inset: 0 50% 0 0 !important; background: linear-gradient(90deg, rgba(179,58,34,0.72) 0%, rgba(179,58,34,0.18) 70%, transparent 100%) !important; z-index: 3 !important; pointer-events: none !important; }
+:root.theme-postal .banner-bg::after { content: '' !important; position: absolute !important; inset: 0 0 0 50% !important; background: linear-gradient(270deg, rgba(122,43,26,0.72) 0%, rgba(122,43,26,0.18) 70%, transparent 100%) !important; z-index: 3 !important; pointer-events: none !important; }
+:root.theme-postal .banner-overlay { background: none !important; }
+:root.theme-postal .banner-eyebrow { color: #ffffff !important; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 2px 4px rgba(0,0,0,0.8) !important; }
+:root.theme-postal .banner-game-title { color: #E2B07A !important; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 0 20px rgba(230,201,138,0.70), 0 0 40px rgba(230,201,138,0.35) !important; background: none !important; -webkit-background-clip: unset !important; background-clip: unset !important; -webkit-text-fill-color: unset !important; }
+:root.theme-postal .banner-glow-line { background: linear-gradient(90deg, transparent, rgba(194,65,12,0.75), rgba(255,220,150,0.55), rgba(194,65,12,0.75), transparent) !important; }
+:root.theme-postal .bot-panel,
+:root.theme-postal .updates-panel,
+:root.theme-postal .mod-panel {
+  background: #B79683 !important;
+  border: 2px solid #8B0A0A !important;
+  box-shadow:
+    0 0 0 1px rgba(210,160,140,0.22) inset,
+    0 0 20px rgba(139,10,10,0.30),
+    0 8px 32px rgba(122,43,26,0.08),
+    0 0 60px rgba(179,58,34,0.06) !important;
+  color: var(--bday-text) !important;
+}
+:root.theme-postal .item-list-panel {
+  background: #5A2E1C !important;
+  border: 2px solid #8B0A0A !important;
+  box-shadow:
+    0 0 0 1px rgba(210,160,140,0.15) inset,
+    0 0 20px rgba(139,10,10,0.30),
+    0 8px 32px rgba(122,43,26,0.08) !important;
+  color: #F1E4CB !important;
+}
+:root.theme-postal .bot-panel::before, :root.theme-postal .updates-panel::before { background: linear-gradient(135deg, rgba(255,255,255,0.25), transparent 60%) !important; }
+:root.theme-postal .bot-name { color: #A80F12 !important; text-shadow: 0 0 18px rgba(168,15,18,0.45) !important; }
+:root.theme-postal .bot-tagline { color: rgba(26,18,8,0.60) !important; }
+:root.theme-postal .bot-desc { color: rgba(26,18,8,0.80) !important; }
+:root.theme-postal .value-list-label { color: rgba(26,18,8,0.65) !important; }
+:root.theme-postal .value-list-author { color: rgba(26,18,8,0.50) !important; }
+:root.theme-postal .updates-title { color: #A80F12 !important; text-shadow: 0 0 20px rgba(168,15,18,0.55), 0 0 40px rgba(168,15,18,0.20) !important; }
+:root.theme-postal .updates-subtitle { color: rgba(168,15,18,0.80) !important; }
+:root.theme-postal .page-title-block { border-color: rgba(194,65,12,0.50) !important; }
+:root.theme-postal .page-title-text { color: #A80F12 !important; text-shadow: 0 0 20px rgba(168,15,18,0.45) !important; }
+:root.theme-postal .page-title-icon { color: #C2410C !important; }
+:root.theme-postal .page-title-sub { color: rgba(180,83,12,0.65) !important; }
+:root.theme-postal .table-empty,
+:root.theme-postal .analyze-area .table-empty,
+:root.theme-postal .stuff-area .table-empty,
+:root.theme-postal .cmp-table-area .table-empty,
+:root.theme-postal #table-container .table-empty,
+:root.theme-postal #az-empty,
+:root.theme-postal #sp-empty,
+:root.theme-postal #cmp-empty,
+:root.theme-postal #table-empty-state {
+  background: linear-gradient(180deg, #B79683 0%, #B79683 100%) !important;
+  border: 2px solid #8B0A0A !important;
+  box-shadow: 0 0 0 1px rgba(210,160,140,0.22) inset, 0 0 20px rgba(139,10,10,0.30) !important;
+}
+:root.theme-postal .dt-result-panel,
+:root.theme-postal .dt-mob-panel {
+  background: linear-gradient(180deg, #B79683 0%, #B79683 100%) !important;
+  border: 2px solid #8B0A0A !important;
+  backdrop-filter: blur(6px) !important;
+}
+:root.theme-postal .dt-result-panel-header {
+  background: linear-gradient(180deg, #B79683 0%, #B79683 100%) !important;
+  border-bottom-color: rgba(139,10,10,0.40) !important;
+  color: rgba(26,18,8,0.75) !important;
+}
+:root.theme-postal .dt-result-panel .roll-table-wrap, :root.theme-postal .dt-mob-panel .roll-table-wrap { background: #B79683 !important; border: 2px solid #8B0A0A !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap thead th, :root.theme-postal .dt-mob-panel .roll-table-wrap thead th { color: rgba(180,83,12,0.75) !important; border-bottom-color: rgba(194,65,12,0.25) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap tbody td, :root.theme-postal .dt-mob-panel .roll-table-wrap tbody td { color: #1A1208 !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap tbody tr, :root.theme-postal .dt-mob-panel .roll-table-wrap tbody tr { border-bottom-color: rgba(194,65,12,0.12) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap tbody tr:hover, :root.theme-postal .dt-mob-panel .roll-table-wrap tbody tr:hover { background: rgba(194,65,12,0.08) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap .td-roll, :root.theme-postal .dt-mob-panel .roll-table-wrap .td-roll { color: #A80F12 !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap .td-base, :root.theme-postal .dt-mob-panel .roll-table-wrap .td-base { color: rgba(74,54,38,0.65) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap .row-near-int td, :root.theme-postal .dt-mob-panel .roll-table-wrap .row-near-int td { background: rgba(194,65,12,0.08) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap .row-near-int .td-roll, :root.theme-postal .dt-mob-panel .roll-table-wrap .row-near-int .td-roll,
+:root.theme-postal .dt-result-panel .roll-table-wrap .row-near-int .td-base, :root.theme-postal .dt-mob-panel .roll-table-wrap .row-near-int .td-base { color: #B4530C !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap .row-match td, :root.theme-postal .dt-mob-panel .roll-table-wrap .row-match td { background: rgba(136,216,168,0.10) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap td.cell-match, :root.theme-postal .dt-mob-panel .roll-table-wrap td.cell-match { color: #2A8A5A !important; text-shadow: 0 0 10px rgba(136,216,168,0.40) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap td.cell-best, :root.theme-postal .dt-mob-panel .roll-table-wrap td.cell-best { color: #B4530C !important; text-shadow: 0 0 10px rgba(180,83,12,0.50) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap .row-best td, :root.theme-postal .dt-mob-panel .roll-table-wrap .row-best td { background: rgba(180,83,12,0.06) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap .row-best .td-roll, :root.theme-postal .dt-mob-panel .roll-table-wrap .row-best .td-roll { color: #C1121F !important; text-shadow: 0 0 14px rgba(180,83,12,0.50) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap button, :root.theme-postal .dt-mob-panel .roll-table-wrap button { color: rgba(74,54,38,0.75) !important; border-color: rgba(194,65,12,0.40) !important; }
+:root.theme-postal .dt-result-panel .roll-table-wrap button:hover, :root.theme-postal .dt-mob-panel .roll-table-wrap button:hover { color: #B4530C !important; border-color: #C2410C !important; opacity: 1 !important; }
+:root.theme-postal .dt-slot-btn {
+  background: rgba(139,10,10,0.10) !important;
+  border-color: rgba(139,10,10,0.35) !important;
+  color: rgba(140,80,180,0.65) !important;
+}
+:root.theme-postal .dt-slot-btn:hover {
+  background: rgba(139,10,10,0.22) !important;
+  border-color: rgba(139,10,10,0.70) !important;
+  color: #C1121F !important;
+}
+:root.theme-postal .dt-slot-btn.active {
+  background: rgba(139,10,10,0.25) !important;
+  border-color: #8B0A0A !important;
+  color: #A80F12 !important;
+  box-shadow: 0 0 12px rgba(139,10,10,0.35) !important;
+}
+:root.theme-postal .dt-slot-add-btn {
+  background: rgba(139,10,10,0.05) !important;
+  border-color: rgba(139,10,10,0.28) !important;
+  color: rgba(140,80,180,0.50) !important;
+}
+:root.theme-postal .dt-slot-add-btn:hover {
+  background: rgba(139,10,10,0.16) !important;
+  border-color: rgba(139,10,10,0.65) !important;
+  color: #C1121F !important;
+}
+:root.theme-postal .dt-result-panel-body .table-empty {
+  background: linear-gradient(135deg, rgba(179,58,34,0.30) 0%, #B79683 50%, rgba(122,43,26,0.30) 100%) !important;
+  border-color: #8B0A0A !important;
+}
+:root.theme-postal .table-empty-icon { opacity: .35 !important; filter: sepia(1) saturate(0.4) !important; }
+:root.theme-postal .table-empty-title { color: rgba(26,18,8,0.60) !important; }
+:root.theme-postal .table-empty-desc { color: rgba(26,18,8,0.50) !important; }
+:root.theme-postal .dt-result-panel-body .table-empty-icon { opacity: .30 !important; filter: sepia(1) saturate(0.5) !important; }
+:root.theme-postal .dt-result-panel-body .table-empty-title { color: rgba(26,18,8,0.55) !important; }
+:root.theme-postal .console-panel .console-empty { color: #1A1208 !important; }
+:root.theme-postal .console-panel .console-empty * { color: #1A1208 !important; }
+:root.theme-postal .console-empty .hint-row {
+  background: rgba(194,65,12,0.10) !important;
+  border-color: rgba(139,10,10,0.28) !important;
+}
+:root.theme-postal .console-empty .hint-page { color: #A80F12 !important; }
+:root.theme-postal .updates-text { color: rgba(26,18,8,0.85) !important; }
+:root.theme-postal .upd-nav-btn { background: rgba(168,15,18,0.08); border-color: rgba(168,15,18,0.30); color: rgba(26,18,8,0.65); }
+:root.theme-postal .upd-nav-btn:hover { background: rgba(168,15,18,0.16); border-color: rgba(168,15,18,0.55); color: #1A1208; }
+:root.theme-postal .updates-text .upd-accent { color: #A80F12 !important; }
+:root.theme-postal .updates-text .upd-cyan { color: #3EAA7A !important; }
+:root.theme-postal .updates-text .upd-green { color: #B4530C !important; }
+:root.theme-postal .updates-text .upd-muted { color: rgba(26,18,8,0.45) !important; }
+:root.theme-postal .credit-card {
+  background: rgba(255,255,255,0.28);
+  border: 2px solid #8B0A0A;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(180,80,80,0.10), inset 0 1px 0 rgba(255,255,255,0.45);
+  padding: 10px 14px;
+  transition: background .2s, border-color .2s, box-shadow .2s;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%);
+}
+:root.theme-postal .credit-card:hover { background: rgba(255,255,255,0.42); border-color: #6E0808; box-shadow: 0 4px 18px rgba(180,80,80,0.15), inset 0 1px 0 rgba(255,255,255,0.60); }
+:root.theme-postal .credit-card-role { color: rgba(150,60,120,0.65) !important; letter-spacing: 1.5px !important; text-transform: uppercase !important; }
+:root.theme-postal .credit-card-name { color: #1A1208 !important; text-shadow: none !important; font-weight: 700 !important; }
+:root.theme-postal .credit-card-name.cyan { color: #2D8C7A !important; text-shadow: none !important; }
+:root.theme-postal .credit-card-name.green { color: #3A9E70 !important; text-shadow: none !important; }
+@media(max-width:1444px) {
+:root.theme-postal .credits-block {
+    background: rgba(255,255,255,0.28) !important;
+    border: 2px solid #8B0A0A !important;
+    border-radius: 10px !important; box-shadow: 0 2px 12px rgba(180,80,80,0.10) !important;
+    gap: 20px !important; width: 100% !important; padding: 10px 16px !important;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%) !important;
+    mask-image: linear-gradient(to right, transparent 0%, black 12%, black 88%, transparent 100%) !important;
+    transition: background .2s, border-color .2s, box-shadow .2s !important;
+  }
+}
+@media(max-width:1444px) {
+:root.theme-postal .credits-block:hover { background: rgba(255,255,255,0.42) !important; border-color: #6E0808 !important; box-shadow: 0 4px 18px rgba(180,80,80,0.15) !important; }
+}
+@media(max-width:1444px) {
+:root.theme-postal .credit-card { background: none !important; border: none !important; border-radius: 0 !important; box-shadow: none !important; padding: 0 !important; flex: none !important; width: auto !important; -webkit-mask-image: none !important; mask-image: none !important; }
+}
+@media(min-width:989px) {
+:root.theme-postal .stat-chip,
+  :root.theme-postal .stats-col-mobile .stat-chip,
+  :root.theme-postal .stats-col .stat-chip { background: linear-gradient(135deg, #FFF3CC 0%, #FFE08A 50%, #C2410C 100%) !important; border: 2px solid #8B0A0A !important; box-shadow: 0 2px 10px rgba(180,130,0,0.08), 0 0 12px rgba(139,10,10,0.40) !important; }
+}
+@media(min-width:989px) {
+:root.theme-postal .stat-num { color: #7A4800 !important; text-shadow: none !important; }
+}
+@media(min-width:989px) {
+:root.theme-postal .stat-lbl { color: rgba(100,60,0,0.72) !important; }
+}
+@media(min-width:989px) {
+:root.theme-postal .stat-chip--total,
+  :root.theme-postal .stats-col-mobile .stat-chip--total,
+  :root.theme-postal .stats-col .stat-chip--total { background: linear-gradient(135deg, #FFE08A 0%, #C2410C 50%, #FFC030 100%) !important; border: 2px solid #8B0A0A !important; box-shadow: 0 0 20px rgba(139,10,10,0.55) !important; }
+}
+@media(min-width:989px) {
+:root.theme-postal .stat-chip--total .stat-lbl,
+  :root.theme-postal .stats-col-mobile .stat-chip--total .stat-lbl { color: rgba(100,55,0,0.85) !important; opacity: 1 !important; font-weight: 700 !important; }
+}
+@media(min-width:989px) {
+:root.theme-postal .total-proc-count,
+  :root.theme-postal .stats-col-mobile .total-proc-count { color: #7A4800 !important; text-shadow: none !important; font-weight: 700 !important; }
+}
+@media(min-width:989px) {
+:root.theme-postal .total-proc-arrow { color: #B87800 !important; }
+}
+@media(max-width:988px) {
+:root.theme-postal .stat-chip,
+  :root.theme-postal .stats-col-mobile .stat-chip,
+  :root.theme-postal .stats-col .stat-chip { background: linear-gradient(135deg, #FFF3CC 0%, #FFE08A 50%, #C2410C 100%) !important; border: 2px solid #8B0A0A !important; box-shadow: 0 2px 8px rgba(180,130,0,0.08), 0 0 12px rgba(139,10,10,0.40) !important; }
+}
+@media(max-width:988px) {
+:root.theme-postal .stat-chip:hover,
+  :root.theme-postal .stats-col-mobile .stat-chip:hover,
+  :root.theme-postal .stats-col .stat-chip:hover { border-color: rgba(180,120,0,0.60) !important; box-shadow: 0 3px 12px rgba(194,65,12,0.25), 0 0 0 1px #B79683 inset !important; }
+}
+@media(max-width:988px) {
+:root.theme-postal .stat-num { color: #7A4800 !important; text-shadow: none !important; font-weight: 700 !important; }
+}
+@media(max-width:988px) {
+:root.theme-postal .stat-lbl { color: rgba(100,60,0,0.72) !important; font-weight: 600 !important; }
+}
+@media(max-width:988px) {
+:root.theme-postal .stat-chip--total,
+  :root.theme-postal .stats-col-mobile .stat-chip--total,
+  :root.theme-postal .stats-col .stat-chip--total { background: linear-gradient(135deg, #FFE08A 0%, #C2410C 50%, #FFC030 100%) !important; border: 2px solid #8B0A0A !important; box-shadow: 0 0 20px rgba(139,10,10,0.55) !important; }
+}
+@media(max-width:988px) {
+:root.theme-postal .stat-chip--total .stat-lbl,
+  :root.theme-postal .stats-col-mobile .stat-chip--total .stat-lbl { color: rgba(100,55,0,0.85) !important; opacity: 1 !important; font-weight: 800 !important; letter-spacing: 1px !important; }
+}
+@media(max-width:988px) {
+:root.theme-postal .total-proc-count,
+  :root.theme-postal .stats-col-mobile .total-proc-count { color: #7A4800 !important; text-shadow: none !important; font-weight: 800 !important; }
+}
+@media(max-width:988px) {
+:root.theme-postal .total-proc-arrow { color: #B87800 !important; }
+}
+:root.theme-postal .item-search-input { color: #1A1208 !important; background: transparent !important; }
+:root.theme-postal .item-search-input::placeholder { color: rgba(26,18,8,0.40) !important; }
+:root.theme-postal .item-search-input:focus { border-color: rgba(168,15,18,0.65) !important; background: #B79683 !important; box-shadow: 0 0 0 2px rgba(168,15,18,0.18) !important; }
+:root.theme-postal .console-panel { background: linear-gradient(180deg, rgba(160,60,40,0.95) 0%, rgba(140,45,30,0.97) 100%) !important; border: 1px solid rgba(194,65,12,0.50) !important; box-shadow: 0 0 0 1px rgba(200,120,80,0.18) inset, 0 8px 32px rgba(80,20,12,0.22), 0 0 40px rgba(160,60,40,0.15) !important; color: #1A1208 !important; }
+:root.theme-postal .console-panel .console-title,
+:root.theme-postal .console-panel .empty-title,
+:root.theme-postal .console-panel .empty-desc,
+:root.theme-postal .console-panel .history-header,
+:root.theme-postal .console-panel .hint-desc { color: #1A1208 !important; }
+:root.theme-postal .console-header { background: linear-gradient(180deg, rgba(160,60,40,0.55), rgba(130,40,28,0.80)) !important; border-bottom: 1px solid rgba(194,65,12,0.35) !important; }
+:root.theme-postal .console-title { color: #F1E4CB !important; letter-spacing: 1px; }
+:root.theme-postal .console-live-badge, :root.theme-postal .console-live-badge span { color: #F1E4CB !important; }
+:root.theme-postal .console-status { background: #F1E4CB !important; box-shadow: 0 0 8px rgba(250,203,226,0.70) !important; }
+:root.theme-postal .console-tabs { border-color: rgba(250,203,226,0.30) !important; background: transparent !important; }
+:root.theme-postal .console-tab-btn { color: rgba(250,203,226,0.60) !important; background: transparent !important; border-bottom-color: transparent !important; }
+:root.theme-postal .console-tab-btn:hover { color: #F1E4CB !important; background: rgba(255,255,255,0.10) !important; }
+:root.theme-postal .console-tab-btn.active { color: #F1E4CB !important; border-bottom-color: #F1E4CB !important; background: rgba(255,255,255,0.08) !important; text-shadow: none; }
+:root.theme-postal .console-panel .history-row,
+:root.theme-postal .console-panel .console-entry,
+:root.theme-postal .console-panel .preview-entry,
+:root.theme-postal .console-panel .compare-entry,
+:root.theme-postal .console-panel .analysis-card { background: #EFE3CC !important; border-color: rgba(160,60,40,0.40) !important; color: #1A1208 !important; }
+:root.theme-postal .console-panel .history-row:hover,
+:root.theme-postal .console-panel .analysis-card:hover { background: #fff7f4 !important; border-color: rgba(160,60,40,0.70) !important; }
+:root.theme-postal .console-panel .card-main { color: #1A1208 !important; }
+:root.theme-postal .console-panel .card-detail { color: rgba(58,26,90,0.72) !important; }
+:root.theme-postal .console-panel .card-time { color: rgba(58,26,90,0.55) !important; }
+:root.theme-postal .analysis-roll { color: #C1121F !important; text-shadow: 0 0 8px rgba(168,15,18,0.35) !important; }
+:root.theme-postal .card-roll-val { color: #C1121F !important; text-shadow: 0 0 8px rgba(168,15,18,0.35) !important; }
+:root.theme-postal .console-panel [class*="badge"],
+:root.theme-postal .console-panel [class*="chip"],
+:root.theme-postal .console-panel [class*="tag"],
+:root.theme-postal .console-panel .card-type { background: rgba(160,60,40,0.30) !important; color: #5A1A7A !important; border-color: rgba(160,60,40,0.50) !important; }
+:root.theme-postal .console-body::-webkit-scrollbar-thumb { background: rgba(168,15,18,0.40) !important; }
+:root.theme-postal .settings-panel { background: transparent !important; border-color: transparent !important; box-shadow: none !important; }
+:root.theme-postal .settings-content { background: #B79683 !important; border: 2px solid rgba(139,10,10,0.50) !important; box-shadow: 0 12px 40px rgba(26,18,8,0.25), 0 0 28px rgba(168,15,18,0.12) !important; color: var(--text-primary) !important; }
+:root.theme-postal .sett-section-label { color: #A80F12 !important; text-shadow: 0 0 12px rgba(168,15,18,0.40) !important; border-bottom-color: rgba(168,15,18,0.28) !important; }
+:root.theme-postal .sett-entry-btn { color: rgba(26,18,8,0.60) !important; background: transparent !important; border-color: transparent !important; }
+:root.theme-postal .sett-entry-btn:hover { color: #1A1208 !important; background: rgba(168,15,18,0.10) !important; border-color: rgba(168,15,18,0.30) !important; }
+:root.theme-postal .sett-entry-btn.active { color: #A80F12 !important; background: none !important; }
+:root.theme-postal .sett-entry-btn.dim { color: rgba(26,18,8,0.30) !important; }
+:root.theme-postal .sett-entry-sep { color: rgba(26,18,8,0.30) !important; }
+:root.theme-postal .sett-lang-btn { background: rgba(168,15,18,0.10) !important; border: 2px solid rgba(168,15,18,0.32) !important; color: rgba(26,18,8,0.75) !important; }
+:root.theme-postal .sett-lang-btn:hover { border-color: rgba(168,15,18,0.60) !important; color: #1A1208 !important; }
+:root.theme-postal .sett-lang-btn.active { border-color: #A80F12 !important; color: #A80F12 !important; background: rgba(168,15,18,0.18) !important; }
+:root.theme-postal .palette-popup-inner { background: linear-gradient(135deg, #B33A22 0%, #B79683 50%, #7A2B1A 100%); border: 2px solid #8B0A0A; box-shadow: 0 8px 32px rgba(26,18,8,0.22), 0 0 24px rgba(193,18,31,0.30); backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+:root.theme-postal .palette-label { color: rgba(26,18,8,0.65) !important; }
+:root.theme-postal .palette-item:hover .palette-label { color: #1A1208 !important; }
+:root.theme-postal .sett-palette-hint { color: #1A1208 !important; opacity: 1; }
+:root.theme-postal .palette-item { border-color: rgba(139,10,10,0.30) !important; }
+:root.theme-postal .palette-item img { border-color: rgba(193,18,31,0.40) !important; }
+:root.theme-postal .palette-item:hover { background: rgba(193,18,31,0.10) !important; box-shadow: 0 0 16px rgba(193,18,31,0.22) !important; }
+:root.theme-postal .avatar-ring-inner { border-color: #C1121F !important; box-shadow: 0 0 28px rgba(193,18,31,0.80), 0 0 52px rgba(200,60,20,0.45), inset 0 0 20px rgba(193,18,31,0.12) !important; }
+:root.theme-postal .avatar-ring-outer { border-color: rgba(193,18,31,0.42) !important; }
+:root.theme-postal .palette-trigger:hover { box-shadow: 0 0 38px rgba(193,18,31,0.90), 0 0 64px rgba(200,60,20,0.55) !important; }
+:root.theme-postal .chat-dot { fill: #FFF0F8; }
+:root.theme-postal .az-quote-mobile { background: linear-gradient(135deg, rgba(179,58,34,0.93) 0%, #B79683 50%, rgba(122,43,26,0.93) 100%) !important; border: 2px solid rgba(139,10,10,0.40) !important; box-shadow: 0 8px 32px rgba(26,18,8,0.15), 0 0 20px rgba(168,15,18,0.12) !important; color: var(--text-primary) !important; }
+:root.theme-postal [data-i18n="devtool_value_lbl"] { color: #A80F12 !important; }
+:root.theme-postal .vl-item-list-panel { background: #5A2E1C !important; border: 2px solid #8B0A0A !important; }
+:root.theme-postal .vl-items-scroll { background: #B79683 !important; color: #1A1208 !important; }
+:root.theme-postal .vl-subheader { color: rgba(26,18,8,0.55) !important; }
+:root.theme-postal .vl-search-wrap { background: #5A2E1C !important; border-color: rgba(139,10,10,0.35) !important; }
+:root.theme-postal .vl-search-input { color: #F1E4CB !important; }
+:root.theme-postal .vl-search-input::placeholder { color: #B79683 !important; }
+:root.theme-postal .vl-search-input:focus { border-color: rgba(168,15,18,0.65) !important; box-shadow: 0 0 0 2px rgba(168,15,18,0.15) !important; }
+:root.theme-postal .vl-search-icon { color: #B79683 !important; }
+:root.theme-postal .vl-search-wrap:focus-within .vl-search-icon { color: #A80F12 !important; }
+:root.theme-postal .vl-search-mode-btn { color: rgba(26,18,8,0.60) !important; border-color: rgba(139,10,10,0.35) !important; }
+:root.theme-postal .vl-search-mode-btn:hover { color: #A80F12 !important; border-color: rgba(168,15,18,0.55) !important; background: rgba(168,15,18,0.08) !important; }
+:root.theme-postal .vl-search-mode-btn.active { color: #A80F12 !important; border-color: rgba(168,15,18,0.55) !important; background: rgba(168,15,18,0.12) !important; }
+:root.theme-postal .vl-search-value-input { background: transparent !important; border-color: rgba(168,15,18,0.45) !important; color: #1A1208 !important; }
+:root.theme-postal .vl-search-value-input::placeholder { color: rgba(26,18,8,0.40) !important; }
+:root.theme-postal .vl-search-value-input:focus { border-color: rgba(168,15,18,0.65) !important; background: #B79683 !important; box-shadow: 0 0 0 2px rgba(168,15,18,0.18) !important; }
+:root.theme-postal .vl-item-btn { color: rgba(26,18,8,0.80) !important; }
+@media (max-width: 1210px) {
+  :root.theme-postal .vl-item-btn { background: #B79683 !important; border-color: rgba(139,10,10,0.30) !important; }
+}
+:root.theme-postal .vl-item-btn:hover { background: color-mix(in srgb, #B79683 80%, #A80F12 20%) !important; border-left-color: #A80F12 !important; color: #A80F12 !important; text-shadow: 0 0 8px rgba(168,15,18,0.40) !important; }
+:root.theme-postal .vl-item-btn.active { background: color-mix(in srgb, #B79683 72%, #A80F12 28%) !important; border-left-color: #A80F12 !important; color: #A80F12 !important; text-shadow: 0 0 8px rgba(168,15,18,0.40) !important; box-shadow: none !important; }
+:root.theme-postal #page-valuelist .vl-item-btn.active,
+:root.theme-postal #page-devtool   .vl-item-btn.active {
+  border-color: #A80F12 !important;
+  background: color-mix(in srgb, #B79683 72%, #A80F12 28%) !important;
+  color: #A80F12 !important;
+}
+:root.theme-postal .vl-cat-btn { background: linear-gradient(180deg, #B79683 0%, #B79683 100%) !important; border: 2px solid rgba(139,10,10,0.45) !important; color: rgba(26,18,8,0.70) !important; }
+:root.theme-postal .vl-cat-btn:hover { background: linear-gradient(180deg, #B79683 0%, #B79683 100%) !important; border: 2px solid #A80F12 !important; color: #A80F12 !important; text-shadow: 0 0 10px rgba(168,15,18,0.50) !important; }
+:root.theme-postal .vl-cat-btn.active { background: linear-gradient(180deg, #B79683 0%, #B79683 100%) !important; border: 2px solid #A80F12 !important; color: #A80F12 !important; text-shadow: 0 0 10px rgba(168,15,18,0.50) !important; box-shadow: 0 0 12px rgba(168,15,18,0.25) !important; }
+:root.theme-postal .vl-btn-view-all { color: #B79683 !important; border-color: rgba(139,10,10,0.45) !important; }
+:root.theme-postal .vl-btn-view-all:hover { color: #E0574F !important; border-color: rgba(168,15,18,0.65) !important; }
+:root.theme-postal .vl-btn-sort { color: #B79683 !important; border-color: rgba(139,10,10,0.45) !important; }
+:root.theme-postal .vl-btn-sort:hover { color: #E0574F !important; }
+:root.theme-postal .vl-btn-sort svg { color: #B79683 !important; }
+:root.theme-postal .vl-list-controls { background: transparent !important; border-color: rgba(139,10,10,0.30) !important; }
+:root.theme-postal .vl-search-mode-btns { background: transparent !important; border-bottom: 1px solid rgba(139,10,10,0.35); }
+:root.theme-postal .tp-rate-panel { background: #5A2E1C !important; border-color: rgba(139,10,10,0.45) !important; }
+:root.theme-postal .tp-rate-label { color: #B79683 !important; }
+:root.theme-postal .tp-rate-number { color: #E0574F !important; text-shadow: 0 0 12px rgba(168,15,18,0.40) !important; }
+:root.theme-postal .tp-rate-suffix { color: #B79683 !important; }
+:root.theme-postal .tp-rate-gold-label { color: #B4530C !important; }
+:root.theme-postal .tp-rate-per-tp { color: #B79683 !important; }
+:root.theme-postal .tp-rate-badge-mobile { background: #5A2E1C !important; border-color: rgba(193,18,31,0.40) !important; }
+:root.theme-postal .tp-rate-badge-mobile .tp-rate-badge-num { color: #A80F12 !important; }
+:root.theme-postal .tp-rate-badge-mobile svg path, :root.theme-postal .tp-rate-badge-mobile svg circle { stroke: #A80F12 !important; }
+:root.theme-postal .tp-rate-input { color: #A80F12 !important; border-color: rgba(139,10,10,0.40) !important; background: #1A1613 !important; }
+:root.theme-postal .tp-rate-input:focus { border-color: #A80F12 !important; box-shadow: 0 0 0 2px rgba(168,15,18,0.18) !important; }
+:root.theme-postal .tp-rate-edit-hint { color: rgba(26,18,8,0.50) !important; }
+:root.theme-postal .tp-rate-reset-btn { color: rgba(26,18,8,0.55) !important; border-color: rgba(139,10,10,0.35) !important; }
+:root.theme-postal .tp-rate-reset-btn:hover { color: #A80F12 !important; border-color: rgba(168,15,18,0.55) !important; }
+:root.theme-postal .tp-rate-mobile-popup-inner { background: #5A2E1C !important; border-color: rgba(139,10,10,0.50) !important; }
+:root.theme-postal .tp-rate-mobile-popup-title { color: #E0574F !important; }
+:root.theme-postal .tp-rate-mobile-popup-sub { color: rgba(183,150,131,0.70) !important; }
+:root.theme-postal .tp-rate-mobile-close { color: rgba(183,150,131,0.65) !important; }
+:root.theme-postal .tp-rate-mobile-close:hover { color: #B79683 !important; }
+:root.theme-postal .tp-rate-mobile-input { color: #A80F12 !important; border-color: rgba(139,10,10,0.40) !important; background: #1A1613 !important; }
+:root.theme-postal .tp-rate-mobile-input:focus { border-color: #A80F12 !important; }
+:root.theme-postal .tp-rate-mobile-confirm { background: linear-gradient(135deg, rgba(168,15,18,0.80) 0%, rgba(168,15,18,0.70) 100%) !important; border-color: #A80F12 !important; color: #fff !important; }
+:root.theme-postal .tp-rate-mobile-confirm:hover { background: linear-gradient(135deg, rgba(168,15,18,1.0) 0%, rgba(168,15,18,0.90) 100%) !important; }
+:root.theme-postal .tp-rate-mobile-cancel { color: rgba(183,150,131,0.75) !important; border-color: rgba(139,10,10,0.35) !important; }
+:root.theme-postal .tp-rate-mobile-cancel:hover { border-color: rgba(139,10,10,0.60) !important; color: #B79683 !important; }
+:root.theme-postal .vl-page-header { border-color: rgba(139,10,10,0.20) !important; }
+:root.theme-postal .vl-page-header-title {
+  color: #FF3232 !important;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 2px 6px rgba(0,0,0,0.75), 0 0 16px rgba(168,15,18,0.55) !important;
+}
+:root.theme-postal .vl-page-header-icon {
+  color: #F1E4CB !important;
+  filter: drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000) drop-shadow(1px 1px 0 #000) drop-shadow(0 0 4px rgba(168,15,18,0.55));
+}
+:root.theme-postal .vl-page-header-sub {
+  color: #F1E4CB !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.75) !important;
+  opacity: 0.92 !important;
+}
+:root.theme-postal .vl-placeholder {
+  background: #B79683 !important;
+  border: 2px solid rgba(139,10,10,0.45) !important;
+  box-shadow: 0 0 0 1px rgba(210,160,140,0.18) inset, 0 8px 24px rgba(139,10,10,0.14) !important;
+}
+:root.theme-postal .vl-placeholder-icon { fill: rgba(139,10,10,0.50) !important; opacity: 1 !important; }
+:root.theme-postal .vl-placeholder-title { color: rgba(26,18,8,0.65) !important; }
+:root.theme-postal .vl-placeholder-sub { color: rgba(26,18,8,0.48) !important; }
+:root.theme-postal .vl-detail-card { background: #B79683; box-shadow: 0 6px 28px rgba(26,18,8,0.22); border: 2px solid rgba(139,10,10,0.45); isolation: isolate; contain: layout style; }
+:root.theme-postal .vl-detail-img-box {
+  background: linear-gradient(135deg, #221E1B 0%, #1A1613 50%, #171310 100%) !important;
+  box-shadow: 0 0 20px rgba(168,15,18,0.45), 0 0 0 1px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(0,0,0,0.65) !important;
+  will-change: auto !important;
+}
+:root.theme-postal .vl-detail-img-box::after {
+  background: rgba(168,15,18,0.05) !important;
+  box-shadow: inset 0 0 32px rgba(168,15,18,0.22) !important;
+}
+:root.theme-postal .vl-detail-img-box .vl-detail-img {
+  filter: drop-shadow(0 3px 7px rgba(168,15,18,0.38)) !important;
+}
+:root.theme-postal .vl-card-close { background: rgba(255,240,248,0.90); border-color: rgba(168,15,18,0.45); color: #C1121F; box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
+:root.theme-postal .vl-card-close:hover { background: #A80F12; color: #fff; box-shadow: 0 0 10px rgba(168,15,18,0.55); }
+:root.theme-postal .vl-value-part-label { color: #1A1208; opacity: 0.60; }
+:root.theme-postal .vl-star { color: rgba(139,10,10,0.35); }
+:root.theme-postal .vl-star-fill { color: #A80F12; }
+:root.theme-postal .vl-detail-divider { background: rgba(139,10,10,0.20) !important; }
+:root.theme-postal .vl-detail-value-title { color: #A80F12 !important; }
+:root.theme-postal .vl-roll-slot-btn, :root.theme-postal .vl-roll-slot-static, :root.theme-postal .vl-roll-drop-item { background: #5A2E1C !important; border-color: rgba(139,10,10,0.40) !important; color: #F1E4CB !important; }
+:root.theme-postal .vl-roll-slot-btn:hover, :root.theme-postal .vl-roll-drop-item:hover { background: #6E3A22 !important; border-color: rgba(168,15,18,0.55) !important; color: #FFF1DE !important; }
+:root.theme-postal .vl-roll-drop-item.active { background: rgba(168,15,18,0.15) !important; border-color: #A80F12 !important; color: #A80F12 !important; }
+:root.theme-postal .vl-roll-dropdown { background: #B79683 !important; border: 2px solid rgba(139,10,10,0.50) !important; box-shadow: 0 8px 24px rgba(26,18,8,0.18) !important; }
+:root.theme-postal .vl-roll-dropdown::-webkit-scrollbar-thumb { background: rgba(168,15,18,0.40) !important; }
+:root.theme-postal .vl-status-tooltip { background: #B79683; border: 2px solid rgba(139,10,10,0.50); color: #1A1208; box-shadow: 0 4px 14px rgba(26,18,8,0.20); }
+:root.theme-postal .vl-status-tooltip-text { color: rgba(26,18,8,0.75) !important; }
+:root.theme-postal .vl-status-modal { background: linear-gradient(135deg, rgba(179,58,34,0.97) 0%, #B79683 50%, rgba(122,43,26,0.97) 100%) !important; border-color: rgba(139,10,10,0.50) !important; box-shadow: 0 8px 32px rgba(26,18,8,0.25) !important; }
+:root.theme-postal .vl-status-modal-text { color: rgba(26,18,8,0.75) !important; }
+:root.theme-postal .vl-status-modal-close { color: rgba(26,18,8,0.60) !important; }
+:root.theme-postal .vl-status-modal-close:hover { color: #A80F12 !important; }
+:root.theme-postal #dt-feedback-panel { background: linear-gradient(180deg, rgba(160,60,40,0.95) 0%, rgba(140,45,30,0.97) 100%) !important; border: 1px solid rgba(194,65,12,0.50) !important; box-shadow: 0 0 0 1px rgba(200,120,80,0.18) inset, 0 8px 32px rgba(80,20,12,0.22), 0 0 40px rgba(160,60,40,0.15) !important; color: #1A1208 !important; }
+:root.theme-postal .fb-own-badge { background: rgba(160,60,40,0.30) !important; color: #5A1A7A !important; border-color: rgba(160,60,40,0.50) !important; }
+:root.theme-postal .fb-sticker-picker { background: linear-gradient(180deg, rgba(160,60,40,0.97) 0%, rgba(140,45,30,0.99) 100%) !important; border-color: rgba(194,65,12,0.50) !important; }
+:root.theme-postal .fb-sticker-cat-btn { color: rgba(250,203,226,0.60) !important; }
+:root.theme-postal .fb-sticker-cat-btn:hover, :root.theme-postal .fb-sticker-cat-btn.active { color: #F1E4CB !important; border-bottom-color: #F1E4CB !important; }
+:root.theme-postal .fb-sticker-item:hover { background: rgba(255,255,255,0.10) !important; }
+:root.theme-postal .fb-sticker-btn:hover { color: #F1E4CB !important; }
+:root.theme-postal .fb-modal-panel { background: linear-gradient(135deg, rgba(179,58,34,0.97) 0%, #B79683 50%, rgba(122,43,26,0.97) 100%) !important; border: 2px solid #8B0A0A !important; box-shadow: 0 8px 32px rgba(26,18,8,0.22) !important; }
+:root.theme-postal .fb-modal-header { background: #8B0A0A !important; border-color: rgba(140,70,40,0.50) !important; }
+:root.theme-postal .fb-modal-title { color: #B79683 !important; text-shadow: 0 1px 3px rgba(100,40,10,0.30) !important; }
+:root.theme-postal .fb-modal-close { color: #B79683 !important; }
+:root.theme-postal .fb-modal-close:hover { color: #A80F12 !important; }
+:root.theme-postal .fb-modal-hint { color: rgba(26,18,8,0.65) !important; }
+:root.theme-postal .fb-input-lbl { color: rgba(26,18,8,0.65) !important; }
+:root.theme-postal .fb-input-title, :root.theme-postal .fb-textarea { color: #1A1208 !important; border-color: rgba(139,10,10,0.35) !important; background: #B79683 !important; }
+:root.theme-postal .fb-input-title:focus, :root.theme-postal .fb-textarea:focus { border-color: rgba(139,10,10,0.65) !important; box-shadow: 0 0 0 2px rgba(168,15,18,0.15) !important; }
+:root.theme-postal .fb-input-title::placeholder, :root.theme-postal .fb-textarea::placeholder { color: rgba(26,18,8,0.38) !important; }
+:root.theme-postal .fb-char-hint { color: rgba(26,18,8,0.50) !important; }
+:root.theme-postal .fb-modal-footer { background: #8B0A0A !important; border-color: rgba(140,70,40,0.50) !important; }
+:root.theme-postal .fb-modal-cancel { color: #B79683 !important; border-color: #B79683 !important; }
+:root.theme-postal .fb-modal-cancel:hover { border-color: #B79683 !important; color: #B79683 !important; }
+:root.theme-postal .fb-modal-submit { background: linear-gradient(135deg, rgba(168,15,18,0.85) 0%, rgba(168,15,18,0.75) 100%) !important; border-color: #A80F12 !important; color: #fff !important; }
+:root.theme-postal .fb-modal-submit:hover { background: linear-gradient(135deg, #A80F12 0%, #C1121F 100%) !important; }
+:root.theme-postal .dt-cm-panel { background: linear-gradient(135deg, rgba(179,58,34,0.97) 0%, #B79683 50%, rgba(122,43,26,0.97) 100%) !important; border: 2px solid #8B0A0A !important; box-shadow: 0 8px 32px rgba(26,18,8,0.22) !important; }
+:root.theme-postal .dt-cm-header { background: #8B0A0A !important; border-color: rgba(140,70,40,0.50) !important; }
+:root.theme-postal .dt-cm-title { color: #B79683 !important; text-shadow: 0 1px 3px rgba(100,40,10,0.30) !important; }
+:root.theme-postal .dt-cm-close { color: #B79683 !important; }
+:root.theme-postal .dt-cm-close:hover { color: #A80F12 !important; }
+:root.theme-postal .dt-cm-label { color: rgba(26,18,8,0.55) !important; }
+:root.theme-postal .dt-cm-row { border-color: rgba(139,10,10,0.18) !important; }
+:root.theme-postal .dt-cm-code { color: #1A1208 !important; background: #B79683 !important; border-color: rgba(139,10,10,0.35) !important; }
+:root.theme-postal .dt-cm-copy { color: rgba(26,18,8,0.60) !important; border-color: rgba(139,10,10,0.35) !important; }
+:root.theme-postal .dt-cm-copy:hover { color: #A80F12 !important; border-color: rgba(168,15,18,0.55) !important; background: rgba(168,15,18,0.10) !important; }
+:root.theme-postal .dt-cm-footer { background: #8B0A0A !important; border-color: rgba(140,70,40,0.50) !important; }
+:root.theme-postal .dt-cm-copy-all { color: #A80F12 !important; border-color: rgba(168,15,18,0.35) !important; background: rgba(168,15,18,0.08) !important; }
+:root.theme-postal .dt-cm-copy-all:hover { background: rgba(168,15,18,0.18) !important; box-shadow: 0 0 14px rgba(168,15,18,0.25) !important; }
+:root.theme-postal .dt-cm-body::-webkit-scrollbar-thumb { background: rgba(168,15,18,0.40) !important; }
+:root.theme-postal .dt-cm-empty { color: rgba(26,18,8,0.45) !important; }
+:root.theme-postal .dt-ic-hint { color: rgba(26,18,8,0.55) !important; }
+:root.theme-postal .dt-ld-q { color: rgba(26,18,8,0.80) !important; }
+:root.theme-postal .dt-ld-img-row { color: #1A1208 !important; }
+:root.theme-postal .dt-ic-textarea {
+  color: #1A1208 !important;
+  background: #B79683 !important;
+  border-color: rgba(139,10,10,0.35) !important;
+}
+:root.theme-postal .dt-ic-textarea:focus { border-color: rgba(168,15,18,0.55) !important; }
+:root.theme-postal .dt-ic-textarea::-webkit-scrollbar-thumb { background: rgba(168,15,18,0.40) !important; }
+:root.theme-postal .dt-ic-cancel {
+  color: rgba(26,18,8,0.60) !important;
+  border-color: rgba(139,10,10,0.35) !important;
+}
+:root.theme-postal .dt-ic-cancel:hover { color: #A80F12 !important; border-color: rgba(168,15,18,0.55) !important; background: rgba(168,15,18,0.10) !important; }
+:root.theme-postal .dt-dem-input { color: #1A1208 !important; border-color: rgba(139,10,10,0.40) !important; background: #B79683 !important; }
+:root.theme-postal .dt-dem-input:focus { border-color: #A80F12 !important; box-shadow: 0 0 0 2px rgba(168,15,18,0.15) !important; }
+:root.theme-postal .dt-dem-arrow { color: rgba(26,18,8,0.55) !important; border-color: rgba(139,10,10,0.35) !important; }
+:root.theme-postal .dt-dem-arrow:hover { color: #A80F12 !important; border-color: rgba(168,15,18,0.55) !important; }
+:root.theme-postal .dt-status-dropdown { background: #B79683 !important; border-color: rgba(139,10,10,0.50) !important; box-shadow: 0 8px 24px rgba(26,18,8,0.18) !important; }
+:root.theme-postal .dt-status-opt:hover { background: rgba(168,15,18,0.12); color: #A80F12; }
+:root.theme-postal .dt-status-pick-btn { border: 2px solid rgba(139,10,10,0.35); color: rgba(26,18,8,0.65); background: #B79683; }
+:root.theme-postal .dt-status-pick-btn:hover { background: rgba(168,15,18,0.14); border-color: rgba(168,15,18,0.50); color: #A80F12; box-shadow: 0 0 12px rgba(168,15,18,0.18); }
+:root.theme-postal .dt-card-print-btn { color: #C1121F !important; border-color: rgba(193,18,31,0.55) !important; background: rgba(193,18,31,0.13) !important; }
+:root.theme-postal .dt-card-print-btn:hover { background: rgba(193,18,31,0.25) !important; border-color: rgba(193,18,31,0.90) !important; box-shadow: 0 0 12px rgba(193,18,31,0.55) !important; }
+:root.theme-postal .dt-input-code-btn {
+  background: #2A170F !important;
+  border: 1px solid #A80F12 !important;
+  color: #FF3B3B !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35) !important;
+}
+:root.theme-postal .dt-input-code-btn:hover {
+  background: #3B2317 !important;
+  border-color: #C1121F !important;
+  box-shadow: 0 0 14px rgba(168,15,18,0.55) !important;
+}
+:root.theme-postal .dt-print-all-btn {
+  color: #FF3B3B !important;
+  border-color: #A80F12 !important;
+  background: #2A170F !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.35) !important;
+}
+:root.theme-postal .dt-print-all-btn:hover {
+  background: #3B2317 !important;
+  border-color: #C1121F !important;
+  box-shadow: 0 0 18px rgba(193,18,31,0.55) !important;
+}
+:root.theme-postal .vl-detail-img-box.border-mythic {
+  background-image:
+    linear-gradient(#2A170F, #2A170F),
+    linear-gradient(var(--mythic-c, #ff2323), var(--mythic-c, #ff2323)) !important;
+  background-origin: border-box !important;
+  background-clip: padding-box, border-box !important;
+}
+:root.theme-postal { --dt-re-bg: #B79683; }
+:root.theme-postal .vl-roll-tooltip { border: 1px solid rgba(139,10,10,0.50); border-top: 2px solid #A80F12; }
+:root.theme-easter .dt-roll-editor,
+:root.theme-baldi .dt-roll-editor,
+:root.theme-postal .dt-roll-editor {
+  color: #2a2420;
+}
+:root.theme-easter .dt-re-row,
+:root.theme-baldi .dt-re-row,
+:root.theme-postal .dt-re-row {
+  border-top-color: rgba(0,0,0,0.08);
+}
+:root.theme-easter .dt-re-price,
+:root.theme-baldi .dt-re-price,
+:root.theme-postal .dt-re-price {
+  color: #2a2420;
+  border-bottom-color: rgba(0,0,0,0.16);
+}
+:root.theme-easter .dt-re-price::placeholder,
+:root.theme-baldi .dt-re-price::placeholder,
+:root.theme-postal .dt-re-price::placeholder {
+  color: rgba(0,0,0,0.30);
+}
+:root.theme-postal .dt-re-row { border-top-color: rgba(139,10,10,0.18) !important; }
+:root.theme-postal { --item-halo: rgba(168,15,18,.48); --item-drop: rgba(110,8,8,.45); }
+.vl-detail-img,
+.vc-diff-img-box img,
+:root.theme-easter .vl-detail-img,
+:root.theme-baldi .vl-detail-img,
+:root.theme-postal .vl-detail-img-box .vl-detail-img,
+:root.theme-easter .vc-diff-img-box img,
+:root.theme-baldi .vc-diff-img-box img,
+:root.theme-postal .vc-diff-img-box img {
+  filter: drop-shadow(0 0 12px var(--item-halo)) !important;
+}
+.vl-detail-img-box::after,
+.vl-detail-img-wrap::after,
+.vc-diff-img-box::after,
+.vc-diff-img-wrap::after,
+:root.theme-easter .vl-detail-img-box::after,
+:root.theme-postal .vl-detail-img-box::after,
+:root.theme-baldi .vl-detail-img-box::after,
+:root.theme-easter .vl-detail-img-wrap::after,
+:root.theme-postal .vl-detail-img-wrap::after,
+:root.theme-baldi .vl-detail-img-wrap::after {
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.65), inset 0 0 22px var(--item-drop) !important;
+}
+:root.theme-postal .ed-pm-intro { color: rgba(26,18,8,0.55) !important; }
+:root.theme-postal .ed-pm-intro b { color:#8B0A0A !important; }
+:root.theme-postal .ed-pm-item { background: #B79683 !important; border-color: rgba(139,10,10,0.35) !important; }
+:root.theme-postal .ed-pm-item-name { color:#1A1208 !important; }
+:root.theme-postal .ed-pm-item-meta { color: rgba(26,18,8,0.55) !important; }
+:root.theme-postal .ed-pm-del-one { border-left-color: rgba(139,10,10,0.35) !important; background: rgba(255,90,90,0.08) !important; color:#c84a4a !important; opacity:1 !important; }
+:root.theme-postal .ed-pm-del-one:hover { background: rgba(255,90,90,0.18) !important; }
+:root.theme-postal .ed-pm-del-all { border-color: rgba(255,90,90,0.45) !important; background: rgba(255,90,90,0.10) !important; color:#c84a4a !important; }
+:root.theme-postal .ed-pm-del-all:hover { background: rgba(255,90,90,0.20) !important; }
+:root.theme-postal .ed-pm-cancel { border-color: rgba(139,10,10,0.35) !important; color: rgba(26,18,8,0.60) !important; }
+:root.theme-postal .ed-pm-cancel:hover { color:#A80F12 !important; border-color: rgba(168,15,18,0.55) !important; background: rgba(168,15,18,0.10) !important; }
+/* ═════════ POSTAL — авторские правки поверх генерации ═════════ */
+:root.theme-postal{
+  --pos-blood:      #A80F12;
+  --pos-blood-lite: #C1121F;
+  --pos-blood-deep: #6E0808;
+  --pos-brown:      #3B2317;
+  --pos-brown-dark: #24140C;
+  --pos-beige:      232,214,186;
+  --gold:           #A80F12;
+  --gold-bright:    #C1121F;
+  --gold-glow:      #E0574F;
+  --amber:          #C2410C;
+  --border-gold:    #A80F12;
+  --border-rune:    #C1121F;
+  --gold-rgb:       168,15,18;
+  --bg-void:        #1B1008;
+  --text-primary:   #14100C;
+  --text-muted:     #4A3626;
+  --text-dim:       #7A6046;
+  --vl-accent:      #A80F12;
+  --theme-switch-glow: #A80F12;
+}
+
+/* ── Фон страницы: снизу темнота → кровавые → оранжевые огненные ── */
+:root.theme-postal body { background: #1B1008 !important; color: var(--text-primary) !important; }
+:root.theme-postal .page-bg{
+  background-image: url('images/Home Page/banner9_5.webp') !important;
+  background-size: cover !important; background-position: center !important;
+}
+:root.theme-postal .page-bg::after{
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:
+    linear-gradient(180deg,
+      rgba(255,138,42,0.30) 0%,
+      rgba(226,101,15,0.26) 16%,
+      rgba(194,65,12,0.24)  30%,
+      rgba(168,15,18,0.28)  48%,
+      rgba(110,8,8,0.42)    66%,
+      rgba(48,14,8,0.68)    82%,
+      rgba(14,8,5,0.88)     100%),
+    radial-gradient(ellipse 80% 40% at 50% 4%,  rgba(255,160,60,0.35) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 45% at 20% 45%, rgba(168,15,18,0.28) 0%, transparent 60%),
+    radial-gradient(ellipse 65% 45% at 85% 55%, rgba(193,18,31,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse 90% 35% at 50% 100%, rgba(10,6,4,0.85) 0%, transparent 70%);
+}
+
+/* ── NAV: тёмно-коричневая панель ── */
+:root.theme-postal nav{
+  background: linear-gradient(180deg, #3B2317, #24140C) !important;
+  border-color: rgba(168,15,18,0.45) !important;
+  box-shadow: 0 2px 20px rgba(20,10,6,0.55), 0 1px 0 rgba(168,15,18,0.25) !important;
+}
+:root.theme-postal nav::after{
+  background: linear-gradient(90deg, transparent, rgba(168,15,18,0.35), rgba(193,18,31,0.55), rgba(168,15,18,0.35), transparent) !important;
+}
+/* кнопки чёрные, при наведении/активности — кровавые */
+:root.theme-postal .nav-btn,
+:root.theme-postal #settings-btn,
+:root.theme-postal #navbtn-home,
+:root.theme-postal #navbtn-rolls,
+:root.theme-postal #navbtn-analyze,
+:root.theme-postal #navbtn-stuff,
+:root.theme-postal #navbtn-compare,
+:root.theme-postal #navbtn-valuelist,
+:root.theme-postal #navbtn-tradeforum,
+:root.theme-postal #navbtn-tradechat{
+  color: #0B0705 !important; background: none !important; text-shadow: none !important; filter: none !important;
+}
+:root.theme-postal .nav-btn:hover,
+:root.theme-postal #settings-btn:hover,
+:root.theme-postal #navbtn-home:hover,
+:root.theme-postal #navbtn-rolls:hover,
+:root.theme-postal #navbtn-analyze:hover,
+:root.theme-postal #navbtn-stuff:hover,
+:root.theme-postal #navbtn-compare:hover,
+:root.theme-postal #navbtn-valuelist:hover,
+:root.theme-postal #navbtn-tradeforum:hover,
+:root.theme-postal #navbtn-tradechat:hover{
+  color: #C1121F !important; background: none !important;
+  text-shadow: 0 0 10px rgba(168,15,18,0.65) !important;
+}
+:root.theme-postal .nav-btn.active,
+:root.theme-postal #settings-btn.active,
+:root.theme-postal #navbtn-home.active,
+:root.theme-postal #navbtn-rolls.active,
+:root.theme-postal #navbtn-analyze.active,
+:root.theme-postal #navbtn-stuff.active,
+:root.theme-postal #navbtn-compare.active,
+:root.theme-postal #navbtn-valuelist.active,
+:root.theme-postal #navbtn-tradeforum.active,
+:root.theme-postal #navbtn-tradechat.active{
+  color: #C1121F !important; background: none !important; filter: none !important;
+}
+:root.theme-postal .nav-btn.active svg,
+:root.theme-postal #settings-btn.active svg,
+:root.theme-postal #navbtn-home.active svg,
+:root.theme-postal #navbtn-rolls.active svg,
+:root.theme-postal #navbtn-analyze.active svg,
+:root.theme-postal #navbtn-stuff.active svg,
+:root.theme-postal #navbtn-compare.active svg,
+:root.theme-postal #navbtn-valuelist.active svg,
+:root.theme-postal #navbtn-tradeforum.active svg,
+:root.theme-postal #navbtn-tradechat.active svg{
+  overflow: visible !important;
+  filter: drop-shadow(0 0 3px #E0574F) drop-shadow(0 0 8px #C1121F) drop-shadow(0 0 16px rgba(168,15,18,0.90)) !important;
+}
+:root.theme-postal .nav-btn .tooltip{
+  background: #B79683 !important; border-color: #A80F12 !important;
+  color: #6E0808 !important; box-shadow: 0 2px 12px rgba(110,8,8,0.35) !important;
+}
+/* Discord — кровавое свечение */
+:root.theme-postal .nav-discord-btn{ --dc-glow:#C1121F; }
+:root.theme-postal .nav-discord-btn svg{ color:#C1121F !important; fill:#C1121F !important;
+  filter: drop-shadow(0 0 6px rgba(193,18,31,0.75)) drop-shadow(0 0 14px rgba(168,15,18,0.55)) !important; }
+:root.theme-postal .nav-discord-btn .tooltip{ background:#B79683!important;border-color:#A80F12!important;color:#6E0808!important; }
+
+/* ── Панели: сплошной бежевый + кровавая рамка (без blur — нагрузка на слайдшоу баннера) ── */
+:root.theme-postal .bot-panel,
+:root.theme-postal .updates-panel,
+:root.theme-postal .mod-panel,
+:root.theme-postal #dt-feedback-panel{
+  background: #B79683 !important;
+  border: 1px solid var(--pos-blood) !important;
+  box-shadow: 0 0 0 1px rgba(168,15,18,0.18) inset, 0 8px 32px rgba(20,10,6,0.35), 0 0 32px rgba(168,15,18,0.14) !important;
+  color: var(--text-primary) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+:root.theme-postal .item-list-panel {
+  background: #5A2E1C !important;
+  border: 2px solid #8B0A0A !important;
+  box-shadow: 0 0 0 1px rgba(210,160,140,0.15) inset, 0 8px 32px rgba(20,10,6,0.35), 0 0 32px rgba(168,15,18,0.14) !important;
+  color: #F1E4CB !important;
+}
+:root.theme-postal .dt-result-panel,
+:root.theme-postal .dt-mob-panel{
+  background: #B79683 !important;
+  border: 2px solid var(--pos-blood) !important;
+  box-shadow: 0 0 0 1px rgba(168,15,18,0.18) inset, 0 8px 32px rgba(20,10,6,0.35), 0 0 32px rgba(168,15,18,0.14) !important;
+  color: var(--text-primary) !important;
+}
+:root.theme-postal .page-title-block{ border-color: rgba(168,15,18,0.55) !important; }
+:root.theme-postal .page-title-text {
+  color: #FF3232 !important;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 2px 6px rgba(0,0,0,0.75), 0 0 16px rgba(168,15,18,0.55) !important;
+}
+:root.theme-postal .page-title-icon {
+  color: #F1E4CB !important;
+  filter: drop-shadow(-1px -1px 0 #000) drop-shadow(1px -1px 0 #000) drop-shadow(-1px 1px 0 #000) drop-shadow(1px 1px 0 #000) drop-shadow(0 0 4px rgba(168,15,18,0.55));
+}
+:root.theme-postal .page-title-sub  {
+  color: #F1E4CB !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.75) !important;
+  opacity: 0.92 !important;
+}
+:root.theme-postal .bot-name   { color:#A80F12 !important; text-shadow: 0 0 18px rgba(168,15,18,0.40) !important; }
+:root.theme-postal .updates-title{ color:#A80F12 !important; text-shadow: 0 0 20px rgba(168,15,18,0.45) !important; }
+:root.theme-postal .updates-subtitle{ color: rgba(168,15,18,0.80) !important; }
+:root.theme-postal .bot-tagline{ color: rgba(20,16,12,0.70) !important; }
+:root.theme-postal .bot-desc   { color: rgba(20,16,12,0.85) !important; }
+
+/* ── Value Changes: коричневый поиск, кровавые записи ── */
+:root.theme-postal #dt-feedback-panel .vl-search-wrap{
+  background: linear-gradient(180deg, #3B2317, #24140C) !important;
+  border-bottom-color: rgba(168,15,18,0.50) !important;
+}
+:root.theme-postal #dt-feedback-panel .vl-search-input{
+  background: rgba(255,255,255,0.05) !important; border-color: rgba(168,15,18,0.50) !important;
+  color: #F1E4CB !important;
+}
+:root.theme-postal #dt-feedback-panel .vl-search-input::placeholder{ color: #B79683 !important; }
+:root.theme-postal #dt-feedback-panel .vl-search-input:focus{ border-color:#C1121F !important; box-shadow: 0 0 0 2px rgba(193,18,31,0.20) !important; }
+:root.theme-postal #dt-feedback-panel .vl-search-icon{ color: #B79683 !important; }
+:root.theme-postal #dt-feedback-panel .vl-search-wrap:focus-within .vl-search-icon{ color:#C1121F !important; }
+:root.theme-postal .fb-panel-header{
+  background: linear-gradient(180deg, #3B2317, #24140C) !important;
+  border-color: rgba(168,15,18,0.45) !important;
+}
+:root.theme-postal .fb-panel-header *{ color:#F1E4CB !important; }
+:root.theme-postal .fb-panel-header .fb-panel-title,
+:root.theme-postal .fb-header-center .fb-panel-title{ color:#E0574F !important; }
+:root.theme-postal .fb-item{
+  background: #B79683 !important;
+  border-color: rgba(224,87,79,0.55) !important;
+}
+:root.theme-postal .fb-item:hover{
+  background: #C2A492 !important;
+  border-color:#E0574F !important;
+}
+:root.theme-postal .fb-item-title { color:#1A1208 !important; }
+:root.theme-postal .fb-item-body  { color: rgba(26,18,8,0.82) !important; }
+:root.theme-postal .fb-item-author{ color: rgba(26,18,8,0.66) !important; }
+:root.theme-postal .fb-item-time  { color: rgba(26,18,8,0.52) !important; }
+
+/* ── Аватар: кровавая подсветка ── */
+:root.theme-postal .avatar-ring-inner{
+  border-color:#A80F12 !important;
+  box-shadow: 0 0 28px rgba(168,15,18,0.85), 0 0 54px rgba(193,18,31,0.45), inset 0 0 20px rgba(110,8,8,0.20) !important;
+}
+:root.theme-postal .avatar-ring-outer{ border-color: rgba(193,18,31,0.45) !important; }
+
+/* ── Credit block: структура прежняя, рамки кровавые, фона нет ── */
+:root.theme-postal .credit-card{
+  background: none !important;
+  border-color: rgba(168,15,18,0.65) !important;
+  box-shadow: none !important;
+}
+:root.theme-postal .credit-card:hover{
+  background: none !important;
+  border-color:#C1121F !important;
+  box-shadow: 0 0 14px rgba(168,15,18,0.25) !important;
+}
+:root.theme-postal .credit-card-role{ color: rgba(110,8,8,0.75) !important; }
+:root.theme-postal .credit-card-name{ color:#14100C !important; text-shadow:none !important; }
+:root.theme-postal .credit-card-name.cyan { color:#8B0A0A !important; }
+:root.theme-postal .credit-card-name.green{ color:#B4530C !important; }
+@media (max-width:1444px){
+  :root.theme-postal .credits-block{
+    background: none !important;
+    border-color: rgba(168,15,18,0.65) !important;
+    box-shadow: none !important;
+  }
+  :root.theme-postal .credits-block:hover{ background: none !important; border-color:#C1121F !important; box-shadow: 0 0 14px rgba(168,15,18,0.25) !important; }
+}
+
+
+/* ── Правки: модульные окна, Value Changes, баннер ── */
+:root.theme-postal .stat-chip,
+:root.theme-postal .stats-col .stat-chip,
+:root.theme-postal .stats-col-mobile .stat-chip{
+  background: linear-gradient(135deg, #3B2317 0%, #2A170F 100%) !important;
+  border: 2px solid rgba(139,10,10,0.75) !important;
+  box-shadow: 0 2px 12px rgba(30,14,8,0.28), 0 0 12px rgba(139,10,10,0.25) !important;
+  backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+}
+:root.theme-postal .stat-chip:hover,
+:root.theme-postal .stats-col .stat-chip:hover,
+:root.theme-postal .stats-col-mobile .stat-chip:hover{
+  border-color:#C1121F !important;
+  box-shadow: 0 3px 16px rgba(30,14,8,0.35), 0 0 16px rgba(193,18,31,0.35) !important;
+}
+:root.theme-postal .stat-chip--total,
+:root.theme-postal .stats-col .stat-chip--total,
+:root.theme-postal .stats-col-mobile .stat-chip--total{
+  background: linear-gradient(135deg, #4A2A1A 0%, #30180F 100%) !important;
+  border: 2px solid rgba(168,15,18,0.85) !important;
+  box-shadow: 0 0 20px rgba(168,15,18,0.35) !important;
+}
+:root.theme-postal .stat-num,
+:root.theme-postal .stats-col-mobile .stat-num{ color:#F5EBD8 !important; text-shadow: 0 1px 4px rgba(0,0,0,0.45) !important; }
+:root.theme-postal .stat-lbl,
+:root.theme-postal .stats-col-mobile .stat-lbl{ color: #B79683 !important; }
+:root.theme-postal .stat-chip--total .stat-lbl,
+:root.theme-postal .stats-col-mobile .stat-chip--total .stat-lbl{ color: #B79683 !important; }
+:root.theme-postal .total-proc-count,
+:root.theme-postal .stats-col-mobile .total-proc-count{ color:#FFE9D8 !important; text-shadow: 0 0 10px rgba(193,18,31,0.45) !important; }
+:root.theme-postal .total-proc-arrow{ color:#E0574F !important; }
+
+:root.theme-postal .fb-item{
+  background: #B79683 !important;
+  border-color: rgba(168,15,18,0.55) !important;
+  backdrop-filter: blur(4px) !important; -webkit-backdrop-filter: blur(4px) !important;
+}
+:root.theme-postal .fb-item:hover{
+  background: #C2A492 !important;
+  border-color:#C1121F !important;
+}
+:root.theme-postal .fb-item-title { color:#1A1208 !important; }
+:root.theme-postal .fb-item-body  { color: rgba(26,18,8,0.82) !important; }
+:root.theme-postal .fb-item-author{ color: rgba(26,18,8,0.66) !important; }
+:root.theme-postal .fb-item-time  { color: rgba(26,18,8,0.52) !important; }
+:root.theme-postal .vc-diff-value-title--value,
+:root.theme-postal .vc-diff-value-title--rolls{ color:#A80F12 !important; text-shadow: 0 0 8px rgba(168,15,18,0.30) !important; }
+
+:root.theme-postal .banner-game-title{
+  color:#C1121F !important;
+  text-shadow: -2px -2px 0 #2A0404, 2px -2px 0 #2A0404, -2px 2px 0 #2A0404, 2px 2px 0 #2A0404,
+               0 0 20px rgba(110,8,8,0.85), 0 0 44px rgba(74,5,5,0.65) !important;
+  background: none !important; -webkit-text-fill-color: unset !important;
+}
+:root.theme-postal .banner-glow-line{
+  background: linear-gradient(90deg, transparent, rgba(74,5,5,0.85), rgba(168,15,18,0.75), rgba(74,5,5,0.85), transparent) !important;
+  box-shadow: 0 0 18px rgba(110,8,8,0.55) !important;
+}
+
+</style>
+
 </head>
 <body>
 <div class="page-bg"></div>
@@ -12015,6 +13036,10 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
                 <img src="images/Home Page/avatar8.webp" alt="Birthday">
                 <span class="palette-label">Birthday</span>
               </button>
+              <button class="palette-item" data-theme="postal" data-glow="#A80F12" onclick="selectPalette('postal')" aria-label="Postal theme">
+                <img src="images/Home Page/avatar9.webp" alt="Postal">
+                <span class="palette-label">Postal</span>
+              </button>
               <button class="palette-item palette-item-future" disabled aria-label="Coming soon">
                 <span class="palette-future-icon">?</span>
                 <span class="palette-label">Soon</span>
@@ -12054,7 +13079,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div><!-- /bot-main-col -->
         <!-- Stats только для мобиля (десктоп видит stats-col снаружи) -->
         <div class="stats-col-mobile">
-          <div class="stat-chip"><span class="stat-num">06.08.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+          <div class="stat-chip"><span class="stat-num">11.08.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
           <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-weapons-m">0</span><span class="stat-lbl" data-i18n="stat_weapons">Weapons</span></div>
           <div class="stat-chip"><span class="stat-num" id="stat-num-armor-m">0</span><span class="stat-lbl" data-i18n="stat_armor">Armor</span></div>
@@ -12065,7 +13090,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
         </div>
       </div>
       <div class="stats-col">
-        <div class="stat-chip"><span class="stat-num">06.08.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
+        <div class="stat-chip"><span class="stat-num">11.08.2026</span><span class="stat-lbl" data-i18n="stat_last_update">Last Update</span></div>
         <div class="stat-chip"><span class="stat-num">29.04.2026</span><span class="stat-lbl" data-i18n="stat_data_creation">Data Creation</span></div>
         <div class="stat-chip"><span class="stat-num"><span id="stat-num-elements">0</span><span class="stat-num-sep">/</span><span id="stat-num-variants">0</span></span><span class="stat-lbl" data-i18n="stat_elements">Elements / Variants</span></div>
         <div class="stat-chip"><span class="stat-num" id="stat-num-cosmetics">0</span><span class="stat-lbl" data-i18n="stat_cosmetics">Cosmetics</span></div>
@@ -17114,6 +18139,9 @@ const T = {
     upd17_title: 'UPDATES OF 17.07.2026',
     upd17_sub: 'Developer Notes 17.07.2026',
     upd17_body: `It's been such a long time since this site was updated. Over a month!\nAnd so much has changed in the game already.\n\nAlso, our Discord server is just a couple of players short of reaching 100 members.\nJoin through this link — <a class="upd-link" href="https://discord.gg/z4YEe7afFK" target="_blank" rel="noopener">https://discord.gg/z4YEe7afFK</a> !!!\n\nLet's go in order.\nWhat's new?????\n\n<span class="upd-accent">Value Changes functionality expanded.</span>\nIt now shows not just the difference between items, but also which ones were <span class="upd-accent">ADDED!</span> and <span class="upd-accent">REMOVED!</span> You can also type an item's name into search and it'll show up for you. And you can pick a variation to view only items of that specific variation.\n\n<span class="upd-accent">Developer Tool functionality expanded.</span>\nYou can now create custom items and send them to the developer. Who knows, maybe he'll add them to the list. Along with this, a check feature was also added, which will tell you upon login whether your item was added to the site's official database or not.\n\nNaturally, new items have been added! They'll be fully displayed in the list. I can name a few of them, but not all:\n\n* Heroic Viltron Set — mythical armor\n* Terrablade LE — secret weapon\n* Gubby Launcher — secret weapon\n* Lord Prisma Ring — what now?\n* Firework Bow — mythical weapon\n\nWhat's this Lord Prisma Ring? Does that mean..\n\n<span class="upd-accent">A NEW SUB-CATEGORY FOR GEAR HAS BEEN ADDED — RELICS!</span> Hallelujah!\nWe've added accessories, not from every dungeon, but at least the latest ones. Specifically from Underworld, Angel Sanctuary, Crafted, and "Limited" ones.\n\nNew variations added — <span class="upd-accent">Kronax</span> and <span class="upd-accent">Viltron</span>. There was an idea to merge them into one Boss variation, but after thinking it over, we decided screw it.\n\nSome minor fixes and site optimizations, of course.\n\n<span class="upd-accent">What's expected in the next updates?</span>\nWe might come up with some more fixes and mechanics, and of course it'll be interesting to hear your opinion on the new prices or the old ones.. suggest your own options and back them up with arguments!\nWhat to remove, what to add, what to change.\nWrite to us on our Discord server — ED Community Services\n<a class="upd-link" href="https://discord.gg/z4YEe7afFK" target="_blank" rel="noopener">https://discord.gg/z4YEe7afFK</a>\n\nAnd that's all for now!\nHave a wonderful morning / day / evening / night to all of you!`,
+    upd19_title: 'UPDATES OF 11.08.2026',
+    upd19_sub: 'Developer Notes 11.08.2026',
+    upd19_body: `Nothing has been written in the updates panel for quite a while. So many great things have been added to the game and changed.\n\n<span class="upd-accent">What was added up to 11.08.2026?</span>\n<span class="upd-cyan">›</span> A <span class="upd-accent">custom database upload</span> feature was added and polished almost to perfection. The limits of the bugs are unknown, but we're keeping an eye on things.\n<span class="upd-cyan">›</span> New variations added: <span class="upd-accent">Nuclear</span> and <span class="upd-accent">Corrupted Infernal</span>!\n<span class="upd-cyan">›</span> A new element <span class="upd-accent">Lunar</span> was added, plus other goodies in the <span class="upd-accent">Other</span> category. Info about the added items is in <span class="upd-accent">Value Changes</span>!\n<span class="upd-cyan">›</span> The mobile UI has been finished. It's much more comfortable now.\n\n<span class="upd-accent">AND THE BIG HIGHLIGHT! A NEW FAN PALETTE</span>\n<span class="upd-cyan">›</span> <span class="upd-accent">Postal</span>!\n\nWhat's planned right now. Again, changing prices and so on.\nAnd!\n<span class="upd-cyan">›</span> We'll add the <span class="upd-accent">Equinox</span> variation\n<span class="upd-cyan">›</span> Two new <span class="upd-accent">Rhitta</span> weapons.\n<span class="upd-cyan">›</span> We'll change the rarity of <span class="upd-accent">Timelost Conqueror's Blade LE</span> from Mythic to Ascended (same on the second site, Calculator Roll Bot)\n\nAnd that's all!\nHave a wonderful morning / day / evening / night to all of you!`,
     dt_cust_create_prefix:'Create ',
     dt_cust_cat_elements:'Element', dt_cust_cat_gear:'Gear', dt_cust_cat_cosmetic:'Cosmetic',
     dt_cust_cat_gamepasses:'Gamepass', dt_cust_cat_chromas:'Chroma', dt_cust_cat_other:'Item',
@@ -17385,6 +18413,9 @@ const T = {
     upd17_title: 'ОБНОВЛЕНИЯ НА 17.07.2026',
     upd17_sub: 'Записи разработчика 17.07.2026',
     upd17_body: `Как же долго не было обновления на этом сайте. Больше месяца!\nА в игре успело же столько всего измениться.\n\nТак-же на нашем дискорд-сервере нехватает парочку игроков, чтобы сделать 100 участников\nЗаходите по этой ссылке — <a class="upd-link" href="https://discord.gg/z4YEe7afFK" target="_blank" rel="noopener">https://discord.gg/z4YEe7afFK</a> !!!\n\nДавайте по порядку.\nЧто нового?????\n\n<span class="upd-accent">Расширен функционал Value Changes.</span>\nТеперь он показывает не только разницу между предметами, но и так-же показывает какие были ещё и <span class="upd-accent">ДОБАВЛЕНЫ!</span> и <span class="upd-accent">УДАЛЕНЫ!</span> А так-же вы можете ввести в поиск название предмета и он вам покажется. Ну и вы можете выбрать вариацию и смотреть предметы исключительно выбранной вами вариации.\n\n<span class="upd-accent">Расширен функционал Developer Tool.</span>\nТеперь можно создавать кастомные предметы и скинуть разработчику. Мало ли он их внесёт в список. В связи с этим так-же была добавлена функция проверки, которая при входе скажет вам — был ли ваш предмет добавлен в официальную базу данных сайта, или нет.\n\nДобавлены естественно новые предметы! Они будут отображаться в списке полноценно. Я могу перечислить некоторые из них, но не все:\n\n* Heroic Viltron Set — мифическая броня\n* Terrablade LE — секретное оружие\n* Gubby Launcher — секретное оружие\n* Lord Prisma Ring — что-что?\n* Firework Bow — мифическое оружие\n\nКакой Lord Prisma Ring? Неужели это значит..\n\n<span class="upd-accent">ДОБАВЛЕНА НОВАЯ ПОДКАТЕГОРИЯ ДЛЯ GEAR — RELICS!</span> Алилуя!\nМы добавили аксессуары, не из всех данжей, но по крайней мере последние из них. Именно по Underworld, Angel Sanctuary, Крафтовые и "Лимитированные".\n\nДобавлены новые вариации — <span class="upd-accent">Kronax</span> и <span class="upd-accent">Viltron</span>. Была идея их объединить в одну вариацию Boss, но что-то мы подумали и решили что хуй с ним.\n\nНекоторые побочные фиксы и оптимизации сайта конечно же.\n\n<span class="upd-accent">Что ожидается в следующих обновлениях?</span>\nВозможно ещё придумаем какие-нибудь фиксы и механики, ну и конечно же будет интересно узнать ваше мнение по поводу новых цен или старых.. предлагайте свои варианты и аргументируйте их!\nЧто удалить, что добавить, что изменить.\nПишите на наш дискорд-сервер — ED Community Services\n<a class="upd-link" href="https://discord.gg/z4YEe7afFK" target="_blank" rel="noopener">https://discord.gg/z4YEe7afFK</a>\n\nА на этом всё!\nВсем добрейшего утречка / дня / вечера / ночи!`,
+    upd19_title: 'ОБНОВЛЕНИЯ НА 11.08.2026',
+    upd19_sub: 'Записи разработчика 11.08.2026',
+    upd19_body: `Давненько ничего не писалось в панели обновлений. Столько всего хорошего было добавлено в игру и изменено.\n\n<span class="upd-accent">Что было добавлено вплоть до 11.08.2026?</span>\n<span class="upd-cyan">›</span> Была добавлена функция <span class="upd-accent">загрузки кастомной базы данных</span> и был доработан почти до блеска. Неизвестны границы багов, но наблюдаем за обстановкой.\n<span class="upd-cyan">›</span> Добавлены новые вариации: <span class="upd-accent">Nuclear</span> и <span class="upd-accent">Corrupted Infernal</span>!\n<span class="upd-cyan">›</span> Был добавлен новый элемент <span class="upd-accent">Lunar</span> и другие ништяки в категории <span class="upd-accent">Other</span>. О добавленных предметах есть информация в <span class="upd-accent">Value Changes</span>!\n<span class="upd-cyan">›</span> Был доделан мобильный UI. Теперь он более комфортный.\n\n<span class="upd-accent">И ВАЖНОЕ ОТЛИЧИТЕЛЬНОЕ! НОВАЯ ФАНАТСКАЯ ПАЛИТРА</span>\n<span class="upd-cyan">›</span> <span class="upd-accent">Postal</span>!\n\nВ данный момент что планируется. Опять же менять цены и так далее.\nИ!\n<span class="upd-cyan">›</span> Добавим вариацию <span class="upd-accent">Equinox</span>\n<span class="upd-cyan">›</span> Новые 2 оружия <span class="upd-accent">Rhitta</span>.\n<span class="upd-cyan">›</span> Изменим редкость <span class="upd-accent">Timelost Conqueror's Blade LE</span> с Mythic на Ascended (аналогично и во втором сайте Calculator Roll Bot)\n\nА на этом всё!\nВсем добрейшего утречка / дня / вечерочка / ночи!`,
     dt_cust_create_prefix:'Создать ',
     dt_cust_cat_elements:'Элемент', dt_cust_cat_gear:'Снаряжение', dt_cust_cat_cosmetic:'Косметику',
     dt_cust_cat_gamepasses:'Геймпасс', dt_cust_cat_chromas:'Скин', dt_cust_cat_other:'Предмет',
@@ -17406,8 +18437,8 @@ const T = {
 function t(k) { return T[lang][k] || k; }
 
 /* ── UPDATES PAGINATION ── */
-// Pages: 0 = v1.0.1 (old), 1 = v1.0.2, 2 = v1.0.3, 3 = v1.0.4, 4 = v1.0.5, 5 = v1.1.2 (current). Start on page 5.
-let updPage = 5;
+// Pages: 0..6, page 6 = 11.08.2026 (current). Start on the last page.
+let updPage = 6;
 const UPD_PAGES = [
   { title:'upd13_title', sub:'upd13_sub', body:'upd13_body' },
   { title:'upd14_title', sub:'upd14_sub', body:'upd14_body' },
@@ -17415,6 +18446,7 @@ const UPD_PAGES = [
   { title:'upd16_title', sub:'upd16_sub', body:'upd16_body' },
   { title:'upd17_title', sub:'upd17_sub', body:'upd17_body' },
   { title:'upd18_title', sub:'upd18_sub', body:'upd18_body' },
+  { title:'upd19_title', sub:'upd19_sub', body:'upd19_body' },
 ];
 
 function updRender() {
@@ -17998,6 +19030,19 @@ const _THEMES = {
     tooltip: 'BIRTHDAY THEME',
     switchGlow: '#C084FC',
   },
+  postal: {
+    banners: [
+      'images/Home Page/banner9_1.webp',
+      'images/Home Page/banner9_2.webp',
+      'images/Home Page/banner9_3.webp',
+      'images/Home Page/banner9_4.webp',
+    ],
+    bgImage: 'images/Home Page/banner9_5.webp',
+    mainAvatar: 'images/Home Page/avatar9.webp',
+    switchAvatar: 'images/Home Page/avatar2.webp',
+    tooltip: 'POSTAL THEME',
+    switchGlow: '#A80F12',
+  },
 };
 
 window._applyTheme = function(name) {
@@ -18005,6 +19050,16 @@ window._applyTheme = function(name) {
   if (!theme) return;
   localStorage.setItem('_tr_theme', name);
   window._edSetCookie('_tr_theme', name);
+
+  /* ── Токен применения темы: у каждого вызова свой уникальный id.
+     Отложенные колбэки (requestIdleCallback/setTimeout) из ПРЕДЫДУЩИХ
+     вызовов _applyTheme сверяют этот токен перед тем как трогать DOM —
+     если тема успела смениться ещё раз, устаревший колбэк просто не
+     выполняется. Без этого при быстром переключении тем (например
+     postal → atlantic → postal) отложенная подгрузка баннеров от
+     промежуточной темы могла прилететь ПОСЛЕ того как пользователь уже
+     вернулся на postal, и подмешать чужие слайды в текущее слайдшоу. */
+  const _applyToken = ++window._themeApplyToken || (window._themeApplyToken = 1);
 
   document.documentElement.classList.toggle('theme-time',   name === 'time' || name === 'gold');
   document.documentElement.classList.toggle('theme-easter',  name === 'easter');
@@ -18014,6 +19069,7 @@ window._applyTheme = function(name) {
   document.documentElement.classList.toggle('theme-galaxy', name === 'galaxy');
   document.documentElement.classList.toggle('theme-atlantic', name === 'atlantic');
   document.documentElement.classList.toggle('theme-birthday', name === 'birthday');
+  document.documentElement.classList.toggle('theme-postal', name === 'postal');
 
   const pageBg = document.querySelector('.page-bg');
   if (pageBg) {
@@ -18029,6 +19085,8 @@ window._applyTheme = function(name) {
     // First slide loads immediately; rest deferred until browser is idle
     bannerBg.innerHTML = `<div class="banner-slide" style="background-image:url('${theme.banners[0]}')"></div>`;
     const _loadRestBanners = () => {
+      /* Тема уже сменилась ещё раз, пока мы ждали idle — этот колбэк устарел */
+      if (_applyToken !== window._themeApplyToken) return;
       const existing = bannerBg.querySelectorAll('.banner-slide').length;
       if (existing >= theme.banners.length) return;
       theme.banners.slice(1).forEach(b => {
@@ -18058,6 +19116,7 @@ window._applyTheme = function(name) {
     discord:  'images/Home Page/avatar6.webp',
     atlantic: 'images/Home Page/avatar7.webp',
     birthday: 'images/Home Page/avatar8.webp',
+    postal:   'images/Home Page/avatar9.webp',
   };
   if (mainAv) mainAv.src = AV[name] || AV.galaxy;
 
@@ -18698,6 +19757,17 @@ function toggleEasterTheme() {
       correct_click: 'sounds/birthday/correct_click.mp3',
       wrong_click:   'sounds/birthday/wrong_click.mp3',
       page_enter:    'sounds/birthday/page_enter.mp3'
+    },
+    postal: {
+      entry_bg:      null,
+      home_bg:       'sounds/postal/home_bg.mp3',
+      vl_bg:         'sounds/postal/vl_bg.mp3',
+      tradeforum_bg: null,
+      tradechat_bg:  null,
+      dt_bg:         'sounds/postal/dt_bg.mp3',
+      correct_click: 'sounds/postal/correct_click.mp3',
+      wrong_click:   'sounds/postal/wrong_click.mp3',
+      page_enter:    'sounds/postal/page_enter.mp3'
     },
   };
 
@@ -28158,5 +29228,6 @@ function toggleEasterTheme() {
   window.addEventListener('load', fitAll);
 })();
 </script>
+
 </body>
 </html>
