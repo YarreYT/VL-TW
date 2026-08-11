@@ -6706,8 +6706,11 @@ body.lang-ru .value-list-btn{
 
 #dt-feedback-panel {
   border-left: 1px solid var(--border-gold);
-  background: rgba(6,6,12,.93);
-  backdrop-filter: blur(22px);
+  /* Непрозрачный фон вместо backdrop-filter: каждый перерисованный пиксель
+     внутри панели (анимированные Mythic/Ascended/Exclusive записи) заставлял
+     браузер заново блюрить весь фон под панелью — и это съедало кадры скролла
+     карточек в VL/DT. Визуально почти идентично (было .93 альфы). */
+  background: rgb(6,6,12);
   flex-direction: column;
   height: calc(var(--real-vh) - var(--nav-h));
   max-height: calc(var(--real-vh) - var(--nav-h));
@@ -26422,31 +26425,115 @@ function toggleEasterTheme() {
   var _interval = 1000 / 30;
   var _rafId = null;
   var _running = false;
-  var _shimmerEls = [];
+  var _shimmerEls = [];   // только реально видимые (в viewport)
   var _mythicEls = [];
+  var _dirty = true;      // требуется пересбор списков
+  var _visDirty = false;  // изменилась видимость элементов
+  var _allShimmer = [];   // все кандидаты (для IntersectionObserver)
+  var _allMythic = [];
 
-  function collectShimmerEls() {
+  /* Видимость анимируемых элементов: анимируем только то, что в кадре.
+     Это главное отличие от прежней версии — раньше стили писались во ВСЕ
+     элементы страницы (включая VL-карточки и записи Value Changes за
+     пределами экрана), из-за чего каждый кадр стоил заметного recalc/paint. */
+  var _visible = typeof WeakSet === 'function' ? new WeakSet() : null;
+  var _io = window.IntersectionObserver ? new IntersectionObserver(function(entries) {
+    for (var i = 0; i < entries.length; i++) {
+      var el = entries[i].target;
+      if (entries[i].isIntersecting) { if (_visible) _visible.add(el); }
+      else { if (_visible) _visible['delete'](el); }
+    }
+    _visDirty = true;
+    if (!_running) startShimmer();
+  }, { root: null, rootMargin: '120px', threshold: 0 }) : null;
+
+  function isVisible(el) {
+    if (!_io || !_visible) return true;
+    return _visible.has(el);
+  }
+
+  /* ВАЖНО: в выборке больше НЕТ :not(.card-offscreen).
+     Раньше видимость карточек Value Changes выражалась классом, а класс менялся
+     на каждом кадре скролла → MutationObserver → полный пересбор списков и
+     переподписка IntersectionObserver каждый кадр. Теперь видимость целиком
+     на IntersectionObserver, а классы скролла список не инвалидируют. */
+  function collectAll() {
     var shimmer = [];
     var mythic = [];
     document.querySelectorAll('.page.active .rarity-ascended, .page.active .rarity-exclusive').forEach(function(el){ shimmer.push(el); });
     document.querySelectorAll('.page.active .rarity-mythic, .page.active .border-mythic').forEach(function(el){ mythic.push(el); });
     var fbPanel = document.getElementById('dt-feedback-panel');
     if (fbPanel) {
-      fbPanel.querySelectorAll('.vc-diff-card:not(.card-offscreen) .rarity-ascended, .vc-diff-card:not(.card-offscreen) .rarity-exclusive').forEach(function(el){ shimmer.push(el); });
-      fbPanel.querySelectorAll('.vc-diff-card:not(.card-offscreen) .rarity-mythic, .vc-diff-card:not(.card-offscreen) .border-mythic').forEach(function(el){ mythic.push(el); });
+      fbPanel.querySelectorAll('.vc-diff-card .rarity-ascended, .vc-diff-card .rarity-exclusive').forEach(function(el){ shimmer.push(el); });
+      fbPanel.querySelectorAll('.vc-diff-card .rarity-mythic, .vc-diff-card .border-mythic').forEach(function(el){ mythic.push(el); });
     }
     return { shimmer: shimmer, mythic: mythic };
   }
 
-  function hasShimmerCards() {
-    var found = collectShimmerEls();
-    _shimmerEls = found.shimmer;
-    _mythicEls = found.mythic;
-    return _shimmerEls.length > 0 || _mythicEls.length > 0;
+  /* Инкрементальная подписка: observe только новых, unobserve только исчезнувших.
+     Полный disconnect()/observe() на сотнях элементов сам по себе стоил кадра. */
+  var _observed = typeof Set === 'function' ? new Set() : null;
+
+  function syncObserver(list) {
+    if (!_io || !_observed) return;
+    var next = new Set();
+    var i, el;
+    for (i = 0; i < list.length; i++) next.add(list[i]);
+    _observed.forEach(function(prev) {
+      if (!next.has(prev)) {
+        _io.unobserve(prev);
+        if (_visible) _visible['delete'](prev);
+      }
+    });
+    next.forEach(function(cur) {
+      if (!_observed.has(cur)) _io.observe(cur);
+    });
+    _observed = next;
   }
 
+  function refreshLists() {
+    var found = collectAll();
+    _allShimmer = found.shimmer;
+    _allMythic = found.mythic;
+    syncObserver(found.shimmer.concat(found.mythic));
+    _dirty = false;
+    _visDirty = true;
+  }
+
+  function refreshVisible() {
+    var s = [], m = [], i;
+    for (i = 0; i < _allShimmer.length; i++) if (isVisible(_allShimmer[i])) s.push(_allShimmer[i]);
+    for (i = 0; i < _allMythic.length; i++) if (isVisible(_allMythic[i])) m.push(_allMythic[i]);
+    _shimmerEls = s;
+    _mythicEls = m;
+    _visDirty = false;
+  }
+
+  /* ── Freeze во время скролла ──
+     Пока пользователь скроллит (страницу, список VL/DT или саму панель Value
+     Changes), тикер не пишет ни одного стиля. Любая запись в style
+     анимированной записи = style recalc + paint в кадре скролла, из-за чего
+     карточки VL/DT дёргались ровно тогда, когда в Value Changes видны
+     анимированные (Mythic/Ascended/Exclusive) записи. Пауза на ~140 мс глазом
+     не заметна — цвет просто продолжает движение сразу после остановки. */
+  var _freezeUntil = 0;
+  function _freezeShimmer() { _freezeUntil = (window.performance ? performance.now() : Date.now()) + 140; }
+  var _fopt = { passive: true, capture: true };
+  window.addEventListener('scroll', _freezeShimmer, _fopt);
+  window.addEventListener('wheel', _freezeShimmer, _fopt);
+  window.addEventListener('touchmove', _freezeShimmer, _fopt);
+
   function tick(t) {
-    if (!hasShimmerCards()) {
+    if ((window.performance ? performance.now() : Date.now()) < _freezeUntil) {
+      _rafId = requestAnimationFrame(tick);
+      return;
+    }
+    /* Пересбор списков — только когда DOM реально менялся, а не каждый кадр.
+       Раньше здесь на каждом тике крутились querySelectorAll по всему документу. */
+    if (_dirty) refreshLists();
+    if (_visDirty) refreshVisible();
+
+    if (_allShimmer.length === 0 && _allMythic.length === 0) {
       _running = false;
       _rafId = null;
       return;
@@ -26454,6 +26541,12 @@ function toggleEasterTheme() {
     if (document.hidden) { _rafId = requestAnimationFrame(tick); return; }
     if (t - _lastT < _interval) { _rafId = requestAnimationFrame(tick); return; }
     _lastT = t;
+
+    if (_shimmerEls.length === 0 && _mythicEls.length === 0) {
+      /* всё анимируемое сейчас за пределами экрана — ничего не пишем */
+      _rafId = requestAnimationFrame(tick);
+      return;
+    }
 
     // Ascended / Exclusive shimmer position
     pos += dir * speed;
@@ -26476,19 +26569,110 @@ function toggleEasterTheme() {
     _rafId = requestAnimationFrame(tick);
   }
 
-  /* Запускаем при появлении shimmer-карточек */
-  var _shimmerMO = new MutationObserver(function() {
-    if (!_running && hasShimmerCards()) startShimmer();
+  /* Любое изменение DOM/классов лишь помечает списки грязными — сам пересбор
+     произойдёт максимум раз за кадр внутри tick(). */
+  var _moPending = false;
+  function _isScrollOnlyMutation(m) {
+    /* card-offscreen / card-visible переключаются десятки раз в секунду при
+       скролле и на состав анимируемых элементов больше не влияют */
+    return m.type === 'attributes' && m.attributeName === 'class' &&
+           m.target && m.target.classList &&
+           (m.target.classList.contains('vc-diff-card') || m.target.classList.contains('vl-card-wrap'));
+  }
+  var _shimmerMO = new MutationObserver(function(muts) {
+    if (_moPending) return;
+    var relevant = false;
+    for (var i = 0; i < muts.length; i++) {
+      if (!_isScrollOnlyMutation(muts[i])) { relevant = true; break; }
+    }
+    if (!relevant) return;
+    _moPending = true;
+    setTimeout(function() {
+      _moPending = false;
+      _dirty = true;
+      if (!_running) startShimmer();
+    }, 200);
   });
   _shimmerMO.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
 
   document.addEventListener('page-changed', function() {
-    if (hasShimmerCards()) startShimmer();
+    _dirty = true;
+    startShimmer();
   });
 
   startShimmer();
 })();
 </script>
+
+<style id="rarity-perf-overrides">
+/* ── Перф-правки анимированных редкостей ──
+   1) Панель Value Changes получает собственный слой композитора: перерисовка
+      анимированных редкостей внутри неё больше не заставляет браузер
+      перерисовывать то, что за ней (баннер на Home и его слайд-шоу).
+   2) Каждая diff-карточка изолирована по layout/style — пересчёт стиля одной
+      карточки не тянет за собой пересчёт всего списка.
+   3) У анимированных редкостей две drop-shadow заменены одной: тень
+      пересчитывается на каждом кадре (цвет/градиент меняются), и второй проход
+      удваивал стоимость отрисовки текста. Визуально практически идентично.
+   4) У карточек вне зоны скролла снимается will-change — иначе паузнутые
+      вращающиеся рамки продолжают удерживать слои композитора. */
+#fb-list {
+  contain: paint;
+  transform: translateZ(0);
+}
+/* 6) Панель целиком — отдельный композитный слой без backdrop-filter, чтобы
+      перерисовка анимированных записей не трогала слой страницы (VL/DT-сетку). */
+#dt-feedback-panel {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  contain: paint;
+  transform: translateZ(0);
+  isolation: isolate;
+}
+.vc-diff-card { contain: layout style; }
+
+/* 5) То же самое для VL/DT: список получает свой композитный слой,
+      а каждая карточка — layout/style containment, чтобы paint
+      анимированной (Mythic/Ascended/Exclusive) карточки не каскадировал
+      на соседей и на сам скролл-контейнер во время скролла. */
+.vl-items-scroll {
+  contain: paint;
+  transform: translateZ(0);
+}
+.vl-card-wrap { contain: layout style; }
+
+.vc-diff-name.rarity-mythic,
+.vc-diff-name.rarity-ascended,
+.vc-diff-name.rarity-exclusive,
+.vc-diff-rarity-single.rarity-mythic,
+.vc-diff-rarity-single.rarity-ascended,
+.vc-diff-rarity-single.rarity-exclusive,
+.vc-diff-rarity-new.rarity-mythic,
+.vc-diff-rarity-new.rarity-ascended,
+.vc-diff-rarity-new.rarity-exclusive,
+.vc-diff-rarity-old.rarity-mythic,
+.vc-diff-rarity-old.rarity-ascended,
+.vc-diff-rarity-old.rarity-exclusive,
+.vc-diff-val-num.rarity-mythic,
+.vc-diff-val-num.rarity-ascended,
+.vc-diff-val-num.rarity-exclusive,
+.vl-detail-name.rarity-mythic,
+.vl-detail-name.rarity-ascended,
+.vl-detail-name.rarity-exclusive,
+.vl-detail-rarity.rarity-mythic,
+.vl-detail-rarity.rarity-ascended,
+.vl-detail-rarity.rarity-exclusive,
+.vl-detail-value-big.rarity-mythic,
+.vl-detail-value-big.rarity-ascended,
+.vl-detail-value-big.rarity-exclusive {
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.55));
+}
+
+.vc-diff-card.card-offscreen .vc-diff-img-wrap::before,
+.vl-card-wrap.card-offscreen .vl-detail-img-wrap::before {
+  will-change: auto;
+}
+</style>
 
 <script>
 /* ── Card lazy-reveal: IntersectionObserver ──
