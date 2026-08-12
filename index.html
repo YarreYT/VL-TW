@@ -2723,20 +2723,25 @@ body.lang-ru .value-list-btn{
 }
 
 /* Во время скролла/движения страница и так смазана, плавность цвета не читается —
-   роняем Mythic до ~7 fps (steps(3) * 2 = 6, ближайшее к 7 целое число шагов).
-   Скоуп раздельный (экспериментально):
-     .is-scrolling-page — скроллится страница/список VL-DT → падают только
-       mythic-элементы активной страницы, панель Value Changes идёт как обычно;
-     .is-scrolling-vc  — скроллится сама панель Value Changes → падают только
-       записи внутри панели, карточки страницы не трогаем.
+   роняем Mythic. Скоупы (согласованы с JS-тикером Ascended/Exclusive выше):
+     .is-scrolling-page — скроллится страница/список VL-DT → карточки страницы
+       падают до ~4 fps (steps(2)*2), Value Changes падает мягче — до 8 fps
+       (steps(4)*2), т.к. это фон, а не то, что скроллят;
+     .is-scrolling-vc  — скроллится сама панель Value Changes → её записи падают
+       так же сильно, как и карточки страницы — до ~4 fps, карточки страницы
+       не трогаем.
    Классы вешает общий scroll/wheel/touchmove-обработчик тикера (по target). */
 :root.is-scrolling-page.mythic-css-anim .page .rarity-mythic,
 :root.is-scrolling-page.mythic-css-anim .page .border-mythic {
-  animation-timing-function: steps(3, end);
+  animation-timing-function: steps(2, end);
+}
+:root.is-scrolling-page.mythic-css-anim #dt-feedback-panel .rarity-mythic,
+:root.is-scrolling-page.mythic-css-anim #dt-feedback-panel .border-mythic {
+  animation-timing-function: steps(4, end);
 }
 :root.is-scrolling-vc.mythic-css-anim #dt-feedback-panel .rarity-mythic,
 :root.is-scrolling-vc.mythic-css-anim #dt-feedback-panel .border-mythic {
-  animation-timing-function: steps(3, end);
+  animation-timing-function: steps(2, end);
 }
 .rarity-mythic {
   color: var(--mythic-c, #ff2323) !important;
@@ -26502,8 +26507,8 @@ function toggleEasterTheme() {
   var _lastT = 0;
   var _lastTVC = 0;
   var _interval = 1000 / 30;        // Ascended/Exclusive/Mythic-fallback: 30 fps
-  var SCROLL_INTERVAL = 1000 / 7;   // во время скролла страницы — Mythic/Ascended/Exclusive карточек: 7 fps
-  var SCROLL_INTERVAL_VC_FROM_PAGE = 1000 / 16; // во время скролла СТРАНИЦЫ — Value Changes: 16 fps (раньше не трогалась вообще)
+  var SCROLL_INTERVAL = 1000 / 3;   // во время скролла страницы — Mythic/Ascended/Exclusive карточек: 3 fps
+  var SCROLL_INTERVAL_VC_FROM_PAGE = 1000 / 8; // во время скролла СТРАНИЦЫ — Value Changes: 8 fps
   var _rafId = null;
   var _running = false;
   var _shimmerEls = [];   // только реально видимые (в viewport), скоуп: страница
@@ -26643,9 +26648,7 @@ function toggleEasterTheme() {
       }, 160);
     } else {
       /* Скроллится страница / список VL-DT — режем fps страничных карточек
-         до 7 и, вместе с этим, записей Value Changes до 16 (раньше панель
-         не трогалась вовсе при скролле страницы — это и давало ей "рывки"
-         на фоне заторможенной страницы). */
+         до 3 и, вместе с этим, записей Value Changes до 8. */
       _freezeUntil = now + 140;
       if (!de.classList.contains('is-scrolling-page')) de.classList.add('is-scrolling-page');
       if (_scrollClsTimer) clearTimeout(_scrollClsTimer);
@@ -26676,11 +26679,11 @@ function toggleEasterTheme() {
        но НЕ изолированно — скролл страницы теперь тоже снижает fps записей
        Value Changes (раньше вообще не трогал их, отсюда были "рывки").
        Приоритет отдаём более сильному ограничению, если оба скролла активны
-       одновременно (страница + сама панель) — 7 fps как более строгий кейс. */
+       одновременно (страница + сама панель) — 3 fps как более строгий кейс. */
     var interval = (now < _freezeUntil) ? SCROLL_INTERVAL : _interval;
     var intervalVC;
-    if (now < _freezeUntilVC) intervalVC = SCROLL_INTERVAL;               // скролл самой панели — 7 fps
-    else if (now < _freezeUntil) intervalVC = SCROLL_INTERVAL_VC_FROM_PAGE; // скролл страницы — 16 fps
+    if (now < _freezeUntilVC) intervalVC = SCROLL_INTERVAL;               // скролл самой панели — 3 fps
+    else if (now < _freezeUntil) intervalVC = SCROLL_INTERVAL_VC_FROM_PAGE; // скролл страницы — 8 fps
     else intervalVC = _interval;                                           // без скролла — 30 fps
 
     /* Пересбор списков — только когда DOM реально менялся, а не каждый кадр.
