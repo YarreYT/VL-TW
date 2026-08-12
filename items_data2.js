@@ -567,7 +567,6 @@ window.VL_VARIANTS_DB = {
     fire:                 { value:0, demand:0, status:null },
     sand:                 { value:0, demand:0, status:null },
     air:                  { value:0, demand:0, status:null },
-    time:         { value:115000, demand:3.75, status:'inprocess' },
   },
 
   timelost: {
