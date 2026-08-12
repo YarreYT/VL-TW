@@ -625,8 +625,10 @@ window.VL_VARIANTS_DB = {
   },
   corrupted_infernal: {
     time:                 { value:50000, demand:3, status:'inprocess' },
-},
+  },
 
+  equinox: {
+  },
 };
 
 
