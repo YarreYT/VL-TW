@@ -17694,7 +17694,7 @@ function isMabVisible() {
       if (fl) fl.style.maxHeight = '';
     }
 
-    var MIN_H = 260; // ~3 карточки (как в console-panel)
+    var MIN_H = 400; // ~3 карточки (как в console-panel)
 
     var vh = window.innerHeight;
 
@@ -17707,10 +17707,37 @@ function isMabVisible() {
     var activePg = document.querySelector('.page.active');
     var pagePadBottom = activePg ? (parseInt(getComputedStyle(activePg).paddingBottom) || 0) : 0;
 
-    // Позиция верха fb-панели относительно viewport — это и есть граница контента выше неё
-    var fbTop = fbP.getBoundingClientRect().top;
+    // Позиция верха fb-панели В СИСТЕМЕ КООРДИНАТ ДОКУМЕНТА (scroll-независимая),
+    // а не getBoundingClientRect().top, который "плывёт" вместе с текущим скроллом.
+    //
+    // Баг, который это чинит: на мобиле панель в потоке (position: static). Когда
+    // пользователь скроллит страницу вниз до объёмной карточки (например, Gear со
+    // списком роллов), getBoundingClientRect().top у панели уменьшается сам по себе
+    // (это нормально — панель просто ближе к верху экрана). Но старый код читал это
+    // "уменьшившееся" значение на каждый DOM-mutation-пересчёт и увеличивал
+    // available/maxHeight, будто панели физически стало больше места — хотя на самом
+    // деле available должно оставаться прежним. Это раздувало fb-list, что удлиняло
+    // страницу, что давало ещё больший скролл, что на следующем пересчёте ещё сильнее
+    // уменьшало fbTop — самоусиливающийся цикл, позволяющий доскроллить страницу
+    // заметно ниже расчётных ~3 карточек.
+    //
+    // Фикс: фиксируем абсолютную позицию панели в документе (getBoundingClientRect().top
+    // + window.scrollY) один раз — при первом вызове после того как панель стала видимой
+    // на этой странице — и переиспользуем её при всех последующих пересчётах, пока панель
+    // не пересоздана/страница не сменилась. В эти моменты scrollY гарантированно 0
+    // (navigateTo делает window.scrollTo({top:0}) перед показом панели), так что
+    // зафиксированное значение соответствует "естественной" позиции панели.
+    if (fbP._fbBaseTop === undefined || fbP._fbBaseTopPage !== (activePg && activePg.id)) {
+      fbP._fbBaseTop = fbP.getBoundingClientRect().top + window.scrollY;
+      fbP._fbBaseTopPage = activePg && activePg.id;
+    }
+    var fbTop = fbP._fbBaseTop;
+    // NOTE: кэш также явно сбрасывается извне через window.resetFbPanelBaseTop()
+    // (см. resize-хендлер) — там позиция панели относительно документа может
+    // реально измениться, и здесь она должна быть переизмерена, а не унаследована.
 
-    // Доступное место для fb-list — от верха панели до низа экрана, минус шапка и паддинг снизу
+    // Доступное место для fb-list — от верха панели (scroll-независимо) до низа экрана,
+    // минус шапка и паддинг снизу
     var available = vh - fbTop - headerH - pagePadBottom;
     var bodyH = Math.max(MIN_H, available);
 
@@ -17719,6 +17746,15 @@ function isMabVisible() {
 
     // Обновляем призрачные слоты
     if (window.updateFbGhosts) updateFbGhosts(fbList, bodyH);
+  };
+
+  // Сброс кэша базовой позиции панели (fbTop) — вызывается там, где раскладка
+  // ВЫШЕ панели могла реально измениться (resize, поворот экрана), чтобы
+  // следующий updateFbPanelHeight() переизмерил позицию, а не переиспользовал
+  // устаревшее значение.
+  window.resetFbPanelBaseTop = function() {
+    var fbP = document.getElementById('dt-feedback-panel');
+    if (fbP) fbP._fbBaseTop = undefined;
   };
 
   // Дебаунс-версия — чтобы не дёргать при каждом DOM-изменении
@@ -17884,6 +17920,9 @@ function navigateTo(page) {
         // искажает getBoundingClientRect при следующем updateFbPanelHeight
         const fbListReset = fbPanel.querySelector('.fb-list');
         if (fbListReset) fbListReset.style.maxHeight = '';
+        // Панель физически переставляется в DOM — её позиция гарантированно
+        // изменится, поэтому кэш базовой fbTop-позиции тоже сбрасываем.
+        if (window.resetFbPanelBaseTop) resetFbPanelBaseTop();
         // На мобиле — вставляем в конец активной страницы (в поток)
         const activePg = document.getElementById('page-' + page);
         if (activePg && fbPanel.parentElement !== activePg) activePg.appendChild(fbPanel);
@@ -19574,6 +19613,10 @@ function toggleEasterTheme() {
       azSpAdaptLayout();
       if (window.updateMobConsoleHeight) updateMobConsoleHeight();
       if (window.attachMobConsoleObserver) attachMobConsoleObserver();
+      // Ресайз/поворот экрана может реально изменить позицию панели относительно
+      // документа (высота шапки/баннера пересчиталась) — сбрасываем кэш fbTop,
+      // чтобы updateFbPanelHeight() не унаследовал устаревшее базовое значение.
+      if (window.resetFbPanelBaseTop) resetFbPanelBaseTop();
       if (window.updateFbPanelHeight) updateFbPanelHeight();
       if (window.attachFbPanelObserver) attachFbPanelObserver();
       // Palette popup: если открыто и режим (мобайл/десктоп) сменился — переоткрыть в нужном виде
