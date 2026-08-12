@@ -124,7 +124,7 @@ window.VL_DB = {
     { id:'lunar_neckalce',      name:"Lunar Neckalce",       rarity:'uncommon',  imgId:'lunarnecklace',     subtype:'relic',  status:null },
     { id:'vitalis_necklace',    name:"Vitalis Necklace",     rarity:'legendary', imgId:'vitalisnecklace',   subtype:'relic',  status:null },
     { id:'reapers_ring', name:"Reaper's Ring", rarity:'mythic', imgId:'reapersring', subtype:'relic', status:null },
-      { id:'lionels_war_blade', name:"Lionel's War Blade", rarity:'mythic', imgId:'tlconqblade', subtype:'weapon', status:null },
+      { id:'lionels_war_blade', name:"Lionel's War Blade", rarity:'ascended', imgId:'tlconqblade', subtype:'weapon', status:null },
       { id:'hydromaxx_mini',    name:"HydroMaxx MINI", rarity:'secret', imgId:'hydromaxxmini', subtype:'weapon', status:'hyped' },
       { id:'hydromaxx_lrxl', name:"HydroMaxx LRXL", rarity:'secret', imgId:'hydromaxxlrxl', subtype:'weapon', status:null },
       { id:'ascendant_vanquisher', name:"Ascendant Vanquisher", rarity:'secret', imgId:'magmaedgev2', subtype:'weapon', status:null },
