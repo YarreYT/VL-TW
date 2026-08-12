@@ -2684,9 +2684,60 @@ body.lang-ru .value-list-btn{
 .rarity-uncommon  { color: #2ecc71 !important; }
 
 /* Mythic — цвет буквально перетекает по всему спектру (не бегущая полоса):
-   JS-тикер каждый тик считает новый HSL-цвет и пишет его в --mythic-c на
-   ближайшем предке, поэтому ВЕСЬ текст и рамка карточки разом красные →
-   оранжевые → жёлтые → ... по кругу, без анимации position/размера фона. */
+   ВЕСЬ текст и рамка карточки разом красные → оранжевые → жёлтые → ... по кругу.
+   Основной механизм — чистый CSS: --mythic-c зарегистрирован через @property как
+   анимируемый <color>, и крутится через @keyframes прямо в композиторе браузера,
+   БЕЗ единого обращения к JS каждый кадр. Это значит, что цикл не фризится и не
+   тормозит во время скролла вообще никак — это забота браузера, а не главного
+   потока. Класс .mythic-css-anim вешается на <html> через JS один раз при старте,
+   если браузер поддерживает @property (см. #rarity-perf-tick script) — старые
+   браузеры без поддержки продолжают ехать на JS RAF-тикере (fallback) как раньше. */
+@property --mythic-c {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: #ff2323;
+}
+@keyframes mythic-hue-cycle {
+  0%    { --mythic-c: hsl(0,   90%, 58%); }
+  8.33% { --mythic-c: hsl(30,  90%, 58%); }
+  16.67%{ --mythic-c: hsl(60,  90%, 58%); }
+  25%   { --mythic-c: hsl(90,  90%, 58%); }
+  33.33%{ --mythic-c: hsl(120, 90%, 58%); }
+  41.67%{ --mythic-c: hsl(150, 90%, 58%); }
+  50%   { --mythic-c: hsl(180, 90%, 58%); }
+  58.33%{ --mythic-c: hsl(210, 90%, 58%); }
+  66.67%{ --mythic-c: hsl(240, 90%, 58%); }
+  75%   { --mythic-c: hsl(270, 90%, 58%); }
+  83.33%{ --mythic-c: hsl(300, 90%, 58%); }
+  91.67%{ --mythic-c: hsl(330, 90%, 58%); }
+  100%  { --mythic-c: hsl(360, 90%, 58%); }
+}
+:root.mythic-css-anim .rarity-mythic,
+:root.mythic-css-anim .border-mythic {
+  /* Кадры урезаны через steps(): анимация @property-цвета НЕ композиторная —
+     каждый её кадр стоит Recalculate Style + Paint на каждом mythic-элементе.
+     ВАЖНО: steps() применяется к КАЖДОМУ интервалу между keyframes, а их тут 12
+     (13 стопов), поэтому обновлений в секунду = steps * 12 / 6s = steps * 2.
+     steps(15) → 30 fps вместо 60. */
+  animation: mythic-hue-cycle 6s steps(15, end) infinite;
+}
+
+/* Во время скролла/движения страница и так смазана, плавность цвета не читается —
+   роняем Mythic до ~7 fps (steps(3) * 2 = 6, ближайшее к 7 целое число шагов).
+   Скоуп раздельный (экспериментально):
+     .is-scrolling-page — скроллится страница/список VL-DT → падают только
+       mythic-элементы активной страницы, панель Value Changes идёт как обычно;
+     .is-scrolling-vc  — скроллится сама панель Value Changes → падают только
+       записи внутри панели, карточки страницы не трогаем.
+   Классы вешает общий scroll/wheel/touchmove-обработчик тикера (по target). */
+:root.is-scrolling-page.mythic-css-anim .page .rarity-mythic,
+:root.is-scrolling-page.mythic-css-anim .page .border-mythic {
+  animation-timing-function: steps(3, end);
+}
+:root.is-scrolling-vc.mythic-css-anim #dt-feedback-panel .rarity-mythic,
+:root.is-scrolling-vc.mythic-css-anim #dt-feedback-panel .border-mythic {
+  animation-timing-function: steps(3, end);
+}
 .rarity-mythic {
   color: var(--mythic-c, #ff2323) !important;
 }
@@ -2716,14 +2767,18 @@ body.lang-ru .value-list-btn{
   color: transparent;
 }
 
-/* If system animations are disabled — JS-тикер не запускается */
+/* If system animations are disabled — CSS/JS цикл не запускается */
 @media (prefers-reduced-motion: reduce) {
   .rarity-ascended,
   .rarity-exclusive {
     background-size: 100% 100%;
     background-position: 0% 50%;
   }
-  /* .rarity-mythic: JS-тикер не запускается, остаётся статичный fallback-цвет из CSS variable */
+  :root.mythic-css-anim .rarity-mythic,
+  :root.mythic-css-anim .border-mythic {
+    animation: none;
+  }
+  /* .rarity-mythic: остаётся статичный fallback-цвет из CSS variable */
 }
 
 
@@ -17184,6 +17239,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     { id:'viltron',    lbl:'V',  name:'Viltron',   bg:'#520114' },
     { id:'nuclear',    lbl:'Nu', name:'Nuclear',   bg:'#7ec89a' },
     { id:'corrupted_infernal', lbl:'CI', name:'Corrupted Infernal', bg:'#8b3fc8' },
+    { id:'equinox',    lbl:'Eq', name:'Equinox',   bg:'linear-gradient(to bottom, #ECA131 25%, #6837BD 75%)' },
   ];
 
   window.VL_DB = VL_DB;
@@ -17214,6 +17270,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     { id:'viltron',       name:'Viltron'      },
     { id:'nuclear',       name:'Nuclear'      },
     { id:'corrupted_infernal', name:'Corrupted Infernal' },
+    { id:'equinox',       name:'Equinox' },
   ];
 
   // ── Стикеры: системные/сайт ──
@@ -26416,21 +26473,49 @@ function toggleEasterTheme() {
    и того же цвета в любой момент времени. */
 (function() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  /* Определяем поддержку @property один раз при старте. Если поддерживается —
+     Mythic целиком отдаётся CSS (@keyframes mythic-hue-cycle в основном
+     стиле), а JS вообще не трогает mythic-элементы: не собирает их в списки,
+     не наблюдает через IntersectionObserver, не фризит во время скролла —
+     цикл живёт в композиторе браузера и скролла не замечает вовсе.
+     Ascended/Exclusive шиммер остаётся на JS-тикере как раньше (там
+     механика завязана на background-position бегущей полосы). */
+  var _mythicCssMode = false;
+  try {
+    _mythicCssMode = !!(window.CSS && typeof CSS.registerProperty === 'function');
+  } catch (e) { _mythicCssMode = false; }
+  if (_mythicCssMode) {
+    document.documentElement.classList.add('mythic-css-anim');
+  }
+
   var pos = 0;
   var dir = 1;
   var speed = 3.3;
-  var hue = 0;
-  var hueSpeed = 2; // градусов за тик — полный оборот радуги примерно за 6 секунд
+  var MYTHIC_CYCLE_MS = 6000; // полный оборот радуги — реальное время, не завязано на кол-во тиков
+  var MYTHIC_CATCHUP_MS = 260; // за сколько мс "догоняем" цвет после остановки скролла (только JS fallback)
+  var _renderedHue = 0;      // последний реально отрисованный hue (для плавного добега, только JS fallback)
+  var _wasFrozen = false;    // были ли заморожены на предыдущем тике (только JS fallback)
+  var _catchupActive = false;
+  var _catchupStart = 0;
+  var _catchupFromHue = 0;
   var _lastT = 0;
-  var _interval = 1000 / 30;
+  var _lastTVC = 0;
+  var _interval = 1000 / 30;        // Ascended/Exclusive/Mythic-fallback: 30 fps
+  var SCROLL_INTERVAL = 1000 / 7;   // во время скролла страницы — Mythic/Ascended/Exclusive карточек: 7 fps
+  var SCROLL_INTERVAL_VC_FROM_PAGE = 1000 / 16; // во время скролла СТРАНИЦЫ — Value Changes: 16 fps (раньше не трогалась вообще)
   var _rafId = null;
   var _running = false;
-  var _shimmerEls = [];   // только реально видимые (в viewport)
+  var _shimmerEls = [];   // только реально видимые (в viewport), скоуп: страница
   var _mythicEls = [];
+  var _shimmerVCEls = []; // видимые, скоуп: панель Value Changes
+  var _mythicVCEls = [];
   var _dirty = true;      // требуется пересбор списков
   var _visDirty = false;  // изменилась видимость элементов
   var _allShimmer = [];   // все кандидаты (для IntersectionObserver)
   var _allMythic = [];
+  var _allShimmerVC = [];
+  var _allMythicVC = [];
 
   /* Видимость анимируемых элементов: анимируем только то, что в кадре.
      Это главное отличие от прежней версии — раньше стили писались во ВСЕ
@@ -26460,14 +26545,20 @@ function toggleEasterTheme() {
   function collectAll() {
     var shimmer = [];
     var mythic = [];
+    var shimmerVC = [];
+    var mythicVC = [];
     document.querySelectorAll('.page.active .rarity-ascended, .page.active .rarity-exclusive').forEach(function(el){ shimmer.push(el); });
-    document.querySelectorAll('.page.active .rarity-mythic, .page.active .border-mythic').forEach(function(el){ mythic.push(el); });
+    if (!_mythicCssMode) {
+      document.querySelectorAll('.page.active .rarity-mythic, .page.active .border-mythic').forEach(function(el){ mythic.push(el); });
+    }
     var fbPanel = document.getElementById('dt-feedback-panel');
     if (fbPanel) {
-      fbPanel.querySelectorAll('.vc-diff-card .rarity-ascended, .vc-diff-card .rarity-exclusive').forEach(function(el){ shimmer.push(el); });
-      fbPanel.querySelectorAll('.vc-diff-card .rarity-mythic, .vc-diff-card .border-mythic').forEach(function(el){ mythic.push(el); });
+      fbPanel.querySelectorAll('.vc-diff-card .rarity-ascended, .vc-diff-card .rarity-exclusive').forEach(function(el){ shimmerVC.push(el); });
+      if (!_mythicCssMode) {
+        fbPanel.querySelectorAll('.vc-diff-card .rarity-mythic, .vc-diff-card .border-mythic').forEach(function(el){ mythicVC.push(el); });
+      }
     }
-    return { shimmer: shimmer, mythic: mythic };
+    return { shimmer: shimmer, mythic: mythic, shimmerVC: shimmerVC, mythicVC: mythicVC };
   }
 
   /* Инкрементальная подписка: observe только новых, unobserve только исчезнувших.
@@ -26495,17 +26586,23 @@ function toggleEasterTheme() {
     var found = collectAll();
     _allShimmer = found.shimmer;
     _allMythic = found.mythic;
-    syncObserver(found.shimmer.concat(found.mythic));
+    _allShimmerVC = found.shimmerVC;
+    _allMythicVC = found.mythicVC;
+    syncObserver(found.shimmer.concat(found.mythic, found.shimmerVC, found.mythicVC));
     _dirty = false;
     _visDirty = true;
   }
 
   function refreshVisible() {
-    var s = [], m = [], i;
+    var s = [], m = [], sv = [], mv = [], i;
     for (i = 0; i < _allShimmer.length; i++) if (isVisible(_allShimmer[i])) s.push(_allShimmer[i]);
     for (i = 0; i < _allMythic.length; i++) if (isVisible(_allMythic[i])) m.push(_allMythic[i]);
+    for (i = 0; i < _allShimmerVC.length; i++) if (isVisible(_allShimmerVC[i])) sv.push(_allShimmerVC[i]);
+    for (i = 0; i < _allMythicVC.length; i++) if (isVisible(_allMythicVC[i])) mv.push(_allMythicVC[i]);
     _shimmerEls = s;
     _mythicEls = m;
+    _shimmerVCEls = sv;
+    _mythicVCEls = mv;
     _visDirty = false;
   }
 
@@ -26516,49 +26613,138 @@ function toggleEasterTheme() {
      карточки VL/DT дёргались ровно тогда, когда в Value Changes видны
      анимированные (Mythic/Ascended/Exclusive) записи. Пауза на ~140 мс глазом
      не заметна — цвет просто продолжает движение сразу после остановки. */
-  var _freezeUntil = 0;
-  function _freezeShimmer() { _freezeUntil = (window.performance ? performance.now() : Date.now()) + 140; }
+  var _freezeUntil = 0;    // скоуп: активная страница (VL/DT-сетка, окно)
+  var _freezeUntilVC = 0;  // скоуп: панель Value Changes
+  var _scrollClsTimer = null;
+  var _scrollClsTimerVC = null;
+
+  /* Определяем, что именно скроллится: панель Value Changes или страница.
+     scroll не всплывает, но capture-слушатель на window всё равно получает
+     событие, а его target — реальный скролл-контейнер. */
+  function _isVCTarget(ev) {
+    var t = ev && ev.target;
+    if (!t) return false;
+    if (t.nodeType !== 1) return false; // document/window → это скролл страницы
+    var panel = document.getElementById('dt-feedback-panel');
+    return !!(panel && (panel === t || panel.contains(t)));
+  }
+
+  function _freezeShimmer(ev) {
+    var now = (window.performance ? performance.now() : Date.now());
+    var de = document.documentElement;
+    if (_isVCTarget(ev)) {
+      /* Скроллится Value Changes — режем fps только внутри панели. */
+      _freezeUntilVC = now + 140;
+      if (!de.classList.contains('is-scrolling-vc')) de.classList.add('is-scrolling-vc');
+      if (_scrollClsTimerVC) clearTimeout(_scrollClsTimerVC);
+      _scrollClsTimerVC = setTimeout(function() {
+        _scrollClsTimerVC = null;
+        de.classList.remove('is-scrolling-vc');
+      }, 160);
+    } else {
+      /* Скроллится страница / список VL-DT — режем fps страничных карточек
+         до 7 и, вместе с этим, записей Value Changes до 16 (раньше панель
+         не трогалась вовсе при скролле страницы — это и давало ей "рывки"
+         на фоне заторможенной страницы). */
+      _freezeUntil = now + 140;
+      if (!de.classList.contains('is-scrolling-page')) de.classList.add('is-scrolling-page');
+      if (_scrollClsTimer) clearTimeout(_scrollClsTimer);
+      _scrollClsTimer = setTimeout(function() {
+        _scrollClsTimer = null;
+        de.classList.remove('is-scrolling-page');
+      }, 160);
+    }
+  }
   var _fopt = { passive: true, capture: true };
   window.addEventListener('scroll', _freezeShimmer, _fopt);
   window.addEventListener('wheel', _freezeShimmer, _fopt);
   window.addEventListener('touchmove', _freezeShimmer, _fopt);
 
+  /* Целевой hue Mythic-цикла считается от реального времени (performance.now()),
+     а не от количества прошедших тиков. Благодаря этому цвет "живёт" даже пока
+     мы ничего не пишем в DOM во время скролла — цикл не останавливается и не
+     сбивается, а ровно там, где должен быть по времени (в т.ч. корректно
+     переходит в новый цикл и возвращается к красному, если скролл длился
+     дольше MYTHIC_CYCLE_MS). */
+  function _mythicTargetHue(now) {
+    return ((now % MYTHIC_CYCLE_MS) / MYTHIC_CYCLE_MS) * 360;
+  }
+
   function tick(t) {
-    if ((window.performance ? performance.now() : Date.now()) < _freezeUntil) {
-      _rafId = requestAnimationFrame(tick);
-      return;
-    }
+    var now = (window.performance ? performance.now() : Date.now());
+    /* Раздельные скоупы: страница и панель Value Changes режутся независимо,
+       но НЕ изолированно — скролл страницы теперь тоже снижает fps записей
+       Value Changes (раньше вообще не трогал их, отсюда были "рывки").
+       Приоритет отдаём более сильному ограничению, если оба скролла активны
+       одновременно (страница + сама панель) — 7 fps как более строгий кейс. */
+    var interval = (now < _freezeUntil) ? SCROLL_INTERVAL : _interval;
+    var intervalVC;
+    if (now < _freezeUntilVC) intervalVC = SCROLL_INTERVAL;               // скролл самой панели — 7 fps
+    else if (now < _freezeUntil) intervalVC = SCROLL_INTERVAL_VC_FROM_PAGE; // скролл страницы — 16 fps
+    else intervalVC = _interval;                                           // без скролла — 30 fps
+
     /* Пересбор списков — только когда DOM реально менялся, а не каждый кадр.
        Раньше здесь на каждом тике крутились querySelectorAll по всему документу. */
     if (_dirty) refreshLists();
     if (_visDirty) refreshVisible();
 
-    if (_allShimmer.length === 0 && _allMythic.length === 0) {
+    if (_allShimmer.length === 0 && _allMythic.length === 0 &&
+        _allShimmerVC.length === 0 && _allMythicVC.length === 0) {
       _running = false;
       _rafId = null;
       return;
     }
     if (document.hidden) { _rafId = requestAnimationFrame(tick); return; }
-    if (t - _lastT < _interval) { _rafId = requestAnimationFrame(tick); return; }
-    _lastT = t;
 
-    if (_shimmerEls.length === 0 && _mythicEls.length === 0) {
-      /* всё анимируемое сейчас за пределами экрана — ничего не пишем */
+    var pageDue = (t - _lastT) >= interval;
+    var vcDue   = (t - _lastTVC) >= intervalVC;
+    if (!pageDue && !vcDue) { _rafId = requestAnimationFrame(tick); return; }
+
+    var _lastAny = Math.max(_lastT, _lastTVC);
+    var _dt = _lastAny ? (t - _lastAny) : Math.min(interval, intervalVC);
+    if (pageDue) _lastT = t;
+    if (vcDue) _lastTVC = t;
+
+    var _shimNow = (pageDue ? _shimmerEls.length : 0) + (vcDue ? _shimmerVCEls.length : 0);
+    var _mythNow = (pageDue ? _mythicEls.length : 0) + (vcDue ? _mythicVCEls.length : 0);
+    if (_shimNow === 0 && _mythNow === 0) {
+      /* всё анимируемое сейчас за пределами экрана (или не его кадр) — ничего не пишем */
       _rafId = requestAnimationFrame(tick);
       return;
     }
 
     // Ascended / Exclusive shimmer position
-    pos += dir * speed;
+    /* Шаг шиммера привязан ко времени, а не к числу тиков — иначе на 15 fps
+       бегущая полоса Ascended/Exclusive ползла бы вдвое медленнее. */
+    pos += dir * speed * (Math.min(_dt, 200) / (1000 / 30));
     if (pos >= 100) { pos = 100; dir = -1; }
     else if (pos <= 0) { pos = 0; dir = 1; }
     var bg = pos + '% 50%';
-    for (var i = 0; i < _shimmerEls.length; i++) _shimmerEls[i].style.backgroundPosition = bg;
+    if (pageDue) for (var i = 0; i < _shimmerEls.length; i++) _shimmerEls[i].style.backgroundPosition = bg;
+    if (vcDue) for (var iv = 0; iv < _shimmerVCEls.length; iv++) _shimmerVCEls[iv].style.backgroundPosition = bg;
 
     // Mythic hue cycle — весь цвет целиком меняется, без бегущей полосы
-    hue = (hue + hueSpeed) % 360;
-    var mythicColor = 'hsl(' + hue.toFixed(1) + ', 90%, 58%)';
-    for (var j = 0; j < _mythicEls.length; j++) _mythicEls[j].style.setProperty('--mythic-c', mythicColor);
+    var targetHue = _mythicTargetHue(now);
+    var displayHue = targetHue;
+    if (_catchupActive) {
+      var elapsed = now - _catchupStart;
+      if (elapsed >= MYTHIC_CATCHUP_MS) {
+        _catchupActive = false;
+        displayHue = targetHue;
+      } else {
+        /* быстро прогоняем цвета от точки, на которой остановился скролл,
+           до реальной текущей точки цикла — вперёд по кругу (кратчайший
+           путь по направлению движения цикла, с учётом переход через 360°) */
+        var progress = elapsed / MYTHIC_CATCHUP_MS;
+        var diff = targetHue - _catchupFromHue;
+        if (diff < 0) diff += 360;
+        displayHue = (_catchupFromHue + diff * progress) % 360;
+      }
+    }
+    _renderedHue = displayHue;
+    var mythicColor = 'hsl(' + displayHue.toFixed(1) + ', 90%, 58%)';
+    if (pageDue) for (var j = 0; j < _mythicEls.length; j++) _mythicEls[j].style.setProperty('--mythic-c', mythicColor);
+    if (vcDue) for (var jv = 0; jv < _mythicVCEls.length; jv++) _mythicVCEls[jv].style.setProperty('--mythic-c', mythicColor);
 
     _rafId = requestAnimationFrame(tick);
   }
@@ -29437,5 +29623,220 @@ function toggleEasterTheme() {
 })();
 </script>
 
+
+<style id="vl-tall-card-scroll-fix">
+/* ── Фикс: высокая карточка не даёт скроллить до роллов (desktop/tablet) ──
+   Причина: .vl-section имел overflow:hidden, а .vl-content-area — min-height:0,
+   поэтому одиночная карточка выше вьюпорта просто обрезалась: страница не
+   удлинялась, и низ карточки (роллы) был недостижим. Скролл появлялся только
+   когда карточек становилось достаточно для второго ряда.
+   Решение: по вертикали секция больше не обрезает контент — высота страницы
+   растёт под самую высокую карточку, плюс запас снизу, чтобы последний ролл
+   не прилипал к краю экрана. Горизонтальный клип сохранён (overflow-x: clip),
+   чтобы не появлялся боковой скролл. */
+@media (min-width: 989px) {
+  #page-valuelist,
+  #page-devtool {
+    height: auto !important;
+    overflow-y: visible !important;
+  }
+  #page-valuelist .vl-section,
+  #page-devtool   .vl-section {
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+  #page-valuelist .vl-content-area,
+  #page-devtool   .vl-content-area {
+    align-items: flex-start;
+  }
+  /* Запас снизу: последний ролл не упирается в край вьюпорта */
+  #page-valuelist .vl-detail-area,
+  #page-devtool   .vl-detail-area {
+    padding-bottom: 96px;
+  }
+  /* Карточка не должна сама себя обрезать по высоте */
+  .vl-cards-wrap,
+  .vl-card-wrap,
+  .vl-detail-card {
+    max-height: none;
+  }
+}
+</style>
+
+<style id="vl-rolltip-reserve-fix">
+/* ── Фикс: список роллов (.vl-roll-tooltip) висит absolute (top:100%) и не
+   добавляет высоту странице. Из-за этого у одиночной/нижней карточки роллы
+   уходили за вьюпорт и доскроллить до них было невозможно — помогало только
+   открыть больше карточек, чтобы страница удлинилась «сама».
+   Решение: НЕ трогаем саму карточку (никакого margin/padding на .vl-card-wrap —
+   это двигало бы соседние карточки в её flex-ряду вниз). Вместо этого один общий
+   invisible-спейсер после сетки карточек (.vl-cards-wrap) резервирует место
+   под самый глубокий открытый тултип на странице. Он растягивает страницу,
+   но не толкает сами карточки — они остаются на месте. */
+@media (min-width: 989px) {
+  .vl-rt-spacer {
+    display: block;
+    width: 100%;
+    flex-basis: 100%;
+    height: var(--vl-rt-reserve, 0px);
+    transition: height .32s cubic-bezier(.4,0,.2,1);
+  }
+  /* Пока идёт resize спейсера, форсируем видимость уже показанных карточек,
+     даже если IntersectionObserver на мгновение решит, что они вышли из
+     вьюпорта из-за реflow'а — иначе верхний ряд мигает "призраком". */
+  .vl-card-wrap.vl-rt-frozen-visible {
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto !important;
+  }
+}
+</style>
+<script id="vl-rolltip-reserve-fix-js">
+(function () {
+  if (window.__vlRtReserveInit) return;
+  window.__vlRtReserveInit = true;
+
+  var DESKTOP = function () { return window.innerWidth >= 989; };
+
+  /* Спейсер — последний ребёнок .vl-cards-wrap (после всей сетки карточек,
+     а не внутри отдельной карточки), поэтому он не участвует в раскладке
+     самих карточек и не сдвигает соседей по ряду. */
+  function spacerFor(wrap) {
+    var sp = wrap.querySelector(':scope > .vl-rt-spacer');
+    if (!sp) {
+      sp = document.createElement('div');
+      sp.className = 'vl-rt-spacer';
+      wrap.appendChild(sp);
+    } else if (wrap.lastElementChild !== sp) {
+      /* Карточки добавляются через wrap.appendChild(card) и обгоняют
+         спейсер по DOM-порядку — в тот момент спейсер перестаёт быть
+         последним ребёнком .vl-cards-wrap. Раз flex-basis:100% ломает
+         перенос строки НЕ в конце сетки, а посреди неё, это рвёт всю
+         раскладку рядов (именно поэтому баг проявляется только после
+         ручного добавления хотя бы одной карточки). Поэтому спейсер
+         всегда возвращаем в самый конец. */
+      wrap.appendChild(sp);
+    }
+    return sp;
+  }
+
+  function ownerWrapOf(tt) {
+    var card = tt.closest ? tt.closest('.vl-card-wrap, .az-card') : null;
+    if (!card) return null;
+    return card.closest('.vl-cards-wrap') || card.parentElement;
+  }
+
+  function overflowOf(tt) {
+    /* Реальная высота содержимого тултипа, но не больше того, что он себе
+       позволяет (max-height: 70vh) — столько места и нужно зарезервировать. */
+    var cap = window.innerHeight * 0.70;
+    return Math.max(0, Math.round(Math.min(tt.scrollHeight, cap)));
+  }
+
+  function isBottomRow(card, wrap) {
+    /* Карточка считается "в последнем ряду", если её верхняя граница
+       совпадает (с запасом на подпиксельные погрешности) с максимальным
+       offsetTop среди всех карточек сетки — то есть ни одна карточка
+       не начинается ниже неё. */
+    var cards = wrap.querySelectorAll(':scope > .vl-card-wrap, :scope > .az-card');
+    if (!cards.length) return true;
+    var maxTop = 0;
+    cards.forEach(function (c) { if (c.offsetTop > maxTop) maxTop = c.offsetTop; });
+    return Math.abs(card.offsetTop - maxTop) < 2;
+  }
+
+  function recalcWrap(wrap) {
+    var sp = wrap.querySelector(':scope > .vl-rt-spacer');
+    if (!DESKTOP()) { if (sp) sp.style.removeProperty('--vl-rt-reserve'); return; }
+    var open = wrap.querySelectorAll(':scope .vl-roll-tooltip.vl-rt-open:not(.vl-rt-mobile-portal)');
+    var max = 0;
+    open.forEach(function (tt) {
+      var card = tt.closest('.vl-card-wrap, .az-card');
+      if (!card || !isBottomRow(card, wrap)) return; /* не нижний ряд — резерв не нужен */
+      max = Math.max(max, overflowOf(tt));
+    });
+    if (max > 0) { spacerFor(wrap).style.setProperty('--vl-rt-reserve', max + 'px'); }
+    else if (sp) { sp.style.removeProperty('--vl-rt-reserve'); }
+  }
+
+  /* ── Anti-flicker: спейсер меняет высоту .vl-cards-wrap → страница
+     реflow'ится → верхний ряд карточек на мгновение "выезжает" из зоны
+     IntersectionObserver (card lazy-reveal, см. ниже в файле) и мигает
+     как card-offscreen (opacity:0). Пока идёт transition спейсера,
+     примораживаем уже показанные карточки в состоянии card-visible,
+     игнорируя промежуточные срабатывания IO. */
+  function freezeVisibleCards(ms) {
+    var cards = document.querySelectorAll('.vl-card-wrap.card-visible');
+    cards.forEach(function (c) { c.classList.add('vl-rt-frozen-visible'); });
+    clearTimeout(window.__vlRtFreezeT);
+    window.__vlRtFreezeT = setTimeout(function () {
+      document.querySelectorAll('.vl-rt-frozen-visible').forEach(function (c) {
+        c.classList.remove('vl-rt-frozen-visible');
+      });
+    }, ms || 420);
+  }
+
+  var trackedWraps = new Set();
+  function track(tt) {
+    var wrap = ownerWrapOf(tt);
+    if (!wrap) return;
+    trackedWraps.add(wrap);
+    freezeVisibleCards();
+    recalcWrap(wrap);
+    requestAnimationFrame(function () { recalcWrap(wrap); });
+    setTimeout(function () { recalcWrap(wrap); }, 60);
+    setTimeout(function () { recalcWrap(wrap); }, 360);
+    if (ro) { try { ro.observe(tt); } catch (_) {} }
+  }
+
+  function untrack(tt) {
+    var wrap = ownerWrapOf(tt) || null;
+    if (ro) { try { ro.unobserve(tt); } catch (_) {} }
+    freezeVisibleCards();
+    if (wrap) recalcWrap(wrap);
+  }
+
+  var ro = (typeof ResizeObserver !== 'undefined') ? new ResizeObserver(function (entries) {
+    entries.forEach(function (e) {
+      var wrap = ownerWrapOf(e.target);
+      if (wrap) recalcWrap(wrap);
+    });
+  }) : null;
+
+  new MutationObserver(function (muts) {
+    muts.forEach(function (m) {
+      m.addedNodes && Array.prototype.forEach.call(m.addedNodes, function (n) {
+        if (n.nodeType !== 1) return;
+        if (n.classList && n.classList.contains('vl-roll-tooltip')) track(n);
+        else if (n.querySelectorAll) Array.prototype.forEach.call(n.querySelectorAll('.vl-roll-tooltip'), track);
+        /* Карточка добавлена вручную (клик по item в левом списке) —
+           спейсер, если уже существует в этом wrap'е, оказался бы перед
+           новой карточкой и сломал бы перенос строк. Возвращаем его в конец. */
+        if (n.classList && n.classList.contains('vl-card-wrap')) {
+          var w = n.parentElement;
+          if (w && w.classList.contains('vl-cards-wrap')) {
+            var sp = w.querySelector(':scope > .vl-rt-spacer');
+            if (sp && w.lastElementChild !== sp) w.appendChild(sp);
+          }
+        }
+      });
+      m.removedNodes && Array.prototype.forEach.call(m.removedNodes, function (n) {
+        if (n.nodeType !== 1) return;
+        if (n.classList && n.classList.contains('vl-roll-tooltip')) untrack(n);
+        else if (n.querySelectorAll) Array.prototype.forEach.call(n.querySelectorAll('.vl-roll-tooltip'), untrack);
+      });
+      /* класс vl-rt-open может переключаться без добавления/удаления узла */
+      if (m.type === 'attributes' && m.target.classList && m.target.classList.contains('vl-roll-tooltip')) {
+        var wrap = ownerWrapOf(m.target);
+        if (wrap) recalcWrap(wrap);
+      }
+    });
+  }).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
+
+  window.addEventListener('resize', function () {
+    trackedWraps.forEach(recalcWrap);
+  });
+})();
+</script>
 </body>
 </html>
