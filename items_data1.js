@@ -44,24 +44,25 @@ window.VL_DB = {
     { id:'angel',          name:"Angel",          rarity:'legendary', imgId:'angel', demand:0,   value:0,     status:null      },
     { id:'lava',           name:"Lava",           rarity:'legendary', imgId:'lava', demand:0,   value:0,     status:null      },
     /* ── Mythic ── */
-    { id:'reaper',         name:"Reaper",         rarity:'mythic', imgId:'reaper',    demand:3,   value:20,    status:null      },
-    { id:'mech',           name:"Mech",           rarity:'mythic', imgId:'mech',    demand:2.5, value:20,    status:null      },
-    { id:'galaxy',         name:"Galaxy",         rarity:'mythic', imgId:'galaxy',    demand:3.5, value:20,    status:null      },
-    { id:'kitsune',        name:"Kitsune",        rarity:'mythic', imgId:'kitsune',    demand:3,   value:20,    status:null      },
+    { id:'reaper',		name:"Reaper",		rarity:'mythic', imgId:'reaper',		demand:2,	value:15,		status:null },
+    { id:'mech',		name:"Mech",		rarity:'mythic', imgId:'mech',		demand:2,	value:15,		status:null },
+    { id:'galaxy',		name:"Galaxy",		rarity:'mythic', imgId:'galaxy',		demand:2.5,	value:15,		status:null },
+    { id:'kitsune',		name:"Kitsune",		rarity:'mythic', imgId:'kitsune',		demand:2,	value:15,		status:null },
     /* ── Secret ── */
     { id:'time',		name:"Time",		rarity:'secret', imgId:'time',		demand:0.5,	value:40,		status:null },
     /* ── Mythic (extra) ── */
-    { id:'phantom',        name:"Phantom",        rarity:'mythic', imgId:'phantom',    demand:5,   value:6000,  status:'rising'  },
-    { id:'nightmare',      name:"Nightmare",      rarity:'mythic', imgId:'nightmare',    demand:5,   value:5000,  status:'rising'  },
+    { id:'phantom',		name:"Phantom",		rarity:'mythic', imgId:'phantom',		demand:5,	value:7000,		status:'rising' },
+    { id:'nightmare',		name:"Nightmare",		rarity:'mythic', imgId:'nightmare',		demand:5,	value:6000,		status:'rising' },
     { id:'astra',          name:"Astra",          rarity:'mythic', imgId:'astra',    demand:4,   value:4000,  status:'rising'  },
-    { id:'infinity',		name:"Infinity",		rarity:'mythic', imgId:'infinity',		demand:4,	value:15000,		status:null },
-    { id:'solar',		name:"Solar",		rarity:'mythic', imgId:'solar',		demand:2.5,	value:5000,		status:'unstable' },
+    { id:'infinity',		name:"Infinity",		rarity:'mythic', imgId:'infinity',		demand:4,	value:12000,		status:null },
+    { id:'solar',		name:"Solar",		rarity:'mythic', imgId:'solar',		demand:3.5,	value:5000,		status:'unstable' },
     { id:'bunny',          name:"Bunny",          rarity:'mythic', imgId:'bunny',    demand:4,   value:3250,  status:'rising'  },
     { id:'krampus',        name:"Krampus",        rarity:'mythic', imgId:'krampus',    demand:3,   value:1000,  status:null      },
     /* ── Exclusive ── */
     { id:'sunlar',		name:"Sunlar",		rarity:'exclusive', imgId:'sunlar',		demand:3,	value:2000,		status:'rising' },
     { id:'fools_phantom',		name:"Fool's Phantom",		rarity:'exclusive', imgId:'fools_phantom',		demand:2.5,	value:15000,		status:'rare' },
     { id:'sunshine',	   name:"Sunshine",  rarity:'exclusive', imgId:'lebronmeme',    demand:5, value:30121982,    status:'inflated' },
+      { id:'lunar',		name:"Lunar",		rarity:'mythic', imgId:'lunar',		demand:4, value:4500,		status:'unstable' },
   ],
   gear: [
     /* ── Weapons ── */
@@ -80,8 +81,8 @@ window.VL_DB = {
     { id:'ascvoidblade',  name:"Ascended Voidblade",           rarity:'ascended',  imgId:'ascvoidblade',   subtype:'weapon', status:null },
     { id:'cupidfury',     name:"Cupid's Fury",                 rarity:'ascended',  imgId:'cupidfury',      subtype:'weapon', status:null },
     { id:'cupidwrath',    name:"Cupid's Wrath",                rarity:'secret',    imgId:'cupidwrath',     subtype:'weapon', status:null },
-    { id:'tlconqblade',   name:"Timelost Conqueror's Blade",   rarity:'mythic',    imgId:'tlconqblade',    subtype:'weapon', status:null },
-    { id:'tlconqbladele', name:"Timelost Conqueror's Blade LE", rarity:'mythic', imgId:'tlconqblade', subtype:'weapon', status:'lowering' },
+    { id:'tlconqblade',   name:"Timelost Conqueror's Blade",   rarity:'ascended',  imgId:'tlconqblade',    subtype:'weapon', status:null },
+    { id:'tlconqbladele', name:"Timelost Conqueror's Blade LE", rarity:'secret',   imgId:'tlconqblade',    subtype:'weapon', status:'unstable' },
     { id:'glitchedstaff', name:"Glitched Staff",               rarity:'secret',    imgId:'glitchedstaff',  subtype:'weapon', status:null },
     { id:'viltronstaff',  name:"Viltron Staff",                rarity:'ascended',  imgId:'glitchedstaff',  subtype:'weapon', status:null },
     { id:'seriously',     name:"Serious Staff",                rarity:'secret',    imgId:'seriously',      subtype:'weapon', status:null },
@@ -93,15 +94,15 @@ window.VL_DB = {
     { id:'kronaxset',     name:"Kronax Set",                   rarity:'mythic',    imgId:'kronaxset',      subtype:'armor',  status:null },
     { id:'heroickronax',  name:"Heroic Kronax Set",            rarity:'mythic',    imgId:'kronaxset',      subtype:'armor',  status:null },
     /* ── New Weapons ── */
-    { id:'rainbow_noodle', name:"Rainbow Noodle", rarity:'mythic', imgId:'rainbownoodle', subtype:'weapon', status:'lowering' },
+    { id:'rainbow_noodle', name:"Rainbow Noodle", rarity:'mythic', imgId:'rainbownoodle', subtype:'weapon', status:null },
     { id:'curious_wooden_bow', name:"Curious Wooden Bow", rarity:'ascended', imgId:'woodenbow', subtype:'weapon', status:null },
-    { id:'shadow_scythe', name:"Shadow Scythe", rarity:'mythic', imgId:'shadowscythe', subtype:'weapon', status:'lowering' },
-    { id:'firework_bow', name:"Firework Bow", rarity:'mythic', imgId:'fireworkbow', subtype:'weapon', status:'lowering' },
-    { id:'terrablade_le', name:"Terrablade LE", rarity:'secret', imgId:'terrablade', subtype:'weapon', status:null },
-    { id:'pool_noodle', name:"Pool Noodle", rarity:'legendary', imgId:'poolnoodle', subtype:'weapon', status:'lowering' },
-    { id:'terrablade', name:"Terrablade", rarity:'mythic', imgId:'terrablade', subtype:'weapon', status:'lowering' },
+    { id:'shadow_scythe', name:"Shadow Scythe", rarity:'mythic', imgId:'shadowscythe', subtype:'weapon', status:null },
+    { id:'firework_bow', name:"Firework Bow", rarity:'mythic', imgId:'fireworkbow', subtype:'weapon', status:null },
+    { id:'terrablade_le', name:"Terrablade LE", rarity:'secret', imgId:'terrablade', subtype:'weapon', status:'hyped' },
+    { id:'pool_noodle', name:"Pool Noodle", rarity:'legendary', imgId:'poolnoodle', subtype:'weapon', status:null },
+    { id:'terrablade', name:"Terrablade", rarity:'mythic', imgId:'terrablade', subtype:'weapon', status:null },
     { id:'hydromaxx_lr', name:"HydroMaxx LR", rarity:'secret', imgId:'hydromaxxlr', subtype:'weapon', status:null },
-    { id:'hydromaxx_cqb', name:"HydroMaxx CQB", rarity:'mythic', imgId:'hydromaxxcqb', subtype:'weapon', status:'lowering' },
+    { id:'hydromaxx_cqb', name:"HydroMaxx CQB", rarity:'mythic', imgId:'hydromaxxcqb', subtype:'weapon', status:null },
     { id:'gubby_launcher', name:"Gubby Launcher", rarity:'secret', imgId:'gubbylauncher', subtype:'weapon', status:'rare' },
     /* ── New Armor ── */
     { id:'viltron_set', name:"Viltron Set", rarity:'mythic', imgId:'viltronset', subtype:'armor', status:null },
@@ -123,88 +124,88 @@ window.VL_DB = {
     { id:'lunar_neckalce',      name:"Lunar Neckalce",       rarity:'uncommon',  imgId:'lunarnecklace',     subtype:'relic',  status:null },
     { id:'vitalis_necklace',    name:"Vitalis Necklace",     rarity:'legendary', imgId:'vitalisnecklace',   subtype:'relic',  status:null },
     { id:'reapers_ring', name:"Reaper's Ring", rarity:'mythic', imgId:'reapersring', subtype:'relic', status:null },
-      { id:'lionels_war_blade', name:"Lionel's War Blade", rarity:'mythic', imgId:'tlconqblade', subtype:'weapon', status:null },
+      { id:'lionels_war_blade', name:"Lionel's War Blade", rarity:'ascended', imgId:'tlconqblade', subtype:'weapon', status:null },
       { id:'hydromaxx_mini',    name:"HydroMaxx MINI", rarity:'secret', imgId:'hydromaxxmini', subtype:'weapon', status:'hyped' },
-      { id:'hydromaxx_lrxl',    name:"HydroMaxx LRXL", rarity:'secret', imgId:'hydromaxxlrxl', subtype:'weapon', status:'hyped' },
+      { id:'hydromaxx_lrxl', name:"HydroMaxx LRXL", rarity:'secret', imgId:'hydromaxxlrxl', subtype:'weapon', status:null },
       { id:'ascendant_vanquisher', name:"Ascendant Vanquisher", rarity:'secret', imgId:'magmaedgev2', subtype:'weapon', status:null },
   ],
 
   cosmetic: [
     /* ── Cosmetic Weapons ── */
-    { id:'betadaggers',       name:"Beta Daggers",             rarity:'mythic',    imgId:'betadaggers',       subtype:'weapon', status:null, value:9000,  demand:3    },
-    { id:'betascythe',        name:"Beta Scythe",              rarity:'mythic',    imgId:'betascythe',        subtype:'weapon', status:null, value:4500,  demand:2    },
+    { id:'betadaggers', name:"Beta Daggers", rarity:'mythic', imgId:'betadaggers', subtype:'weapon', status:null, value:27500, demand:3.5 },
+    { id:'betascythe', name:"Beta Scythe", rarity:'mythic', imgId:'betascythe', subtype:'weapon', status:null, value:5500, demand:2.5 },
     { id:'betahammer',        name:"Beta Hammer",              rarity:'mythic',    imgId:'betahammer',        subtype:'weapon', status:null, value:2500,  demand:1.5  },
-    { id:'betabattleaxe',     name:"Beta Battleaxe",           rarity:'mythic',    imgId:'betabattleaxe',     subtype:'weapon', status:null, value:2500,  demand:1.25 },
+    { id:'betabattleaxe', name:"Beta Battleaxe", rarity:'mythic', imgId:'betabattleaxe', subtype:'weapon', status:null, value:2500, demand:1.5 },
     { id:'betaaxe',           name:"Beta Axe",                 rarity:'mythic',    imgId:'betaaxe',           subtype:'weapon', status:null, value:1500,  demand:1.25 },
-    { id:'betadeathadder',    name:"Beta Deathadder",          rarity:'mythic',    imgId:'betadeathadder',    subtype:'weapon', status:null, value:1250,  demand:1.5  },
-    { id:'amberfallaxe',      name:"Amberfall Axe",            rarity:'mythic',    imgId:'amberfallaxe',      subtype:'weapon', status:null, value:17500, demand:2    },
-    { id:'twilightbloom',     name:"Twilight Bloom",           rarity:'legendary', imgId:'twilightbloom',     subtype:'weapon', status:null, value:6000,  demand:1    },
-    { id:'rootbinder',        name:"Rootbinder",               rarity:'legendary', imgId:'rootbinder',        subtype:'weapon', status:null, value:5000,  demand:1    },
-    { id:'amberbloomblade',   name:"Amberbloom Blade",         rarity:'legendary', imgId:'amberbloomblade',   subtype:'weapon', status:null, value:5000,  demand:0.85 },
-    { id:'crimsondeathadder', name:"Crimson Deathadder",       rarity:'legendary', imgId:'crimsondeathadder', subtype:'weapon', status:null, value:2500,  demand:1.5  },
-    { id:'serpentstaff',      name:"Serpent's Verdant Staff",  rarity:'legendary', imgId:'serpentstaff',      subtype:'weapon', status:null, value:1500,  demand:0.35 },
-    { id:'stormcallerglaive', name:"Stormcaller's Glavie",     rarity:'legendary', imgId:'stormcallerglaive', subtype:'weapon', status:null, value:1500,  demand:0.25 },
+    { id:'betadeathadder', name:"Beta Deathadder", rarity:'mythic', imgId:'betadeathadder', subtype:'weapon', status:null, value:1000, demand:0.5 },
+    { id:'amberfallaxe', name:"Amberfall Axe", rarity:'mythic', imgId:'amberfallaxe', subtype:'weapon', status:null, value:20000, demand:1.5 },
+    { id:'twilightbloom', name:"Twilight Bloom", rarity:'legendary', imgId:'twilightbloom', subtype:'weapon', status:null, value:8000, demand:1 },
+    { id:'rootbinder', name:"Rootbinder", rarity:'legendary', imgId:'rootbinder', subtype:'weapon', status:null, value:4000, demand:0.5 },
+    { id:'amberbloomblade', name:"Amberbloom Blade", rarity:'legendary', imgId:'amberbloomblade', subtype:'weapon', status:null, value:4000, demand:0.5 },
+    { id:'crimsondeathadder', name:"Crimson Deathadder", rarity:'legendary', imgId:'crimsondeathadder', subtype:'weapon', status:null, value:3500, demand:2 },
+    { id:'serpentstaff', name:"Serpent's Verdant Staff", rarity:'legendary', imgId:'serpentstaff', subtype:'weapon', status:null, value:1000, demand:0.25 },
+    { id:'stormcallerglaive', name:"Stormcaller's Glavie", rarity:'legendary', imgId:'stormcallerglaive', subtype:'weapon', status:null, value:1500, demand:0.5 },
     { id:'webweaverscythe',   name:"Webweaver Scythe",         rarity:'mythic',    imgId:'webweaverscythe',   subtype:'weapon', status:null, value:750,   demand:0.5  },
     { id:'ghastlyskeleblade', name:"Ghastly Skeleblade",       rarity:'legendary', imgId:'ghastlyskeleblade', subtype:'weapon', status:null, value:1000,  demand:0.5  },
     { id:'soulbreaker',       name:"Soulbreaker",              rarity:'mythic',    imgId:'soulbreaker',       subtype:'weapon', status:null, value:600,   demand:0    },
-    { id:'krampusscythe',     name:"Krampus Scythe",           rarity:'mythic',    imgId:'krampusscythe',     subtype:'weapon', status:null, value:12500, demand:2.5  },
-    { id:'verdantblade',      name:"Verdant Blade",            rarity:'mythic',    imgId:'verdantblade',      subtype:'weapon', status:null, value:8500,  demand:2.5  },
-    { id:'giftedblade',       name:"Gifted Blade",             rarity:'mythic',    imgId:'giftedblade',       subtype:'weapon', status:null, value:2000,  demand:0.5  },
-    { id:'gingerscythe',      name:"Ginger Scythe",            rarity:'mythic',    imgId:'gingerscythe',      subtype:'weapon', status:null, value:1500,  demand:0.5  },
+    { id:'krampusscythe', name:"Krampus Scythe", rarity:'mythic', imgId:'krampusscythe', subtype:'weapon', status:null, value:17500, demand:3.5 },
+    { id:'verdantblade', name:"Verdant Blade", rarity:'mythic', imgId:'verdantblade', subtype:'weapon', status:null, value:37500, demand:2.25 },
+    { id:'giftedblade', name:"Gifted Blade", rarity:'mythic', imgId:'giftedblade', subtype:'weapon', status:null, value:3000, demand:1 },
+    { id:'gingerscythe', name:"Ginger Scythe", rarity:'mythic', imgId:'gingerscythe', subtype:'weapon', status:null, value:2000, demand:0.75 },
     { id:'giftwrappedaxe',    name:"Giftwrapped Axe",          rarity:'legendary', imgId:'giftwrappedaxe',    subtype:'weapon', status:null, value:1000,  demand:0.25 },
     { id:'cubescythe',        name:"Cube Scythe",              rarity:'legendary', imgId:'cubescythe',        subtype:'weapon', status:null, value:750,   demand:1    },
-    { id:'galacticfrostaxe',  name:"Galactic Frost Axe",       rarity:'legendary', imgId:'galacticfrostaxe',  subtype:'weapon', status:null, value:2000,  demand:1    },
+    { id:'galacticfrostaxe', name:"Galactic Frost Axe", rarity:'legendary', imgId:'galacticfrostaxe', subtype:'weapon', status:null, value:2500, demand:1.5 },
     { id:'moltenscythe',      name:"Molten Scythe",            rarity:'legendary', imgId:'moltenscythe',      subtype:'weapon', status:null, value:4500,  demand:1.25 },
-    { id:'corruptedaxe',      name:"Corrupted Axe",            rarity:'legendary', imgId:'corruptedaxe',      subtype:'weapon', status:null, value:850,   demand:0.5  },
-    { id:'dualdragonitespear',name:"Dual Dragonite Spear",     rarity:'mythic',    imgId:'dualdragonitespear',subtype:'weapon', status:null, value:15000, demand:2    },
-    { id:'dragonitespear',    name:"Dragonite Spear",          rarity:'mythic',    imgId:'dragonitespear',    subtype:'weapon', status:null, value:5000,  demand:1.25 },
+    { id:'corruptedaxe', name:"Corrupted Axe", rarity:'legendary', imgId:'corruptedaxe', subtype:'weapon', status:null, value:1000, demand:0.75 },
+    { id:'dualdragonitespear', name:"Dual Dragonite Spear", rarity:'mythic', imgId:'dualdragonitespear', subtype:'weapon', status:null, value:22500, demand:2.25 },
+    { id:'dragonitespear', name:"Dragonite Spear", rarity:'mythic', imgId:'dragonitespear', subtype:'weapon', status:null, value:4500, demand:1 },
     { id:'theolympian',       name:"The Olympian",             rarity:'legendary', imgId:'theolympian',       subtype:'weapon', status:null, value:600,   demand:0.25 },
-    { id:'valkyrieblade',     name:"Valkyrie Blade",           rarity:'legendary', imgId:'valkyrieblade',     subtype:'weapon', status:null, value:3500,  demand:1.5  },
+    { id:'valkyrieblade', name:"Valkyrie Blade", rarity:'legendary', imgId:'valkyrieblade', subtype:'weapon', status:null, value:4000, demand:3 },
     { id:'bunnyspear',        name:"Bunny Spear",              rarity:'legendary', imgId:'bunnyspear',        subtype:'weapon', status:null, value:800,   demand:0.75 },
     { id:'bunnystaff',        name:"Bunny Staff",              rarity:'legendary', imgId:'bunnystaff',        subtype:'weapon', status:null, value:800,   demand:0.75 },
     { id:'bunnyaxe',          name:"Bunny Axe",                rarity:'legendary', imgId:'bunnyspear',        subtype:'weapon', status:null, value:800,   demand:0.75 },
-    { id:'tempestclaw',       name:"Tempest Claw",             rarity:'legendary', imgId:'tempestclaw',       subtype:'weapon', status:null, value:1500,  demand:0.75 },
-    { id:'dawnbringer',       name:"Dawnbringer",              rarity:'legendary', imgId:'dawnbringer',       subtype:'weapon', status:null, value:1000,  demand:0.5  },
-    { id:'soulspire',         name:"Soul Spire",               rarity:'legendary', imgId:'soulspire',         subtype:'weapon', status:null, value:1000,  demand:0.5  },
+    { id:'tempestclaw', name:"Tempest Claw", rarity:'legendary', imgId:'tempestclaw', subtype:'weapon', status:null, value:2000, demand:1 },
+    { id:'dawnbringer', name:"Dawnbringer", rarity:'legendary', imgId:'dawnbringer', subtype:'weapon', status:null, value:1000, demand:1 },
+    { id:'soulspire', name:"Soul Spire", rarity:'legendary', imgId:'soulspire', subtype:'weapon', status:null, value:2000, demand:0.25 },
     { id:'thunderrift',       name:"Thunder Rift",             rarity:'legendary', imgId:'thunderrift',       subtype:'weapon', status:null, value:750,   demand:0    },
     { id:'thunderblade',      name:"Thunderblade",             rarity:'legendary', imgId:'thunderblade',      subtype:'weapon', status:null, value:550,   demand:0    },
     { id:'minutehand',        name:"Minutehand",               rarity:'mythic',    imgId:'minutehand',        subtype:'weapon', status:null, value:300,   demand:0.25 },
     { id:'hourhand',          name:"Hourhand",                 rarity:'legendary', imgId:'hourhand',          subtype:'weapon', status:null, value:600,   demand:0.5  },
-    { id:'violetbattleaxe',   name:"Violet Battleaxe",         rarity:'mythic',    imgId:'violetbattleaxe',   subtype:'weapon', status:null, value:45000, demand:1.5  },
+    { id:'violetbattleaxe', name:"Violet Battleaxe", rarity:'mythic', imgId:'violetbattleaxe', subtype:'weapon', status:null, value:45000, demand:2 },
     { id:'top3sword',         name:"Top 3 Sword",              rarity:'mythic',    imgId:'top3sword',         subtype:'weapon', status:null, value:18000, demand:2    },
-    { id:'top10sword',        name:"Top 10 Sword",             rarity:'legendary', imgId:'top10sword',        subtype:'weapon', status:null, value:1000,  demand:0.5  },
+    { id:'top10sword', name:"Top 10 Sword", rarity:'legendary', imgId:'top10sword', subtype:'weapon', status:null, value:1500, demand:0.25 },
     { id:'dragonslayerblade', name:"Dragon Slayer Blade",      rarity:'mythic',    imgId:'dragonslayer',      subtype:'weapon', status:'rare', value:'2500-75000+',  demand:2  },
     /* ── Cosmetic Armor ── */
-    { id:'emberknightset',    name:"Ember Knight Set",         rarity:'mythic',    imgId:'emberknightset',    subtype:'armor',  status:'rising', value:72500, demand:2    },
-    { id:'redphantomset',     name:"Red Phantom Set",          rarity:'mythic',    imgId:'redphantomset',     subtype:'armor',  status:null, value:34000, demand:0.75 },
-    { id:'autumnspiritset',   name:"Autumn Spirit Set",        rarity:'mythic',    imgId:'autumnspiritset',   subtype:'armor',  status:null, value:16500,  demand:2    },
-    { id:'horsemanset',       name:"Horseman Set",             rarity:'mythic',    imgId:'horsemanset',       subtype:'armor',  status:null, value:5500,  demand:1.5  },
-    { id:'astralaegisset',    name:"Astral Aegis Set",         rarity:'mythic',    imgId:'astralaegisset',    subtype:'armor',  status:null, value:5000,  demand:2    },
-    { id:'towerkingset',      name:"Tower King Set",           rarity:'exclusive', imgId:'towerkingset',      subtype:'armor',  status:null, value:6000,  demand:0.75 },
-    { id:'vampireset',        name:"Vampire Set",              rarity:'mythic',    imgId:'vampireset',        subtype:'armor',  status:null, value:5000,  demand:0.25 },
-    { id:'krampusset',        name:"Krampus Set",              rarity:'mythic',    imgId:'krampusset',        subtype:'armor',  status:null, value:4750,  demand:1.25 },
-    { id:'chainedoverlordset',name:"Chained Overlord Set",     rarity:'mythic',    imgId:'chainedoverlordset',subtype:'armor',  status:null, value:3500,  demand:1.25 },
-    { id:'mummyset',          name:"Mummy Set",                rarity:'mythic',    imgId:'mummyset',          subtype:'armor',  status:null, value:3250,  demand:0.75 },
-    { id:'scorchguardset',    name:"Scorchguard Set",          rarity:'mythic',    imgId:'scorchguardset',    subtype:'armor',  status:null, value:3750,  demand:0.65 },
-    { id:'voltsentinelset',   name:"Volt Sentinel Set",        rarity:'mythic',    imgId:'voltsentinelset',   subtype:'armor',  status:null, value:4250,  demand:1.5  },
-    { id:'stormborneset',     name:"Stormborne Set",           rarity:'mythic',    imgId:'stormborneset',     subtype:'armor',  status:null, value:2000,  demand:0.75 },
-    { id:'tempestbreakerset', name:"Tempestbreaker Set",       rarity:'mythic',    imgId:'tempestbreakerset', subtype:'armor',  status:null, value:1750,  demand:0.75 },
-    { id:'brightcoreset',     name:"Brightcore Set",           rarity:'mythic',    imgId:'brightcoreset',     subtype:'armor',  status:null, value:1250,   demand:0.25 },
-    { id:'voidcoreset',       name:"Voidcore Set",             rarity:'mythic',    imgId:'voidcoreset',       subtype:'armor',  status:null, value:1250,   demand:0.25 },
-    { id:'betaset',           name:"Beta Set",                 rarity:'mythic',    imgId:'betaset',           subtype:'armor',  status:null, value:4000,  demand:1.75 },
-    { id:'darkknightset',     name:"Dark Knight Set",          rarity:'mythic',    imgId:'darkknightset',     subtype:'armor',  status:null, value:3250,  demand:1.25 },
-    { id:'darknexusset',      name:"Dark Nexus Set",           rarity:'mythic',    imgId:'darknexusset',      subtype:'armor',  status:null, value:3000,  demand:0.75 },
-    { id:'ghastlyset',        name:"Ghastly Set",              rarity:'mythic',    imgId:'ghastlyset',        subtype:'armor',  status:null, value:2500,   demand:0.25 },
-    { id:'snowflakeset',      name:"Snowflake Set",            rarity:'mythic',    imgId:'snowflakeset',      subtype:'armor',  status:null, value:3000,   demand:0.75 },
-    { id:'gingerbreadset',    name:"Gingerbread Guardian Set", rarity:'mythic',    imgId:'gingerbreadset',    subtype:'armor',  status:null, value:2000,   demand:0.5  },
+    { id:'emberknightset', name:"Ember Knight Set", rarity:'mythic', imgId:'emberknightset', subtype:'armor', status:'rising', value:90000, demand:3 },
+    { id:'redphantomset', name:"Red Phantom Set", rarity:'mythic', imgId:'redphantomset', subtype:'armor', status:null, value:40000, demand:2.5 },
+    { id:'autumnspiritset', name:"Autumn Spirit Set", rarity:'mythic', imgId:'autumnspiritset', subtype:'armor', status:null, value:20000, demand:1.5 },
+    { id:'horsemanset', name:"Horseman Set", rarity:'mythic', imgId:'horsemanset', subtype:'armor', status:null, value:6500, demand:1 },
+    { id:'astralaegisset', name:"Astral Aegis Set", rarity:'mythic', imgId:'astralaegisset', subtype:'armor', status:null, value:7000, demand:2 },
+    { id:'towerkingset', name:"Tower King Set", rarity:'exclusive', imgId:'towerkingset', subtype:'armor', status:null, value:6000, demand:1 },
+    { id:'vampireset', name:"Vampire Set", rarity:'mythic', imgId:'vampireset', subtype:'armor', status:null, value:4000, demand:0.5 },
+    { id:'krampusset', name:"Krampus Set", rarity:'mythic', imgId:'krampusset', subtype:'armor', status:null, value:5000, demand:2 },
+    { id:'chainedoverlordset', name:"Chained Overlord Set", rarity:'mythic', imgId:'chainedoverlordset', subtype:'armor', status:null, value:6000, demand:3.25 },
+    { id:'mummyset', name:"Mummy Set", rarity:'mythic', imgId:'mummyset', subtype:'armor', status:null, value:3000, demand:1 },
+    { id:'scorchguardset', name:"Scorchguard Set", rarity:'mythic', imgId:'scorchguardset', subtype:'armor', status:null, value:4000, demand:1.5 },
+    { id:'voltsentinelset', name:"Volt Sentinel Set", rarity:'mythic', imgId:'voltsentinelset', subtype:'armor', status:null, value:4500, demand:2 },
+    { id:'stormborneset', name:"Stormborne Set", rarity:'mythic', imgId:'stormborneset', subtype:'armor', status:null, value:2500, demand:1 },
+    { id:'tempestbreakerset', name:"Tempestbreaker Set", rarity:'mythic', imgId:'tempestbreakerset', subtype:'armor', status:null, value:2000, demand:1 },
+    { id:'brightcoreset', name:"Brightcore Set", rarity:'mythic', imgId:'brightcoreset', subtype:'armor', status:null, value:1500, demand:0.5 },
+    { id:'voidcoreset', name:"Voidcore Set", rarity:'mythic', imgId:'voidcoreset', subtype:'armor', status:null, value:1500, demand:0.5 },
+    { id:'betaset', name:"Beta Set", rarity:'mythic', imgId:'betaset', subtype:'armor', status:null, value:4500, demand:2 },
+    { id:'darkknightset', name:"Dark Knight Set", rarity:'mythic', imgId:'darkknightset', subtype:'armor', status:null, value:4000, demand:1.25 },
+    { id:'darknexusset', name:"Dark Nexus Set", rarity:'mythic', imgId:'darknexusset', subtype:'armor', status:null, value:3500, demand:2 },
+    { id:'ghastlyset', name:"Ghastly Set", rarity:'mythic', imgId:'ghastlyset', subtype:'armor', status:null, value:2500, demand:0.5 },
+    { id:'snowflakeset', name:"Snowflake Set", rarity:'mythic', imgId:'snowflakeset', subtype:'armor', status:null, value:3000, demand:1 },
+    { id:'gingerbreadset', name:"Gingerbread Guardian Set", rarity:'mythic', imgId:'gingerbreadset', subtype:'armor', status:null, value:2500, demand:1.5 },
     { id:'frostskinset',      name:"Frostskin Set",            rarity:'mythic',    imgId:'frostskinset',      subtype:'armor',  status:null, value:2000,   demand:0.5  },
     { id:'phantomknightset',  name:"Phantom Knight Set",       rarity:'mythic',    imgId:'phantomknightset',  subtype:'armor',  status:null, value:1000,   demand:0.25 },
-    { id:'aresset',           name:"Ares Set",                 rarity:'mythic',    imgId:'aresset',           subtype:'armor',  status:null, value:1500,   demand:0.25 },
+    { id:'aresset', name:"Ares Set", rarity:'mythic', imgId:'aresset', subtype:'armor', status:null, value:1750, demand:0.5 },
     { id:'plaguedoctorset',   name:"Plague Doctor Set",        rarity:'mythic',    imgId:'plaguedoctorset',   subtype:'armor',  status:null, value:1500,   demand:0.25 },
-    { id:'spectralset',       name:"Spectral Set",             rarity:'mythic',    imgId:'spectralset',       subtype:'armor',  status:null, value:240,    demand:0    },
-    { id:'witchset',          name:"Witch Set",                rarity:'mythic',    imgId:'witchset',          subtype:'armor',  status:null, value:240,    demand:0    },
-    { id:'spookyamethystset', name:"Spooky Amethyst Set",      rarity:'mythic',    imgId:'spookyamethystset', subtype:'armor',  status:null, value:180,    demand:0    },
-    { id:'dragonslayerset',   name:"Dragon Slayer Set",        rarity:'mythic',    imgId:'dragonslayerset',   subtype:'armor',  status:'rare', value:'3250-80000+', demand:1.5   },
+    { id:'spectralset', name:"Spectral Set", rarity:'mythic', imgId:'spectralset', subtype:'armor', status:null, value:1000, demand:0.25 },
+    { id:'witchset', name:"Witch Set", rarity:'mythic', imgId:'witchset', subtype:'armor', status:null, value:300, demand:0 },
+    { id:'spookyamethystset', name:"Spooky Amethyst Set", rarity:'mythic', imgId:'spookyamethystset', subtype:'armor', status:null, value:100, demand:0 },
+    { id:'dragonslayerset', name:"Dragon Slayer Set", rarity:'mythic', imgId:'dragonslayerset', subtype:'armor', status:'rare', value:'3250-80000+', demand:2 },
     { id:'eggshellset',       name:"Eggshell Set",             rarity:'mythic',    imgId:'eggshellset',       subtype:'armor',  status:null, value:'850', demand:0.5    },
     { id:'viltronset',        name:"Viltron Set",              rarity:'mythic',    imgId:'viltronset',        subtype:'armor',  status:null, value:'1000', demand:0.5   },
   ],
@@ -220,17 +221,17 @@ window.VL_DB = {
   ],
 
   chromas: [
-    { id:'candy_nightmare',   name:"Candy Nightmare",   rarity:'legendary', imgId:'candy_nightmare', demand:3,   value:'6500',        status:'rising', category:'chromas' },
-    { id:'spooky_galaxy',     name:"Spooky Galaxy",     rarity:'mythic', imgId:'spooky_galaxy',    demand:3.5, value:'5000',        status:'rising', category:'chromas' },
-    { id:'candy_reaper',      name:"Candy Reaper",      rarity:'legendary', imgId:'candy_reaper', demand:2,   value:'2000',        status:null,     category:'chromas' },
-    { id:'turkey_mech',       name:"Turkey Mech",       rarity:'exclusive', imgId:'turkey_mech', demand:2.5, value:'1250',        status:null,     category:'chromas' },
-    { id:'og_phantom',        name:"OG Phantom",        rarity:'rare', imgId:'og_phantom',      demand:3,   value:'1000',        status:null,     category:'chromas' },
+    { id:'candy_nightmare', name:"Candy Nightmare", rarity:'legendary', imgId:'candy_nightmare', category:'chromas', status:'rising', value:7000, demand:3 },
+    { id:'spooky_galaxy', name:"Spooky Galaxy", rarity:'mythic', imgId:'spooky_galaxy', category:'chromas', status:'rising', value:5500, demand:3.5 },
+    { id:'candy_reaper', name:"Candy Reaper", rarity:'legendary', imgId:'candy_reaper', category:'chromas', status:null, value:2500, demand:2.5 },
+    { id:'turkey_mech', name:"Turkey Mech", rarity:'exclusive', imgId:'turkey_mech', category:'chromas', status:null, value:1500, demand:2.25 },
+    { id:'og_phantom', name:"OG Phantom", rarity:'rare', imgId:'og_phantom', category:'chromas', status:null, value:3000, demand:3 },
     { id:'santa_reaper',      name:"Santa Reaper",      rarity:'exclusive', imgId:'santa_reaper', demand:2,   value:'3500-75000+',  status:'rare',     category:'chromas' },
     { id:'santa_mech',        name:"Santa Mech",        rarity:'exclusive', imgId:'santa_mech', demand:2.5, value:'3500-85000+',  status:'rare',     category:'chromas' },
     { id:'toxic_dragon',      name:"Toxic Dragon",      rarity:'mythic', imgId:'toxic_dragon',    demand:2,   value:'240',         status:null,     category:'chromas' },
-    { id:'blood_darkness',    name:"Blood Darkness",    rarity:'mythic', imgId:'blood_darkness',    demand:1,   value:'600',         status:null,     category:'chromas' },
-    { id:'amber_lightning',   name:"Amber Lightning",   rarity:'legendary', imgId:'amber_lightning', demand:2,   value:'1000',        status:null,     category:'chromas' },
-    { id:'blood_kitsune',     name:"Blood Kitsune",     rarity:'mythic', imgId:'blood_kitsune',    demand:2,   value:'600',         status:null,     category:'chromas' },
+    { id:'blood_darkness', name:"Blood Darkness", rarity:'mythic', imgId:'blood_darkness', category:'chromas', status:null, value:800, demand:1.5 },
+    { id:'amber_lightning', name:"Amber Lightning", rarity:'legendary', imgId:'amber_lightning', category:'chromas', status:null, value:2000, demand:2.5 },
+    { id:'blood_kitsune', name:"Blood Kitsune", rarity:'mythic', imgId:'blood_kitsune', category:'chromas', status:null, value:500, demand:2 },
     { id:'emerald_lightning', name:"Emerald Lightning", rarity:'legendary', imgId:'emerald_lightning', demand:0,   value:'60',          status:null,     category:'chromas' },
     { id:'pumpkin_phantom',   name:"Pumpkin Phantom",   rarity:'mythic', imgId:'pumpkin_phantom',    demand:0,   value:'60',          status:null,     category:'chromas' },
     { id:'nightmare_dragon',  name:"Nightmare Dragon",  rarity:'mythic', imgId:'nightmare_dragon',    demand:0,   value:'60',          status:null,     category:'chromas' },
@@ -244,38 +245,40 @@ window.VL_DB = {
     { id:'frosted_krampus',   name:"Frosted Krampus",   rarity:'mythic', imgId:'frosted_krampus',    demand:0,   value:'60',          status:null,     category:'chromas' },
     { id:'ethereal_angel',    name:"Ethereal Angel",    rarity:'mythic', imgId:'ethereal_angel',    demand:1,   value:'60',          status:null,     category:'chromas' },
     { id:'love_dragon',       name:"Love Dragon",       rarity:'exclusive', imgId:'love_dragon', demand:0,   value:'60',          status:null,     category:'chromas' },
-    { id:'cupids_angel',      name:"Cupid Angel",       rarity:'mythic', imgId:'cupids_angel',    demand:4,   value:'25000',       status:'rising', category:'chromas' },
-    { id:'love_kitsune',      name:"Love Kitsune",      rarity:'exclusive', imgId:'love_kitsune', demand:3.5, value:'7500',        status:'rising', category:'chromas' },
+    { id:'cupids_angel', name:"Cupid Angel", rarity:'mythic', imgId:'cupids_angel', category:'chromas', status:'rising', value:25000, demand:4.5 },
+    { id:'love_kitsune', name:"Love Kitsune", rarity:'exclusive', imgId:'love_kitsune', category:'chromas', status:'rising', value:10000, demand:4 },
     { id:'candy_heart_ice',   name:"Candy-Heart Ice",   rarity:'legendary', imgId:'candy_heart_ice', demand:0,   value:'60',          status:null,     category:'chromas' },
     { id:'golden_bunny',      name:"Golden Bunny",      rarity:'mythic', imgId:'golden_bunny',    demand:1,   value:'240',         status:null,     category:'chromas' },
   ],
 
   other: [
     /* ── Cases ── */
-    { id:'phantom_case',    name:"Phantom Case",    rarity:'mythic', imgId:'phantom_case',    demand:2, value:8500,  status:null },
-    { id:'winter_case',     name:"Winter Case",     rarity:'mythic', imgId:'winter_case',    demand:2, value:12000, status:null },
-    { id:'halloween_case',  name:"Halloween Case",  rarity:'mythic', imgId:'halloween_case',    demand:2, value:2500,  status:null },
-    { id:'spooky_case',     name:"Spooky Case",     rarity:'mythic', imgId:'spooky_case',    demand:2, value:2000,  status:null },
+    { id:'phantom_case', name:"Phantom Case", rarity:'mythic', imgId:'phantom_case', status:null, value:9000, demand:2.25 },
+    { id:'winter_case', name:"Winter Case", rarity:'mythic', imgId:'winter_case', status:null, value:15000, demand:2.5 },
+    { id:'halloween_case', name:"Halloween Case", rarity:'mythic', imgId:'halloween_case', status:null, value:3500, demand:2 },
+    { id:'spooky_case', name:"Spooky Case", rarity:'mythic', imgId:'spooky_case', status:null, value:3000, demand:2.5 },
     { id:'nightmare_case',  name:"Nightmare Case",  rarity:'mythic', imgId:'nightmare_case',    demand:2, value:1200,  status:null },
     { id:'christmas_case',  name:"Christmas Case",  rarity:'mythic', imgId:'christmas_case',    demand:2, value:800,   status:null },
     { id:'easter_case',     name:"Easter Case",     rarity:'legendary', imgId:'easter_case', demand:0, value:180,   status:null },
-    { id:'raid_case',       name:"Raid Case",       rarity:'legendary', imgId:'raid_case', demand:0, value:25,    status:null },
+    { id:'raid_case', name:"Raid Case", rarity:'legendary', imgId:'raid_case', status:null, value:1, demand:0.01 },
     { id:'christmas_gift',  name:"Christmas Gift",  rarity:'legendary', imgId:'christmas_gift', demand:0, value:240,   status:null },
     /* ── Chromatica ── */
-    { id:'chromatic_cataclysm', name:"Chromatic Cataclysm", rarity:'ascended', imgId:'chromatic_cataclysm', demand:2, value:600, status:null },
-    { id:'chromatic_prism',     name:"Chromatic Prism",     rarity:'mythic', imgId:'chromatic_prism',   demand:3, value:300, status:null },
-    { id:'dilation_schism',     name:"Dilation Schism",     rarity:'mythic', imgId:'dilation_schism',   demand:1, value:300, status:null },
+    { id:'chromatic_cataclysm', name:"Chromatic Cataclysm", rarity:'ascended', imgId:'chromatic_cataclysm', status:null, value:250, demand:2 },
+    { id:'chromatic_prism', name:"Chromatic Prism", rarity:'mythic', imgId:'chromatic_prism', status:null, value:150, demand:3 },
+    { id:'dilation_schism', name:"Dilation Schism", rarity:'mythic', imgId:'dilation_schism', status:null, value:80, demand:2 },
     /* ── 2x EXP Boosts ── */
     { id:'exp_12h', name:"12 Hours 2x EXP", rarity:'legendary', imgId:'exp_12h', demand:2.5, value:1000,  status:null },
-    { id:'exp_6h',  name:"6 Hours 2x EXP",  rarity:'epic', imgId:'exp_6h',      demand:2.5, value:750,  status:null },
+    { id:'exp_6h', name:"6 Hours 2x EXP", rarity:'epic', imgId:'exp_6h', status:null, value:500, demand:2.5 },
     { id:'exp_1h',  name:"1 Hour 2x EXP",   rarity:'rare', imgId:'exp_1h',      demand:2.5, value:150,  status:null },
     { id:'exp_15m', name:"15 Mins 2x EXP",  rarity:'common', imgId:'exp_15m',    demand:2, value:60,   status:null },
-      { id:'heroic_kronax_crate', name:"Heroic Kronax Crate", rarity:'mythic', imgId:'kronax_crate', subtype:'other', status:null, value:350, demand:3.25 },
+      { id:'heroic_kronax_crate', name:"Heroic Kronax Crate", rarity:'mythic', imgId:'kronax_crate', subtype:'other', status:null, value:500, demand:3.75 },
       { id:'viltron_crate', name:"Viltron Crate", rarity:'mythic', imgId:'viltron_crate', subtype:'other', status:null, value:150, demand:2.25 },
       { id:'kronax_crate', name:"Kronax Crate", rarity:'mythic', imgId:'kronax_crate', subtype:'other', status:null, value:100, demand:2.25 },
-      { id:'heroic_viltron_crate', name:"Heroic Viltron Crate", rarity:'mythic', imgId:'viltron_crate', subtype:'other', status:null, value:400, demand:3.5 },
-      { id:'summer_chest', name:"Summer Chest", rarity:'mythic', imgId:'summer_chest', subtype:'other', status:null, value:15, demand:1.25 },
-      { id:'24_hours_2x_exp', name:"24 Hours 2x Exp", rarity:'mythic', imgId:'exp_24h', subtype:'other', status:null, value:1500, demand:2.75 },
+      { id:'heroic_viltron_crate', name:"Heroic Viltron Crate", rarity:'mythic', imgId:'viltron_crate', subtype:'other', status:null, value:400, demand:3.25 },
+      { id:'summer_chest', name:"Summer Chest", rarity:'mythic', imgId:'summer_chest', subtype:'other', status:null, value:50, demand:4 },
+      { id:'24_hours_2x_exp', name:"24 Hours 2x Exp", rarity:'mythic', imgId:'exp_24h', subtype:'other', status:null, value:2000, demand:2.75 },
+      { id:'72_hour_2x_exp', name:"72 Hour 2x EXP", rarity:'mythic', imgId:'exp_72h', subtype:'other', status:null, value:3000, demand:3.5 },
+      { id:'mythic_raid_case', name:"Mythic Raid CAse", rarity:'mythic', imgId:'raid_case', subtype:'other', status:null, value:40, demand:3 },
   ],
 
 };
@@ -303,21 +306,21 @@ window.VL_VARIANTS_DB = {
   },
 
   corrupted: {
-    solar:                { value:120000, demand:1, status:null },
-    infinity:  { value:175000, demand:2.5, status:null       },
-    phantom:   { value:150000, demand:3.5, status:null       },
-    nightmare: { value:100000, demand:3.5, status:null       },
+    solar:                { value:65000, demand:4, status:null },
+    infinity:             { value:175000, demand:3, status:null },
+    phantom:              { value:150000, demand:4, status:null },
+    nightmare:            { value:100000, demand:4, status:null },
     astra:                { value:100000, demand:3, status:null },
     time:                 { value:4000, demand:2, status:null },
     bunny:                { value:65000, demand:3, status:null },
-    krampus:   { value:10000,  demand:2.5, status:null       },
-    reaper:               { value:1000, demand:3, status:null },
-    galaxy:               { value:1100, demand:3.5, status:null },
-    mech:                 { value:1000, demand:2.5, status:null },
-    kitsune:              { value:1000, demand:2.5, status:null },
-    gravity:              { value:250, demand:4, status:null },
+    krampus:              { value:12000, demand:2.5, status:null },
+    reaper:               { value:650, demand:3, status:null },
+    galaxy:               { value:700, demand:3.5, status:null },
+    mech:                 { value:500, demand:2.5, status:null },
+    kitsune:              { value:750, demand:2.5, status:null },
+    gravity:              { value:450, demand:4, status:null },
     dragon:               { value:100, demand:2, status:null },
-    darkness:             { value:250, demand:4, status:null },
+    darkness:             { value:200, demand:4, status:null },
     angel:                { value:100, demand:2, status:null },
     lava:                 { value:100, demand:1, status:null },
     lightning:            { value:1, demand:0.01, status:null },
@@ -330,7 +333,8 @@ window.VL_VARIANTS_DB = {
     fire:      { value:0,      demand:0,   status:null       },
     sand:      { value:0,      demand:0,   status:null       },
     air:       { value:0,      demand:0,   status:null       },
-  },
+    lunar:                { value:65000, demand:4, status:null },
+},
 
   infernal: {
     reaper:               { value:30, demand:2, status:null },
@@ -357,10 +361,10 @@ window.VL_VARIANTS_DB = {
   },
 
   shiny: {
-    reaper:               { value:80, demand:2, status:null },
-    galaxy:               { value:80, demand:2, status:null },
-    kitsune:              { value:80, demand:2, status:null },
-    mech:                 { value:80, demand:2, status:null },
+    reaper:               { value:60, demand:2, status:null },
+    galaxy:               { value:60, demand:2, status:null },
+    kitsune:              { value:60, demand:2, status:null },
+    mech:                 { value:60, demand:2, status:null },
     krampus:              { value:2000, demand:2, status:null },
     astra:                { value:8000, demand:3, status:null },
     time:                 { value:2000, demand:2, status:null },
@@ -409,11 +413,11 @@ window.VL_VARIANTS_DB = {
   },
 
   armored: {
-    reaper:               { value:80, demand:2, status:null },
-    mech:                 { value:80, demand:2, status:null },
-    kitsune:              { value:80, demand:2, status:null },
-    galaxy:               { value:80, demand:2, status:null },
-    angel:                { value:200, demand:3, status:null },
+    reaper:               { value:90, demand:2, status:null },
+    mech:                 { value:90, demand:2, status:null },
+    kitsune:              { value:90, demand:2, status:null },
+    galaxy:               { value:90, demand:2, status:null },
+    angel:                { value:300, demand:3, status:null },
     gravity:  { value:0,  demand:0, status:null },
     dragon:   { value:0,   demand:0,   status:null },
     darkness: { value:0,   demand:0,   status:null },
@@ -461,19 +465,19 @@ window.VL_VARIANTS_DB = {
     bunny:     { value:150000, demand:3.5, status:null },
     krampus:              { value:350000, demand:5, status:null },
     time:                 { value:22500, demand:2, status:null },
-    galaxy:               { value:11000, demand:4, status:null },
-    reaper:               { value:10000, demand:3, status:null },
-    kitsune:              { value:9500, demand:2.5, status:null },
-    mech:                 { value:9500, demand:2.5, status:null },
+    galaxy:               { value:9000, demand:3, status:null },
+    reaper:               { value:8000, demand:2.5, status:null },
+    kitsune:              { value:8000, demand:2.5, status:null },
+    mech:                 { value:7000, demand:2, status:null },
     gravity:              { value:1800, demand:3.5, status:null },
-    darkness:  { value:1000,   demand:2,   status:null },
+    darkness:             { value:1200, demand:2, status:null },
     dragon:               { value:1200, demand:2, status:null },
-    angel:     { value:1000,   demand:2,   status:null },
-    lava:      { value:1000,   demand:2,   status:null },
-    lightning:            { value:120, demand:2, status:null },
-    ice:                  { value:60, demand:1, status:null },
-    light:                { value:60, demand:1, status:null },
-    smoke:                { value:40, demand:1, status:null },
+    angel:                { value:1200, demand:2, status:null },
+    lava:                 { value:1200, demand:2, status:null },
+    lightning:            { value:150, demand:2, status:null },
+    ice:                  { value:30, demand:1, status:null },
+    light:                { value:30, demand:1, status:null },
+    smoke:                { value:30, demand:1, status:null },
     earth:                { value:0, demand:0, status:null },
     water:                { value:0, demand:0, status:null },
     fire:                 { value:0, demand:0, status:null },
@@ -481,14 +485,14 @@ window.VL_VARIANTS_DB = {
     nature:               { value:0, demand:0, status:null },
     air:                  { value:0, demand:0, status:null },
     infinity:             { value:550000, demand:5, status:null },
-  },
+},
 
   jumpscared: {
-    sunlar:               { value:60000, demand:3.5, status:'rising' },
+    sunlar:               { value:45000, demand:3.5, status:'rising' },
   },
 
   jumpscarebborn: {
-    sunlar:               { value:175000, demand:3, status:'unstable' },
+    sunlar:               { value:90000, demand:3.5, status:'unstable' },
   },
 
   grumpy: {
@@ -546,36 +550,35 @@ window.VL_VARIANTS_DB = {
     time:                 { value:120000, demand:4, status:'inprocess' },
     galaxy:               { value:70000, demand:4.5, status:null },
     reaper:       { value:60000, demand:3,   status:null    },
-    mech:         { value:55000,  demand:3,   status:null    },
+    mech:                 { value:50000, demand:3, status:null },
     kitsune:              { value:65000, demand:4, status:null },
     gravity:              { value:20000, demand:3.5, status:null },
     dragon:               { value:8000, demand:3, status:null },
     darkness:             { value:15000, demand:3.5, status:null },
     lightning:            { value:2000, demand:3, status:null },
-    angel:                { value:6000, demand:1, status:null },
-    lava:                 { value:6000, demand:2, status:null },
-    light:                { value:300, demand:1, status:null },
-    smoke:                { value:200, demand:1, status:null },
-    ice:                  { value:200, demand:1, status:null },
+    angel:                { value:10000, demand:1, status:null },
+    lava:                 { value:10000, demand:2, status:null },
+    light:                { value:150, demand:1, status:null },
+    smoke:                { value:80, demand:1, status:null },
+    ice:                  { value:80, demand:1, status:null },
     nature:               { value:0, demand:0, status:null },
     earth:                { value:0, demand:0, status:null },
     water:                { value:0, demand:0, status:null },
     fire:                 { value:0, demand:0, status:null },
     sand:                 { value:0, demand:0, status:null },
     air:                  { value:0, demand:0, status:null },
-    time:         { value:115000, demand:3.75, status:'inprocess' },
   },
 
   timelost: {
-    kitsune:              { value:8000, demand:3.5, status:null },
+    kitsune:              { value:8000, demand:4, status:null },
     fools_phantom:        { value:100000, demand:4, status:'rising' },
     mech:                 { value:30000, demand:3, status:null },
-    angel:                { value:50000, demand:5, status:null },
-    gravity:              { value:40, demand:0, status:null },
+    angel:                { value:60000, demand:5, status:null },
+    gravity:              { value:90, demand:2, status:null },
     reaper:               { value:2500, demand:1, status:null },
-    darkness:             { value:20, demand:0, status:null },
-    dragon:               { value:20, demand:0, status:null },
-    lava:                 { value:20, demand:0, status:null },
+    darkness:             { value:150, demand:2, status:null },
+    dragon:               { value:30, demand:2, status:null },
+    lava:                 { value:30, demand:2, status:null },
     lightning:            { value:0, demand:0, status:null },
     light:                { value:0, demand:0, status:null },
     ice:                  { value:0, demand:0, status:null },
@@ -588,9 +591,9 @@ window.VL_VARIANTS_DB = {
   },
 
   glitched: {
-    galaxy:               { value:25000, demand:3, status:null },
-    bunny:                { value:300000, demand:4, status:'rising' },
-    gravity:       { value:3000,  demand:3,   status:null   },
+    galaxy:               { value:30000, demand:3, status:null },
+    bunny:                { value:300000, demand:2.5, status:null },
+    gravity:              { value:4000, demand:3, status:null },
   },
 
   cupid: {
@@ -598,7 +601,7 @@ window.VL_VARIANTS_DB = {
   },
 
   runic: {
-    water:                { value:400, demand:2, status:null },
+    water:                { value:500, demand:2, status:null },
   },
 
   whirlwind: {
@@ -606,7 +609,7 @@ window.VL_VARIANTS_DB = {
   },
 
   viltron: {
-    galaxy:               { value:140000, demand:4.5, status:null },
+    galaxy:               { value:150000, demand:5, status:null },
   },
 
   kronax: {
@@ -614,13 +617,16 @@ window.VL_VARIANTS_DB = {
   },
 
   nuclear: {
-    ice:                  { value:2500, demand:2, status:null },
-    lava:                 { value:4000, demand:2, status:null },
-    air:                  { value:100000, demand:4, status:'rare' },
-    dragon:               { value:25000, demand:3.5, status:null },
+    ice:                  { value:3000, demand:2, status:null },
+    lava:                 { value:3000, demand:2, status:null },
+    air:                  { value:100000, demand:5, status:'rare' },
+    dragon:               { value:25000, demand:4, status:null },
   },
-  
   corrupted_infernal: {
+    time:                 { value:50000, demand:3, status:'inprocess' },
+  },
+
+  equinox: {
   },
 };
 
@@ -634,83 +640,83 @@ window.VL_VARIANTS_DB = {
 window.VL_GEAR_ROLLS = {
   /* ── Weapons ── */
   conqblade: {
-    corrupted: [ {v:500,d:1},{v:550,d:1},{v:600,d:1},{v:650,d:1.25},{v:700,d:1.25},{v:750,d:1.25},{v:800,d:1.25},{v:850,d:1.5},{v:900,d:1.5},{v:950,d:1.5},{v:1000,d:2} ]
+    corrupted: [ {v:600,d:1},{v:600,d:1},{v:600,d:1},{v:600,d:1},{v:600,d:1},{v:600,d:1},{v:600,d:1},{v:600,d:1},{v:600,d:1},{v:600,d:1},{v:600,d:1} ]
   },
   poseidtrident: {
-    corrupted: [ {v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75},{v:120,d:0.75} ]
+    corrupted: [ {v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:40,d:0.5},{v:100,d:1} ]
   },
   doombringer: {
-    corrupted: [ {v:130,d:0.25},{v:145,d:0.25},{v:160,d:0.25},{v:175,d:0.5},{v:190,d:0.5},{v:205,d:0.75},{v:220,d:0.75},{v:235,d:0.75},{v:250,d:1},{v:275,d:1},{v:300,d:1} ]
+    corrupted: [ {v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:130,d:0.75},{v:150,d:1},{v:200,d:1} ]
   },
   grimshadekat: {
-    corrupted: [ {v:60,d:0.5},{v:60,d:0.5},{v:60,d:0.5},{v:60,d:0.5},{v:60,d:0.5},{v:60,d:0.5},{v:60,d:0.5},{v:60,d:0.5},{v:60,d:0.5},{v:60,d:0.5},{v:60,d:0.5} ]
+    corrupted: [ {v:20,d:0.5},{v:20,d:0.5},{v:20,d:0.5},{v:20,d:0.5},{v:20,d:0.5},{v:20,d:0.5},{v:20,d:0.5},{v:20,d:0.5},{v:20,d:0.5},{v:20,d:0.5},{v:40,d:1} ]
   },
   magmaedge: {
-    corrupted: [ {v:100,d:0.75},{v:125,d:0.75},{v:150,d:0.75},{v:175,d:1},{v:200,d:1},{v:225,d:1},{v:250,d:1},{v:275,d:1},{v:300,d:1.25},{v:325,d:1.25},{v:350,d:1.25} ]
+    corrupted: [ {v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:100,d:0.5},{v:150,d:0.5},{v:200,d:0.5} ]
   },
   diamondcrack: {
-    corrupted: [ {v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25},{v:60,d:0.25} ]
+    corrupted: [ {v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:20,d:0.25},{v:40,d:0.5} ]
   },
   abysstrident: {
-    corrupted: [ null,null,null,null,null,{v:1200,d:1},{v:1250,d:1},{v:1300,d:1.2},{v:1500,d:1.2},{v:1750,d:1.5},{v:2000,d:1.5} ]
+    corrupted: [ null,null,null,null,null,{v:1000,d:2},{v:1000,d:2},{v:1000,d:2},{v:1200,d:2},{v:1300,d:2},{v:1500,d:2} ]
   },
   ascdaggers: {
-    corrupted: [ null,null,null,null,null,{v:900,d:0.25},{v:1000,d:0.3},{v:1100,d:0.5},{v:1150,d:0.5},{v:1250,d:0.75},{v:1300,d:1} ]
+    corrupted: [ null,null,null,null,null,{v:800,d:1},{v:850,d:1},{v:900,d:1},{v:1000,d:1},{v:1100,d:1},{v:1200,d:1} ]
   },
   magmaedgev2: {
-    corrupted: [ null,null,null,null,null,{v:1000,d:0.5},{v:1050,d:0.75},{v:1150,d:1},{v:1250,d:1.2},{v:1400,d:1.5},{v:1500,d:1.65} ]
+    corrupted: [ null,null,null,null,null,{v:1000,d:1},{v:1000,d:1},{v:1000,d:1},{v:1200,d:1},{v:1300,d:1},{v:1500,d:1.5} ]
   },
   lightkatanav2: {
-    corrupted: [ null,null,null,null,null,{v:1200,d:1},{v:1250,d:1},{v:1300,d:1.2},{v:1500,d:1.2},{v:1750,d:1.5},{v:2000,d:1.5} ]
+    corrupted: [ null,null,null,null,null,{v:1000,d:1.5},{v:1200,d:1.5},{v:1300,d:1.5},{v:1400,d:1.5},{v:1500,d:1.5},{v:2000,d:2} ]
   },
   mentav2: {
-    corrupted: [ null,null,null,null,null,{v:3250,d:1.5},{v:3500,d:1.5},{v:3750,d:1.5},{v:4000,d:1.5},{v:4250,d:1.75},{v:4500,d:2} ]
+    corrupted: [ null,null,null,null,null,{v:1250,d:1.5},{v:1500,d:1.5},{v:1750,d:1.5},{v:2000,d:1.5},{v:3000,d:1.5},{v:4000,d:2} ]
   },
   /* Wooden Sword V2 — только ролл 11 (индекс 10) */
   woodenv2: {
-    corrupted: [ null,null,null,null,null,null,null,null,null,null,{v:3500,d:2.5} ]
+    corrupted: [ null,null,null,null,null,null,null,null,null,null,{v:3000,d:2.5} ]
   },
   ascvoidblade: {
-    corrupted: [ null,null,null,null,null,{v:2000,d:1.25},{v:2500,d:1.5},{v:2750,d:1.75},{v:3000,d:2.25},{v:3250,d:2.25},{v:3500,d:2.5} ]
+    corrupted: [ null,null,null,null,null,{v:1250,d:2},{v:1500,d:2},{v:1750,d:2},{v:2000,d:2},{v:3000,d:2},{v:4000,d:2.5} ]
   },
   cupidfury: {
-    corrupted: [ {v:2000,d:1},{v:2000,d:1},{v:2000,d:1},{v:2500,d:1},{v:2500,d:1},{v:2750,d:1},{v:3000,d:1},{v:3000,d:1},{v:3250,d:1.25},{v:3500,d:1.25},{v:3750,d:1.5} ]
+    corrupted: [ {v:1000,d:1.5},{v:1000,d:1.5},{v:1000,d:1.5},{v:1000,d:1.5},{v:1000,d:1.5},{v:1000,d:1.5},{v:1000,d:1.5},{v:1000,d:1.5},{v:1000,d:1.5},{v:1000,d:1.5},{v:1500,d:2} ]
   },
   cupidwrath: {
-    corrupted: [ {v:6000,d:1.5},{v:6000,d:1.5},{v:6000,d:1.5},{v:6000,d:1.5},{v:6500,d:1.5},{v:7000,d:1.5},{v:7500,d:1.5},{v:8500,d:1.5},{v:8750,d:2},{v:9000,d:2},{v:9500,d:2} ]
+    corrupted: [ {v:10000,d:3},{v:10000,d:3},{v:10000,d:3},{v:10000,d:3},{v:10000,d:3},{v:10000,d:3},{v:10000,d:3},{v:10000,d:3},{v:10000,d:3},{v:10000,d:3},{v:15000,d:3} ]
   },
   tlconqblade: {
-    corrupted: [ {v:1300,d:0.2},{v:1300,d:0.2},{v:1300,d:0.2},{v:1300,d:0.2},{v:1300,d:0.2},{v:1600,d:0.3},{v:1600,d:0.3},{v:1600,d:0.3},{v:1750,d:0.5},{v:2000,d:0.6},{v:2500,d:0.65} ]
+    corrupted: [ {v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:400,d:1},{v:500,d:1},{v:700,d:1},{v:1000,d:1} ]
   },
   tlconqbladele: {
-    corrupted: [ {v:6000,d:1.5},{v:7250,d:1.5},{v:8250,d:1.5},{v:9250,d:1.5},{v:9500,d:1.75},{v:10000,d:2},{v:10500,d:2},{v:11000,d:2},{v:11500,d:2.5},{v:12000,d:2.5},{v:12500,d:3} ]
+    corrupted: [ {v:22000,d:3},{v:23500,d:3},{v:25000,d:3},{v:26500,d:3},{v:28000,d:3},{v:30000,d:3},{v:32000,d:3},{v:35000,d:3},{v:40000,d:3},{v:45000,d:3},{v:55000,d:4} ]
   },
   glitchedstaff: {
-    corrupted: [ null,null,null,null,null,{v:800,d:1},{v:860,d:1},{v:920,d:1.2},{v:1000,d:1.3},{v:1200,d:1.5},{v:1500,d:1.5} ]
+    corrupted: [ null,null,null,null,null,{v:1000,d:1.5},{v:1100,d:1.5},{v:1200,d:1.5},{v:1300,d:1.5},{v:1500,d:1.5},{v:2000,d:2} ]
   },
   viltronstaff: {
-    corrupted: [ null,null,null,null,null,{v:180,d:0.2},{v:180,d:0.2},{v:180,d:0.2},{v:225,d:0.3},{v:300,d:0.5},{v:350,d:0.5} ]
+    corrupted: [ null,null,null,null,null,{v:250,d:0.5},{v:250,d:0.5},{v:250,d:0.5},{v:250,d:0.5},{v:300,d:0.5},{v:400,d:0.5} ]
   },
   seriously: {
     corrupted: [ null,null,null,null,null,{v:15000,d:1.5},{v:17500,d:1.5},{v:20000,d:2},{v:25000,d:2},{v:30000,d:2},{v:35000,d:2} ]
   },
   easterstaff: {
-    corrupted: [ null,null,null,null,null,{v:600,d:0.5},{v:650,d:1},{v:710,d:1},{v:780,d:1.2},{v:850,d:1.3},{v:1000,d:1.5} ]
+    corrupted: [ null,null,null,null,null,{v:1000,d:2},{v:1000,d:2},{v:1000,d:2},{v:1000,d:2},{v:1000,d:2},{v:1500,d:2} ]
   },
   fzset: {
-    corrupted: [ {v:250,d:0.5},{v:300,d:0.5},{v:400,d:0.5},{v:500,d:0.5},{v:625,d:0.5},{v:725,d:0.75},{v:825,d:0.75},{v:950,d:0.75},{v:1050,d:1},{v:1150,d:1},{v:1250,d:1} ]
+    corrupted: [ {v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:300,d:0.5},{v:600,d:1} ]
   },
   zset: {
-    corrupted: [ {v:60,d:0.15},{v:72,d:0.15},{v:87,d:0.15},{v:99,d:0.25},{v:114,d:0.25},{v:126,d:0.25},{v:141,d:0.35},{v:153,d:0.35},{v:165,d:0.5},{v:180,d:0.5},{v:200,d:0.5} ]
+    corrupted: [ {v:20,d:0},{v:20,d:0},{v:20,d:0},{v:20,d:0},{v:20,d:0},{v:20,d:0},{v:20,d:0},{v:20,d:0},{v:20,d:0},{v:20,d:0},{v:40,d:0} ]
   },
   hadesset: {
-    corrupted: [ {v:250,d:0.5},{v:300,d:0.5},{v:400,d:0.5},{v:500,d:0.5},{v:625,d:0.5},{v:725,d:0.75},{v:825,d:0.75},{v:950,d:0.75},{v:1050,d:1},{v:1150,d:1},{v:1250,d:1} ]
+    corrupted: [ {v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5},{v:300,d:0.5},{v:600,d:1} ]
   },
   kronaxset: {
-    corrupted: [ {v:1500,d:1},{v:1560,d:1},{v:1620,d:1},{v:1680,d:1.2},{v:1740,d:1.3},{v:1800,d:1.5},{v:1860,d:1.5},{v:1920,d:1.5},{v:2000,d:2},{v:2300,d:2},{v:2500,d:2} ]
+    corrupted: [ {v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:1000,d:1},{v:1500,d:1},{v:2000,d:1.5} ]
   },
   heroickronax: {
-    corrupted: [ {v:2000,d:1},{v:2120,d:1},{v:2240,d:1},{v:2360,d:1.2},{v:2480,d:1.3},{v:2600,d:1.5},{v:2720,d:1.5},{v:2840,d:1.7},{v:3000,d:2},{v:3500,d:2},{v:4000,d:2} ]
+    corrupted: [ {v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:1000,d:1},{v:1500,d:1},{v:2000,d:1.5} ]
   },
   viltron_set: {
     corrupted: [ {v:300,d:0},{v:300,d:0.25},{v:350,d:0.25},{v:400,d:0.25},{v:425,d:0.25},{v:450,d:0.5},{v:500,d:0.5},{v:525,d:0.5},{v:550,d:0.75},{v:575,d:0.75},{v:600,d:0.75} ]
@@ -719,58 +725,58 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:500,d:0.35},{v:525,d:0.5},{v:550,d:0.5},{v:575,d:0.5},{v:600,d:0.75},{v:625,d:0.75},{v:650,d:0.75},{v:675,d:0.75},{v:700,d:1},{v:725,d:1},{v:750,d:1} ]
   },
   curious_wooden_bow: {
-    corrupted: [ {v:625,d:0.5},{v:650,d:0.5},{v:675,d:0.5},{v:700,d:0.5},{v:725,d:0.75},{v:750,d:0.75},{v:800,d:0.75},{v:850,d:0.75},{v:900,d:1},{v:950,d:1},{v:1000,d:1} ]
+    corrupted: [ {v:2,d:0},{v:5,d:0},{v:5,d:0},{v:5,d:0},{v:10,d:0},{v:10,d:0},{v:10,d:0},{v:10,d:0},{v:25,d:1},{v:35,d:1},{v:50,d:1} ]
   },
   shadow_scythe: {
-    corrupted: [ {v:1450,d:1},{v:1600,d:1},{v:1750,d:1},{v:1900,d:1.25},{v:2000,d:1.25},{v:2150,d:1.25},{v:2300,d:1.25},{v:2450,d:1.25},{v:2600,d:1.5},{v:2850,d:1.5},{v:3000,d:1.5} ]
+    corrupted: [ {v:2000,d:2},{v:2250,d:2},{v:2500,d:2},{v:2750,d:2},{v:3000,d:2},{v:3250,d:2},{v:3500,d:2},{v:3750,d:2},{v:4000,d:2},{v:4250,d:2.5},{v:4750,d:3} ]
   },
   firework_bow: {
-    corrupted: [ {v:6000,d:1},{v:6150,d:1.25},{v:6300,d:1.25},{v:6450,d:1.5},{v:6600,d:1.5},{v:6750,d:1.75},{v:6900,d:1.75},{v:7050,d:1.75},{v:7200,d:2},{v:7350,d:2},{v:7500,d:2} ]
+    corrupted: [ {v:6250,d:2},{v:6500,d:2},{v:6750,d:2},{v:7000,d:2},{v:7250,d:2},{v:7500,d:2},{v:7750,d:2},{v:8000,d:2},{v:9000,d:2},{v:10000,d:2},{v:12000,d:2.5} ]
   },
   terrablade_le: {
-    corrupted: [ {v:49000,d:3},{v:50500,d:3},{v:52000,d:3},{v:53500,d:3},{v:55000,d:3.25},{v:56500,d:3.25},{v:58000,d:3.25},{v:59500,d:3.25},{v:61000,d:3.5},{v:63500,d:3.5},{v:65000,d:3.5} ]
+    corrupted: [ {v:54000,d:4},{v:57000,d:4},{v:60000,d:4},{v:63000,d:4},{v:66000,d:4},{v:69000,d:4},{v:72000,d:4},{v:75000,d:4},{v:85000,d:4},{v:95000,d:4},{v:110000,d:4.5} ]
   },
   pool_noodle: {
     corrupted: [ {v:25,d:0.25},{v:32.5,d:0.25},{v:40,d:0.25},{v:47.5,d:0.25},{v:55,d:0.25},{v:65,d:0.35},{v:75,d:0.35},{v:85,d:0.35},{v:100,d:0.5},{v:115,d:0.5},{v:125,d:0.5} ]
   },
   heroic_viltron_set: {
-    corrupted: [ {v:500,d:0.25},{v:550,d:0.5},{v:600,d:0.5},{v:650,d:0.5},{v:700,d:0.5},{v:750,d:0.75},{v:800,d:0.75},{v:850,d:0.75},{v:900,d:1},{v:950,d:1},{v:1000,d:1} ]
+    corrupted: [ {v:300,d:0.5},{v:300,d:0.5},{v:300,d:0.5},{v:300,d:0.5},{v:300,d:0.5},{v:300,d:0.5},{v:300,d:0.5},{v:300,d:0.5},{v:300,d:0.5},{v:500,d:0.5},{v:1000,d:1} ]
   },
   terrablade: {
-    corrupted: [ {v:1500,d:1.25},{v:1550,d:1.25},{v:1600,d:1.25},{v:1650,d:1.5},{v:1700,d:1.5},{v:1750,d:1.75},{v:1800,d:1.75},{v:1850,d:1.75},{v:1900,d:2},{v:1950,d:2},{v:2000,d:2} ]
+    corrupted: [ {v:900,d:2},{v:950,d:2},{v:1000,d:2},{v:1050,d:2},{v:1100,d:2},{v:1150,d:2},{v:1200,d:2},{v:1250,d:2},{v:1300,d:2},{v:1500,d:2},{v:2000,d:2.5} ]
   },
   hydromaxx_lr: {
-    corrupted: [ {v:10000,d:1.75},{v:12500,d:1.75},{v:15000,d:1.75},{v:17500,d:2},{v:20000,d:2},{v:22500,d:2.25},{v:25000,d:2.25},{v:27500,d:2.25},{v:30000,d:2.5},{v:32500,d:2.5},{v:35000,d:2.5} ]
+    corrupted: [ {v:17000,d:3},{v:18000,d:3},{v:19000,d:3},{v:20000,d:3},{v:21000,d:3},{v:22000,d:3},{v:23000,d:3},{v:24000,d:3},{v:26000,d:3},{v:30000,d:3.25},{v:40000,d:3.5} ]
   },
   hydromaxx_cqb: {
-    corrupted: [ {v:1000,d:1.5},{v:1050,d:1.5},{v:1100,d:1.5},{v:1150,d:1.5},{v:1200,d:1.5},{v:1250,d:1.75},{v:1300,d:1.75},{v:1350,d:1.75},{v:1400,d:2},{v:1450,d:2},{v:1500,d:2} ]
+    corrupted: [ {v:800,d:1.5},{v:850,d:1.5},{v:900,d:1.5},{v:950,d:1.5},{v:1000,d:1.5},{v:1050,d:1.5},{v:1100,d:1.5},{v:1150,d:1.5},{v:1200,d:1.5},{v:1300,d:1.5},{v:1500,d:2} ]
   },
   lord_prisma_ring: {
-    corrupted: [ {v:20000,d:3.25},{v:22500,d:3.5},{v:25000,d:3.5},{v:27500,d:3.75},{v:30000,d:3.75},{v:32500,d:3.75},{v:35000,d:4},{v:37500,d:4},{v:40000,d:4.25},{v:42500,d:4.25},{v:45000,d:4.25} ]
+    corrupted: [ {v:15000,d:3},{v:16000,d:3},{v:17000,d:3},{v:18000,d:3},{v:19000,d:3},{v:20000,d:3},{v:22000,d:3},{v:25000,d:3},{v:27000,d:3.5},{v:30000,d:3.5},{v:35000,d:4} ]
   },
   lucky_banner_charm: {
-    corrupted: [ {v:500,d:0.75},{v:525,d:0.5},{v:550,d:0.75},{v:575,d:0.75},{v:600,d:0.75},{v:625,d:1},{v:650,d:1},{v:675,d:1},{v:700,d:1.25},{v:725,d:1.25},{v:750,d:1.25} ]
+    corrupted: [ {v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1},{v:500,d:1.5},{v:500,d:1.5},{v:500,d:1.5},{v:600,d:1.5},{v:700,d:1.5},{v:1000,d:2} ]
   },
   easter_ring: {
     corrupted: [ {v:125,d:0},{v:125,d:0},{v:150,d:0},{v:150,d:0.25},{v:150,d:0.25},{v:175,d:0.25},{v:175,d:0.25},{v:175,d:0.25},{v:200,d:0.5},{v:200,d:0.5},{v:200,d:0.5} ]
   },
   celestial_ring: {
-    corrupted: [ {v:1,d:0.25},{v:1,d:0.25},{v:1,d:0.25},{v:1,d:0.5},{v:1,d:0.5},{v:1,d:0.75},{v:1,d:0.75},{v:1,d:0.75},{v:2,d:1},{v:2,d:1},{v:2,d:1} ]
+    corrupted: [ {v:1,d:0.25},{v:1,d:0.5},{v:1,d:0.5},{v:1,d:0.5},{v:1,d:0.5},{v:1,d:0.75},{v:1,d:0.75},{v:1,d:0.75},{v:2,d:1},{v:2,d:1},{v:2,d:1} ]
   },
   torrential_aspect: {
-    corrupted: [ {v:1300,d:1},{v:1450,d:1.25},{v:1600,d:1.25},{v:1850,d:1.5},{v:2000,d:1.5},{v:2150,d:1.75},{v:2250,d:1.75},{v:2350,d:1.75},{v:2400,d:2},{v:2450,d:2},{v:2500,d:2} ]
+    corrupted: [ {v:2400,d:2.5},{v:2500,d:2.5},{v:2600,d:2.5},{v:2700,d:2.5},{v:2800,d:2.5},{v:2900,d:2.5},{v:3000,d:2.5},{v:3100,d:2.5},{v:3200,d:2.5},{v:3500,d:2.5},{v:4000,d:3} ]
   },
   skyborne_runes: {
     corrupted: [ {v:1,d:0.25},{v:1,d:0.5},{v:1,d:0.5},{v:1,d:0.5},{v:1,d:0.75},{v:1,d:0.75},{v:1,d:0.75},{v:1,d:0.75},{v:2,d:1},{v:2,d:1},{v:2,d:1} ]
   },
   graviton_ring: {
-    corrupted: [ {v:750,d:0.15},{v:775,d:0.25},{v:800,d:0.25},{v:825,d:0.25},{v:850,d:0.5},{v:875,d:0.5},{v:900,d:0.5},{v:925,d:0.5},{v:950,d:0.75},{v:975,d:0.75},{v:1000,d:0.75} ]
+    corrupted: [ {v:2550,d:1},{v:2600,d:1},{v:2650,d:1},{v:2700,d:1},{v:2750,d:1},{v:2800,d:1},{v:2850,d:1},{v:2900,d:1},{v:3000,d:1},{v:3500,d:1.5},{v:4000,d:2} ]
   },
   gubby_launcher: {
-    corrupted: [ {v:180000,d:1.75},{v:181000,d:1.9},{v:182000,d:1.9},{v:183000,d:1.9},{v:184000,d:1.9},{v:185000,d:2},{v:186000,d:2},{v:187000,d:2},{v:188000,d:2.25},{v:189000,d:2.25},{v:190000,d:2.25} ]
+    corrupted: [ {v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:200000,d:3},{v:220000,d:3},{v:250000,d:3} ]
   },
   fission_ring: {
-    corrupted: [ {v:40000,d:2.75},{v:41500,d:3},{v:43000,d:3},{v:44500,d:3},{v:46000,d:3},{v:47500,d:3.25},{v:49000,d:3.25},{v:50500,d:3.25},{v:52000,d:3.75},{v:53500,d:3.75},{v:55000,d:3.75} ]
+    corrupted: [ {v:15000,d:3},{v:16000,d:3},{v:17000,d:3},{v:18000,d:3},{v:19000,d:3},{v:20000,d:3},{v:22000,d:3},{v:25000,d:3},{v:27000,d:3.5},{v:30000,d:3.5},{v:35000,d:4} ]
   },
   wise_necklace: {
     corrupted: [ {v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0} ]
@@ -794,19 +800,19 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:0,d:0},{v:1,d:0.25},{v:1,d:0.25},{v:1,d:0.25},{v:1,d:0.5},{v:1,d:0.5},{v:1,d:0.5} ]
   },
   reapers_ring: {
-    corrupted: [ {v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:50,d:0.75} ]
+    corrupted: [ {v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:40,d:1} ]
   },
   lionels_war_blade: {
-    corrupted: [ {v:2500,d:2.25},{v:3000,d:2.25},{v:3500,d:2.25},{v:4000,d:2.5},{v:4500,d:2.5},{v:5000,d:2.5},{v:5500,d:2.5},{v:6000,d:2.5},{v:6500,d:2.75},{v:7000,d:2.75},{v:7500,d:2.75} ]
+    corrupted: [ {v:2000,d:3},{v:2250,d:3},{v:2500,d:3},{v:2750,d:3},{v:3000,d:3},{v:3250,d:3},{v:3500,d:3},{v:4000,d:3},{v:5000,d:3},{v:6000,d:3},{v:8000,d:3.5} ]
   },
   hydromaxx_mini: {
-    corrupted: [ {v:50000,d:2},{v:52500,d:2.25},{v:55000,d:2.25},{v:57500,d:2.25},{v:60000,d:2.25},{v:65000,d:2.5},{v:70000,d:2.5},{v:75000,d:2.5},{v:80000,d:2.75},{v:85000,d:2.75},{v:90000,d:2.75} ]
+    corrupted: [ {v:64000,d:4},{v:67000,d:4},{v:70000,d:4},{v:73000,d:4},{v:76000,d:4},{v:79000,d:4},{v:82000,d:4},{v:85000,d:4},{v:95000,d:4},{v:110000,d:4.5},{v:130000,d:5} ]
   },
   hydromaxx_lrxl: {
-    corrupted: [ {v:20000,d:2},{v:22500,d:2.25},{v:25000,d:2.25},{v:27500,d:2.25},{v:30000,d:2.25},{v:32500,d:2.5},{v:35000,d:2.5},{v:37500,d:2.5},{v:40000,d:2.75},{v:42500,d:2.75},{v:45000,d:2.75} ]
+    corrupted: [ {v:29000,d:3},{v:30000,d:3},{v:32000,d:3},{v:34000,d:3},{v:36000,d:3},{v:38000,d:3},{v:40000,d:3},{v:42000,d:3},{v:45000,d:3},{v:50000,d:3.5},{v:60000,d:4} ]
   },
   ascendant_vanquisher: {
-    corrupted: [ {v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:1500,d:1.85},{v:1550,d:1.95},{v:1600,d:2},{v:1650,d:2.25},{v:1700,d:2.25},{v:1750,d:2.25} ]
+    corrupted: [ {v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:2700,d:2},{v:2900,d:2},{v:3100,d:2},{v:3300,d:2},{v:3500,d:2},{v:4000,d:2.5} ]
   },
 };
 
