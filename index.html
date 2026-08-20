@@ -15116,7 +15116,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     var scroll = document.getElementById('vl-items-scroll');
     if (!scroll) return;
     var list = vlGetList(cat).filter(function(item){
-      return item.name.toLowerCase().indexOf(filter) !== -1;
+      return String(item.name || item.id || '').toLowerCase().indexOf(filter) !== -1;
     }).slice().sort(function(a, b){
       /* Список предметов всегда в исходном порядке (по убыванию цены),
          независимо от текущего режима сортировки карточек. */
@@ -16812,7 +16812,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       var _siSync = document.getElementById('vl-search-input');
       var _fSync = (_siSync ? _siSync.value : '').toLowerCase();
       _vis = vlGetList(vlCat).filter(function(it){
-        return it.name.toLowerCase().indexOf(_fSync) !== -1;
+        return String(it.name || it.id || '').toLowerCase().indexOf(_fSync) !== -1;
       });
     }
     _vlSyncViewAllBtn(_vis);
@@ -17052,7 +17052,7 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
       var _si = document.getElementById('vl-search-input');
       var _filter = (_si && _si.value || '').toLowerCase();
       allItems = vlGetList(vlCat).filter(function(item){
-        return item.name.toLowerCase().indexOf(_filter) !== -1;
+        return String(item.name || item.id || '').toLowerCase().indexOf(_filter) !== -1;
       }).slice();
     }
     /* Выставляем category ДО сортировки — _vlGetItemValue смотрит на item.category */
@@ -20827,10 +20827,24 @@ function toggleEasterTheme() {
       var vVariant = target.variant;
       var elEntry = (window.VL_DB.elements || []).filter(function(e) { return e.id === vBaseId; })[0];
       var isPendingNew = pendingNewElementIds && pendingNewElementIds[vBaseId];
+      /* Скопированный код содержит export id кастомной regular-базы
+         (moonlar), тогда как живая VL_DB хранит её под внутренним rec.id.
+         Резолвим export id назад в запись пользователя и дальше передаём
+         runtime id — так поиск работает и сразу после Create, и после reload. */
+      var customBaseRec = (!elEntry && !isPendingNew && typeof _edFindItemByExportId === 'function')
+        ? _edFindItemByExportId(vBaseId)
+        : null;
+      if (customBaseRec && (customBaseRec.cat !== 'elements' || (customBaseRec.variant && customBaseRec.variant !== 'regular'))) {
+        customBaseRec = null;
+      }
+      var runtimeBaseId = customBaseRec ? customBaseRec.id : vBaseId;
+      if (!elEntry && customBaseRec) {
+        elEntry = (window.VL_DB.elements || []).filter(function(e) { return e.id === runtimeBaseId; })[0];
+      }
       if (!elEntry && !isPendingNew) {
         return { ok: false, line: block.lineNum, msg: _dtIcLangErr('dt_input_err_unknown_id', 'Unknown element') + ': "' + vBaseId + '"' };
       }
-      return { ok: true, action: { type: 'variant', variant: vVariant, baseId: vBaseId, data: vObj } };
+      return { ok: true, action: { type: 'variant', variant: vVariant, baseId: runtimeBaseId, data: vObj } };
     }
 
     if (target.kind === 'rate') {
@@ -27906,7 +27920,13 @@ function toggleEasterTheme() {
       if (d.cat !== 'elements') continue;
       if (d.variant && d.variant !== 'regular') continue; /* нужен именно base-предмет */
       if (_edSlugify(d.name) === slug) {
-        return exportIds[d.id] || slug;
+        /* Runtime-связь обязана хранить внутренний id regular-записи.
+           Export id (например moonlar) существует только в скопированном коде
+           и не является ключом живой VL_DB: использование его здесь создавало
+           пустую baseEntry без name/rarity, а после reload prune считал
+           вариацию сиротой. В экспортный id преобразуем только при генерации
+           сниппета ниже. */
+        return d.id;
       }
     }
     return null;
@@ -27963,7 +27983,11 @@ function toggleEasterTheme() {
              VL_DB.elements — это просто новая вариация ЕГО, а не отдельного
              нового предмета. Пишем variant-строку под его существующим id,
              без создания второй базовой записи. */
+          /* _realBaseId — runtime id. Для кастомной regular-базы он внутренний
+             (custom_xxx), поэтому наружу возвращаем её стабильный export id;
+             для официального предмета id уже публичный и остаётся как есть. */
           var variantKey = realBaseId || eid;
+          if (realBaseId && exportIds[realBaseId]) variantKey = exportIds[realBaseId];
           var vLine = _edPad(variantKey + ":", 22)
             + "{ value:" + _edFv(rec.value) + ","
             + " demand:" + _edFd(rec.demand) + ","
