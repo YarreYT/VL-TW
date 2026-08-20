@@ -29794,7 +29794,11 @@ function toggleEasterTheme() {
   function recalcWrap(wrap) {
     var sp = wrap.querySelector(':scope > .vl-rt-spacer');
     if (!DESKTOP()) { if (sp) sp.style.removeProperty('--vl-rt-reserve'); return; }
-    var open = wrap.querySelectorAll(':scope .vl-roll-tooltip.vl-rt-open:not(.vl-rt-mobile-portal)');
+    /* .dt-roll-editor — тот же паттерн (absolute, top:100%, max-height:70vh),
+       что и .vl-roll-tooltip, но используется в DT (dtToggleRollDropdown)
+       вместо read-only тултипа VL. Без него резерв под DT-редактор роллов
+       не считался вовсе, и баг "нельзя доскроллить" был исправлен только в VL. */
+    var open = wrap.querySelectorAll(':scope .vl-roll-tooltip.vl-rt-open:not(.vl-rt-mobile-portal), :scope .dt-roll-editor.dt-re-open');
     var max = 0;
     open.forEach(function (tt) {
       var card = tt.closest('.vl-card-wrap, .az-card');
@@ -29849,12 +29853,20 @@ function toggleEasterTheme() {
     });
   }) : null;
 
+  /* Оба варианта тултипа роллов — read-only .vl-roll-tooltip (VL) и
+     редактируемый .dt-roll-editor (DT, dtToggleRollDropdown) — используют
+     один и тот же absolute/top:100%/max-height паттерн, поэтому резерв
+     места должен отслеживать оба класса одинаково. */
+  function isRollTip(n) {
+    return !!(n.classList && (n.classList.contains('vl-roll-tooltip') || n.classList.contains('dt-roll-editor')));
+  }
+
   new MutationObserver(function (muts) {
     muts.forEach(function (m) {
       m.addedNodes && Array.prototype.forEach.call(m.addedNodes, function (n) {
         if (n.nodeType !== 1) return;
-        if (n.classList && n.classList.contains('vl-roll-tooltip')) track(n);
-        else if (n.querySelectorAll) Array.prototype.forEach.call(n.querySelectorAll('.vl-roll-tooltip'), track);
+        if (isRollTip(n)) track(n);
+        else if (n.querySelectorAll) Array.prototype.forEach.call(n.querySelectorAll('.vl-roll-tooltip, .dt-roll-editor'), track);
         /* Карточка добавлена вручную (клик по item в левом списке) —
            спейсер, если уже существует в этом wrap'е, оказался бы перед
            новой карточкой и сломал бы перенос строк. Возвращаем его в конец. */
@@ -29868,11 +29880,11 @@ function toggleEasterTheme() {
       });
       m.removedNodes && Array.prototype.forEach.call(m.removedNodes, function (n) {
         if (n.nodeType !== 1) return;
-        if (n.classList && n.classList.contains('vl-roll-tooltip')) untrack(n);
-        else if (n.querySelectorAll) Array.prototype.forEach.call(n.querySelectorAll('.vl-roll-tooltip'), untrack);
+        if (isRollTip(n)) untrack(n);
+        else if (n.querySelectorAll) Array.prototype.forEach.call(n.querySelectorAll('.vl-roll-tooltip, .dt-roll-editor'), untrack);
       });
-      /* класс vl-rt-open может переключаться без добавления/удаления узла */
-      if (m.type === 'attributes' && m.target.classList && m.target.classList.contains('vl-roll-tooltip')) {
+      /* класс vl-rt-open/dt-re-open может переключаться без добавления/удаления узла */
+      if (m.type === 'attributes' && isRollTip(m.target)) {
         var wrap = ownerWrapOf(m.target);
         if (wrap) recalcWrap(wrap);
       }
