@@ -63,6 +63,7 @@ window.VL_DB = {
     { id:'fools_phantom',		name:"Fool's Phantom",		rarity:'exclusive', imgId:'fools_phantom',		demand:2.5,	value:15000,		status:'rare' },
     { id:'sunshine',	   name:"Sunshine",  rarity:'exclusive', imgId:'lebronmeme',    demand:5, value:30121982,    status:'inflated' },
       { id:'lunar',		name:"Lunar",		rarity:'mythic', imgId:'lunar',		demand:4.5,	value:4500,		status:'unstable' },
+      { id:'moonlar',		name:"Moonlar",		rarity:'exclusive', imgId:'moonlar',		demand:3.25, value:2500,		status:null },
   ],
   gear: [
     /* ── Weapons ── */
@@ -128,6 +129,8 @@ window.VL_DB = {
       { id:'hydromaxx_mini',    name:"HydroMaxx MINI", rarity:'secret', imgId:'hydromaxxmini', subtype:'weapon', status:'hyped' },
       { id:'hydromaxx_lrxl', name:"HydroMaxx LRXL", rarity:'secret', imgId:'hydromaxxlrxl', subtype:'weapon', status:null },
       { id:'ascendant_vanquisher', name:"Ascendant Vanquisher", rarity:'secret', imgId:'magmaedgev2', subtype:'weapon', status:null },
+      { id:'divine_axe_rhitta_ex', name:"Divine Axe Rhitta EX", rarity:'secret', imgId:'divineaxerhittaex', subtype:'weapon', status:'hyped' },
+      { id:'divine_axe_rhitta', name:"Divine Axe Rhitta", rarity:'ascended', imgId:'divineaxerhitta', subtype:'weapon', status:null },
   ],
 
   cosmetic: [
@@ -489,11 +492,13 @@ window.VL_VARIANTS_DB = {
 
   jumpscared: {
     sunlar:               { value:50000, demand:3.5, status:'rising' },
-  },
+    moonlar:              { value:78000, demand:3.75, status:'inprocess' },
+},
 
   jumpscarebborn: {
     sunlar:               { value:65000, demand:4, status:'unstable' },
-  },
+    moonlar:              { value:145000, demand:4.25, status:'inprocess' },
+},
 
   grumpy: {
     krampus:              { value:17000, demand:2.5, status:null },
@@ -818,6 +823,12 @@ window.VL_GEAR_ROLLS = {
   },
   ascendant_vanquisher: {
     corrupted: [ {v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:null,d:0},{v:2000,d:2},{v:2300,d:2},{v:2600,d:2},{v:3000,d:2},{v:3500,d:2},{v:4000,d:2.5} ]
+  },
+  divine_axe_rhitta_ex: {
+    corrupted: [ {v:60000,d:3},{v:62500,d:3.25},{v:65000,d:3.25},{v:67500,d:3.5},{v:69500,d:3.5},{v:71250,d:3.5},{v:72500,d:3.5},{v:73750,d:3.5},{v:75000,d:3.75},{v:77500,d:3.75},{v:80000,d:3.75} ]
+  },
+  divine_axe_rhitta: {
+    corrupted: [ {v:1000,d:1.75},{v:1250,d:2},{v:1500,d:2},{v:1750,d:2},{v:2000,d:2},{v:2250,d:2.25},{v:2500,d:2.25},{v:2750,d:2.25},{v:3000,d:2.5},{v:3250,d:2.5},{v:3500,d:2.5} ]
   },
 };
 
