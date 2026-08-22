@@ -492,12 +492,12 @@ window.VL_VARIANTS_DB = {
 
   jumpscared: {
     sunlar:               { value:50000, demand:3.5, status:'rising' },
-    moonlar:              { value:78000, demand:3.75, status:'inprocess' },
+    moonlar:              { value:64000, demand:3.75, status:null },
 },
 
   jumpscarebborn: {
     sunlar:               { value:65000, demand:4, status:'unstable' },
-    moonlar:              { value:145000, demand:4.25, status:'inprocess' },
+    moonlar:              { value:100000, demand:4.25, status:null },
 },
 
   grumpy: {
@@ -626,7 +626,8 @@ window.VL_VARIANTS_DB = {
     lava:                 { value:3000, demand:2, status:null },
     air:                  { value:100000, demand:5, status:'rare' },
     dragon:               { value:35000, demand:4.5, status:null },
-  },
+    lightning:            { value:15000, demand:1.5, status:null },
+},
   corrupted_infernal: {
     time:                 { value:12000, demand:3, status:null },
     reaper:               { value:3500, demand:2.5, status:null },

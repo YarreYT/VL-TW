@@ -17315,46 +17315,44 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
   var vlActiveVariant = 'regular';
 
   function vlGetVariantMaxValue(variantId) {
-    /* Несмотря на имя (оставлено для совместимости с местами, где эта
-       функция ещё вызывается), теперь считает СУММУ value по всем
-       предметам вариации, а не максимум одного предмета. */
+    /* Максимум value среди предметов вариации (самый дорогой предмет). */
     if (variantId === 'regular') {
       var base = VL_DB.elements;
-      var sum = 0;
+      var max = 0;
       for (var i = 0; i < base.length; i++) {
-        sum += base[i].value || 0;
+        if ((base[i].value || 0) > max) max = base[i].value || 0;
       }
-      return sum;
+      return max;
     }
     var vdata = VL_VARIANTS_DB[variantId];
     if (!vdata) return 0;
     var keys = Object.keys(vdata);
-    var sum = 0;
+    var max = 0;
     for (var j = 0; j < keys.length; j++) {
-      sum += vdata[keys[j]].value || 0;
+      if ((vdata[keys[j]].value || 0) > max) max = vdata[keys[j]].value || 0;
     }
-    return sum;
+    return max;
   }
 
   function vlGetVariantMaxDemand(variantId) {
-    /* Аналогично: сумма demand по всем предметам вариации (используется
-       как tie-breaker при равной суммарной стоимости). */
+    /* Demand предмета с наибольшей value (tie-breaker при равной макс. стоимости). */
     if (variantId === 'regular') {
       var base = VL_DB.elements;
-      var sum = 0;
+      var best = null;
       for (var i = 0; i < base.length; i++) {
-        sum += base[i].demand || 0;
+        if (!best || (base[i].value || 0) > (best.value || 0)) best = base[i];
       }
-      return sum;
+      return best ? (best.demand || 0) : 0;
     }
     var vdata = VL_VARIANTS_DB[variantId];
     if (!vdata) return 0;
     var keys = Object.keys(vdata);
-    var sum = 0;
+    var best = null;
     for (var j = 0; j < keys.length; j++) {
-      sum += vdata[keys[j]].demand || 0;
+      var item = vdata[keys[j]];
+      if (!best || (item.value || 0) > (best.value || 0)) best = item;
     }
-    return sum;
+    return best ? (best.demand || 0) : 0;
   }
 
   function vlBuildVariantGrid() {
@@ -22878,34 +22876,33 @@ function toggleEasterTheme() {
 
 
   function _dtVariantMaxValue(variantId) {
-    /* Имя сохранено для совместимости, но теперь это СУММА value по
-       всем предметам вариации (mirrors vlGetVariantMaxValue). */
+    /* Максимум value среди предметов вариации (mirrors vlGetVariantMaxValue). */
     if (variantId === 'regular') {
       var base = window.VL_DB.elements || [];
-      var sum = 0;
-      for (var i = 0; i < base.length; i++) { sum += base[i].value || 0; }
-      return sum;
+      var max = 0;
+      for (var i = 0; i < base.length; i++) { if ((base[i].value || 0) > max) max = base[i].value || 0; }
+      return max;
     }
     var vdata = window.VL_VARIANTS_DB && window.VL_VARIANTS_DB[variantId];
     if (!vdata) return 0;
-    var sum = 0;
-    Object.keys(vdata).forEach(function(k){ sum += vdata[k].value || 0; });
-    return sum;
+    var max = 0;
+    Object.keys(vdata).forEach(function(k){ if ((vdata[k].value || 0) > max) max = vdata[k].value || 0; });
+    return max;
   }
 
   function _dtVariantMaxDemand(variantId) {
-    /* Сумма demand по всем предметам вариации (tie-breaker). */
+    /* Demand предмета с наибольшей value (tie-breaker). */
     if (variantId === 'regular') {
       var base = window.VL_DB.elements || [];
-      var sum = 0;
-      for (var i = 0; i < base.length; i++) { sum += base[i].demand || 0; }
-      return sum;
+      var best = null;
+      for (var i = 0; i < base.length; i++) { if (!best || (base[i].value || 0) > (best.value || 0)) best = base[i]; }
+      return best ? (best.demand || 0) : 0;
     }
     var vdata = window.VL_VARIANTS_DB && window.VL_VARIANTS_DB[variantId];
     if (!vdata) return 0;
-    var sum = 0;
-    Object.keys(vdata).forEach(function(k){ sum += vdata[k].demand || 0; });
-    return sum;
+    var best = null;
+    Object.keys(vdata).forEach(function(k){ var item = vdata[k]; if (!best || (item.value || 0) > (best.value || 0)) best = item; });
+    return best ? (best.demand || 0) : 0;
   }
 
   // ── Render item list ──
