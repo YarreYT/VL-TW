@@ -55,14 +55,14 @@ window.VL_DB = {
     { id:'nightmare',		name:"Nightmare",		rarity:'mythic', imgId:'nightmare',		demand:5,	value:6000,		status:'rising' },
     { id:'astra',		name:"Astra",		rarity:'mythic', imgId:'astra',		demand:3.75,	value:4000,		status:'rising' },
     { id:'infinity',		name:"Infinity",		rarity:'mythic', imgId:'infinity',		demand:5,	value:16000,		status:null },
-    { id:'solar',		name:"Solar",		rarity:'mythic', imgId:'solar',		demand:4.5,	value:4500,		status:'unstable' },
+    { id:'solar',		name:"Solar",		rarity:'mythic', imgId:'solar',		demand:4.5,	value:3500,		status:'unstable' },
     { id:'bunny',		name:"Bunny",		rarity:'mythic', imgId:'bunny',		demand:4,	value:3250,		status:'rising' },
     { id:'krampus',        name:"Krampus",        rarity:'mythic', imgId:'krampus',    demand:3,   value:1000,  status:null      },
     /* ── Exclusive ── */
     { id:'sunlar',		name:"Sunlar",		rarity:'exclusive', imgId:'sunlar',		demand:3,	value:1000,		status:'rising' },
     { id:'fools_phantom',		name:"Fool's Phantom",		rarity:'exclusive', imgId:'fools_phantom',		demand:2.5,	value:15000,		status:'rare' },
     { id:'sunshine',	   name:"Sunshine",  rarity:'exclusive', imgId:'lebronmeme',    demand:5, value:30121982,    status:'inflated' },
-      { id:'lunar',		name:"Lunar",		rarity:'mythic', imgId:'lunar',		demand:4.5,	value:3500,		status:null },
+      { id:'lunar',		name:"Lunar",		rarity:'mythic', imgId:'lunar',		demand:4.5,	value:3500,		status:'unstable' },
       { id:'moonlar',		name:"Moonlar",		rarity:'exclusive', imgId:'moonlar',		demand:3.25, value:2500,		status:null },
   ],
   gear: [
