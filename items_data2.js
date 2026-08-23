@@ -634,7 +634,7 @@ window.VL_VARIANTS_DB = {
   kitsune:              { value:4000, demand:3, status:null },
   galaxy:               { value:4000, demand:3, status:null },
   mech:                 { value:3500, demand:2.5, status:null },
-  solar:                { value:45000, demand:3.5, status:'inprocess' },
+  solar:                { value:60000, demand:3.5, status:null },
 },
 
   equinox: {
