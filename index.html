@@ -25987,7 +25987,11 @@ function toggleEasterTheme() {
     if (parsed.rarityCfg && window.RARITY_CFG) _replaceInto(window.RARITY_CFG, parsed.rarityCfg);
     if (parsed.statusCfg && window.STATUS_CFG) _replaceInto(window.STATUS_CFG, parsed.statusCfg);
     if (parsed.statusDesc && window.STATUS_DESC) _replaceInto(window.STATUS_DESC, parsed.statusDesc);
-    if (parsed.rate !== undefined && parsed.rate !== null) window.ED_GOLD_RATE = parsed.rate;
+    if (parsed.rate !== undefined && parsed.rate !== null) {
+      window.ED_GOLD_RATE = parsed.rate;
+      window._edTpRate = parsed.rate;
+      if (typeof window.tpRateChanged === 'function') window.tpRateChanged(parsed.rate);
+    }
 
     window._dbLoadMarks = marks;
 
@@ -26009,7 +26013,11 @@ function toggleEasterTheme() {
     _replaceInto(window.VL_DB, _c(_ldPristine.db));
     _replaceInto(window.VL_VARIANTS_DB, _c(_ldPristine.vdb));
     _replaceInto(window.VL_GEAR_ROLLS, _c(_ldPristine.gr));
-    if (_ldPristine.rate !== undefined) window.ED_GOLD_RATE = _ldPristine.rate;
+    if (_ldPristine.rate !== undefined) {
+      window.ED_GOLD_RATE = _ldPristine.rate;
+      window._edTpRate = _ldPristine.rate;
+      if (typeof window.tpRateChanged === 'function') window.tpRateChanged(_ldPristine.rate);
+    }
     window._dbLoadMarks = null;
     window._dbLoadImg = {};
     /* Value Changes снова сравнивает items_data1 с items_data2 */

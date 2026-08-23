@@ -59,11 +59,11 @@ window.VL_DB = {
     { id:'bunny',		name:"Bunny",		rarity:'mythic', imgId:'bunny',		demand:4,	value:3250,		status:'rising' },
     { id:'krampus',        name:"Krampus",        rarity:'mythic', imgId:'krampus',    demand:3,   value:1000,  status:null      },
     /* ── Exclusive ── */
-    { id:'sunlar',		name:"Sunlar",		rarity:'exclusive', imgId:'sunlar',		demand:3,	value:1000,		status:'rising' },
+    { id:'sunlar',		name:"Sunlar",		rarity:'exclusive', imgId:'sunlar',		demand:3,	value:1000,		status:'unstable' },
     { id:'fools_phantom',		name:"Fool's Phantom",		rarity:'exclusive', imgId:'fools_phantom',		demand:2.5,	value:15000,		status:'rare' },
     { id:'sunshine',	   name:"Sunshine",  rarity:'exclusive', imgId:'lebronmeme',    demand:5, value:30121982,    status:'inflated' },
       { id:'lunar',		name:"Lunar",		rarity:'mythic', imgId:'lunar',		demand:4.5,	value:3500,		status:'unstable' },
-      { id:'moonlar',		name:"Moonlar",		rarity:'exclusive', imgId:'moonlar',		demand:3.25, value:2500,		status:null },
+      { id:'moonlar',		name:"Moonlar",		rarity:'exclusive', imgId:'moonlar',		demand:2.5,	value:1500,		status:'unstable' },
   ],
   gear: [
     /* ── Weapons ── */
