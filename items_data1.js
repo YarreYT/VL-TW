@@ -45,7 +45,7 @@ window.VL_DB = {
     { id:'lava',           name:"Lava",           rarity:'legendary', imgId:'lava', demand:0,   value:0,     status:null      },
     /* ── Mythic ── */
     { id:'reaper',		name:"Reaper",		rarity:'mythic', imgId:'reaper',		demand:2,	value:10,		status:null },
-    { id:'mech',		name:"Mech",		rarity:'mythic', imgId:'mech',		demand:2,	value:10,		status:null },
+    { id:'mech',		name:"Mech",		rarity:'mythic', imgId:'mech',		demand:1.5,	value:9,		status:null },
     { id:'galaxy',		name:"Galaxy",		rarity:'mythic', imgId:'galaxy',		demand:2.5,	value:10,		status:null },
     { id:'kitsune',		name:"Kitsune",		rarity:'mythic', imgId:'kitsune',		demand:2,	value:10,		status:null },
     /* ── Secret ── */
@@ -55,15 +55,15 @@ window.VL_DB = {
     { id:'nightmare',		name:"Nightmare",		rarity:'mythic', imgId:'nightmare',		demand:5,	value:6000,		status:'rising' },
     { id:'astra',		name:"Astra",		rarity:'mythic', imgId:'astra',		demand:3.75,	value:4000,		status:'rising' },
     { id:'infinity',		name:"Infinity",		rarity:'mythic', imgId:'infinity',		demand:5,	value:16000,		status:null },
-    { id:'solar',		name:"Solar",		rarity:'mythic', imgId:'solar',		demand:4.5,	value:4500,		status:'unstable' },
-    { id:'bunny',		name:"Bunny",		rarity:'mythic', imgId:'bunny',		demand:4,	value:3000,		status:'rising' },
+    { id:'solar',		name:"Solar",		rarity:'mythic', imgId:'solar',		demand:4.5,	value:3500,		status:'unstable' },
+    { id:'bunny',		name:"Bunny",		rarity:'mythic', imgId:'bunny',		demand:4,	value:3250,		status:'rising' },
     { id:'krampus',        name:"Krampus",        rarity:'mythic', imgId:'krampus',    demand:3,   value:1000,  status:null      },
     /* ── Exclusive ── */
-    { id:'sunlar',		name:"Sunlar",		rarity:'exclusive', imgId:'sunlar',		demand:3,	value:1000,		status:'rising' },
+    { id:'sunlar',		name:"Sunlar",		rarity:'exclusive', imgId:'sunlar',		demand:3,	value:1000,		status:'unstable' },
     { id:'fools_phantom',		name:"Fool's Phantom",		rarity:'exclusive', imgId:'fools_phantom',		demand:2.5,	value:15000,		status:'rare' },
     { id:'sunshine',	   name:"Sunshine",  rarity:'exclusive', imgId:'lebronmeme',    demand:5, value:30121982,    status:'inflated' },
-      { id:'lunar',		name:"Lunar",		rarity:'mythic', imgId:'lunar',		demand:4.5,	value:4500,		status:'unstable' },
-      { id:'moonlar',		name:"Moonlar",		rarity:'exclusive', imgId:'moonlar',		demand:3.25, value:2500,		status:null },
+      { id:'lunar',		name:"Lunar",		rarity:'mythic', imgId:'lunar',		demand:4.5,	value:3500,		status:'unstable' },
+      { id:'moonlar',		name:"Moonlar",		rarity:'exclusive', imgId:'moonlar',		demand:2.5,	value:1500,		status:'unstable' },
   ],
   gear: [
     /* ── Weapons ── */
@@ -86,7 +86,7 @@ window.VL_DB = {
     { id:'tlconqbladele', name:"Timelost Conqueror's Blade LE", rarity:'secret',   imgId:'tlconqblade',    subtype:'weapon', status:'unstable' },
     { id:'glitchedstaff', name:"Glitched Staff",               rarity:'secret',    imgId:'glitchedstaff',  subtype:'weapon', status:null },
     { id:'viltronstaff',  name:"Viltron Staff",                rarity:'ascended',  imgId:'glitchedstaff',  subtype:'weapon', status:null },
-    { id:'seriously',     name:"Serious Staff",                rarity:'secret',    imgId:'seriously',      subtype:'weapon', status:null },
+    { id:'seriously', name:"Serious Staff", rarity:'secret', imgId:'seriously', subtype:'weapon', status:'lowering' },
     { id:'easterstaff',   name:"Easter Spear",                 rarity:'secret',    imgId:'easterstaff',    subtype:'weapon', status:null },
     /* ── Armor ── */
     { id:'fzset',         name:"Furious Zeus Set",             rarity:'mythic',    imgId:'fzset',          subtype:'armor',  status:null },
@@ -214,13 +214,13 @@ window.VL_DB = {
   ],
 
   gamepasses: [
-    { id:'gp_x2dungeonloot', name:"x2 Dungeon Loot", rarity:'exclusive', imgId:'gp_x2dungeonloot', subtype:'gamepass', status:null, value:7000, demand:3 },
-    { id:'gp_x2elementmastery', name:"x2 Element Mastery", rarity:'exclusive', imgId:'gp_x2elementmastery', subtype:'gamepass', status:null, value:5000, demand:3 },
-    { id:'gp_x2gold',           name:"x2 Gold",            rarity:'exclusive', imgId:'gp_x2gold',           subtype:'gamepass', status:null, value:5000, demand:4 },
+    { id:'gp_x2dungeonloot', name:"x2 Dungeon Loot", rarity:'exclusive', imgId:'gp_x2dungeonloot', subtype:'gamepass', status:'hyped', value:8500, demand:4 },
+    { id:'gp_x2elementmastery', name:"x2 Element Mastery", rarity:'exclusive', imgId:'gp_x2elementmastery', subtype:'gamepass', status:null, value:5250, demand:3 },
+    { id:'gp_x2gold', name:"x2 Gold", rarity:'exclusive', imgId:'gp_x2gold', subtype:'gamepass', status:'hyped', value:6000, demand:4.5 },
     { id:'gp_premiumpass',      name:"Premium Pass",       rarity:'exclusive', imgId:'gp_premiumpass',      subtype:'gamepass', status:null, value:5000, demand:3 },
     { id:'gp_summonluck',       name:"Summon Luck",        rarity:'exclusive', imgId:'gp_summonluck',       subtype:'gamepass', status:null, value:4000, demand:3 },
-    { id:'gp_vip',              name:"VIP",                rarity:'exclusive', imgId:'gp_vip',              subtype:'gamepass', status:null, value:3500, demand:3 },
-    { id:'gp_extrastorage',     name:"Extra Storage",      rarity:'exclusive', imgId:'gp_extrastorage',     subtype:'gamepass', status:null, value:2000, demand:3 },
+    { id:'gp_vip', name:"VIP", rarity:'exclusive', imgId:'gp_vip', subtype:'gamepass', status:null, value:4000, demand:3.5 },
+    { id:'gp_extrastorage', name:"Extra Storage", rarity:'exclusive', imgId:'gp_extrastorage', subtype:'gamepass', status:null, value:1300, demand:2.5 },
   ],
 
   chromas: [
@@ -301,7 +301,7 @@ window.VL_VARIANTS_DB = {
     kitsune:              { value:1000, demand:1, status:null },
     time:                 { value:2500, demand:1, status:null },
     krampus:              { value:15000, demand:3, status:null },
-    bunny:                { value:18000, demand:4, status:null },
+    bunny:                { value:16000, demand:4, status:'rare' },
     dragon:               { value:60, demand:1, status:null },
     gravity:              { value:60, demand:1, status:null },
     angel:                { value:60, demand:1, status:null },
@@ -317,10 +317,10 @@ window.VL_VARIANTS_DB = {
     time:                 { value:2500, demand:2, status:null },
     bunny:                { value:57000, demand:3, status:null },
     krampus:              { value:14000, demand:2.5, status:null },
-    reaper:               { value:500, demand:3, status:null },
-    galaxy:               { value:600, demand:3.5, status:null },
-    mech:                 { value:500, demand:3, status:null },
-    kitsune:              { value:800, demand:4, status:null },
+    reaper:               { value:400, demand:3, status:null },
+    galaxy:               { value:500, demand:3.5, status:null },
+    mech:                 { value:350, demand:2.5, status:null },
+    kitsune:              { value:700, demand:4, status:null },
     gravity:              { value:250, demand:3.5, status:null },
     dragon:               { value:100, demand:2.5, status:null },
     darkness:             { value:150, demand:2.5, status:null },
@@ -471,7 +471,7 @@ window.VL_VARIANTS_DB = {
     galaxy:               { value:6000, demand:3, status:null },
     reaper:               { value:5500, demand:2.5, status:null },
     kitsune:              { value:6000, demand:3, status:null },
-    mech:                 { value:5000, demand:2, status:null },
+    mech:                 { value:4750, demand:1.75, status:null },
     gravity:              { value:1500, demand:3.5, status:null },
     darkness:             { value:1200, demand:2, status:null },
     dragon:               { value:1200, demand:2, status:null },
@@ -492,12 +492,12 @@ window.VL_VARIANTS_DB = {
 
   jumpscared: {
     sunlar:               { value:50000, demand:3.5, status:'rising' },
-    moonlar:              { value:64000, demand:3.75, status:null },
+    moonlar:              { value:42000, demand:3.75, status:null },
 },
 
   jumpscarebborn: {
     sunlar:               { value:65000, demand:4, status:'unstable' },
-    moonlar:              { value:100000, demand:4.25, status:null },
+    moonlar:              { value:72000, demand:4.25, status:null },
 },
 
   grumpy: {
@@ -553,10 +553,10 @@ window.VL_VARIANTS_DB = {
 
   radiant: {
     time:                 { value:110000, demand:4, status:null },
-    galaxy:               { value:42000, demand:3.5, status:null },
-    reaper:               { value:40000, demand:3, status:null },
-    mech:                 { value:40000, demand:3.5, status:null },
-    kitsune:              { value:45000, demand:4, status:null },
+    galaxy:               { value:42000, demand:3.5, status:'lowering' },
+    reaper:               { value:40000, demand:3, status:'lowering' },
+    mech:                 { value:37000, demand:3, status:'lowering' },
+    kitsune:              { value:45000, demand:4, status:'lowering' },
     gravity:              { value:14000, demand:3.5, status:null },
     dragon:               { value:8000, demand:3, status:null },
     darkness:             { value:11000, demand:3.5, status:null },
@@ -596,8 +596,8 @@ window.VL_VARIANTS_DB = {
   },
 
   glitched: {
-    galaxy:               { value:30000, demand:3, status:null },
-    bunny:                { value:300000, demand:2.75, status:null },
+    galaxy:               { value:28000, demand:2.5, status:null },
+    bunny:                { value:252525, demand:2.75, status:'inprocess' },
     gravity:              { value:4000, demand:3, status:null },
   },
 
@@ -610,7 +610,7 @@ window.VL_VARIANTS_DB = {
   },
 
   whirlwind: {
-    kitsune:              { value:1200000, demand:5, status:'unstable' },
+    kitsune:              { value:1250000, demand:5, status:'rare' },
   },
 
   viltron: {
@@ -618,14 +618,14 @@ window.VL_VARIANTS_DB = {
   },
 
   kronax: {
-    time:                 { value:130000, demand:4, status:null },
+    time:                 { value:120000, demand:3.25, status:null },
   },
 
   nuclear: {
-    ice:                  { value:3000, demand:2, status:null },
-    lava:                 { value:3000, demand:2, status:null },
+    ice:                  { value:1500, demand:2, status:null },
+    lava:                 { value:2000, demand:2, status:null },
     air:                  { value:100000, demand:5, status:'rare' },
-    dragon:               { value:35000, demand:4.5, status:null },
+    dragon:               { value:40000, demand:4.5, status:null },
     lightning:            { value:15000, demand:1.5, status:null },
 },
   corrupted_infernal: {
@@ -634,6 +634,7 @@ window.VL_VARIANTS_DB = {
   kitsune:              { value:4000, demand:3, status:null },
   galaxy:               { value:4000, demand:3, status:null },
   mech:                 { value:3500, demand:2.5, status:null },
+  solar:                { value:60000, demand:3.5, status:null },
 },
 
   equinox: {
@@ -709,7 +710,7 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ null,null,null,null,null,{v:250,d:0.5},{v:250,d:0.5},{v:250,d:0.5},{v:250,d:0.5},{v:300,d:0.5},{v:400,d:0.5} ]
   },
   seriously: {
-    corrupted: [ null,null,null,null,null,{v:18000,d:2},{v:20000,d:2},{v:22000,d:2},{v:24000,d:2.25},{v:27000,d:2.5},{v:30000,d:2.75} ]
+    corrupted: [ null,null,null,null,null,{v:15000,d:1.75},{v:17500,d:2},{v:20000,d:2},{v:22500,d:2.25},{v:23500,d:2.5},{v:25000,d:2.5} ]
   },
   easterstaff: {
     corrupted: [ null,null,null,null,null,{v:1000,d:2},{v:1000,d:2},{v:1000,d:2},{v:1000,d:2},{v:1000,d:2},{v:1500,d:2} ]
@@ -817,7 +818,7 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:4500,d:3},{v:4700,d:3},{v:5000,d:3},{v:5200,d:3},{v:5500,d:3},{v:5700,d:3},{v:6000,d:3},{v:6500,d:3},{v:7000,d:3},{v:9000,d:3},{v:12000,d:3.5} ]
   },
   hydromaxx_mini: {
-    corrupted: [ {v:50000,d:4.5},{v:53000,d:4.5},{v:56000,d:4.5},{v:59000,d:4.5},{v:62000,d:4.5},{v:65000,d:4.5},{v:68000,d:4.5},{v:72000,d:4.5},{v:90000,d:4.5},{v:110000,d:5},{v:130000,d:5} ]
+    corrupted: [ {v:50000,d:4},{v:53000,d:4.25},{v:56000,d:4.25},{v:59000,d:4.5},{v:62000,d:4.5},{v:65000,d:4.75},{v:68000,d:4.75},{v:72000,d:4.75},{v:90000,d:4.75},{v:110000,d:5},{v:125000,d:5} ]
   },
   hydromaxx_lrxl: {
     corrupted: [ {v:12000,d:3},{v:13500,d:3},{v:15000,d:3},{v:16500,d:3},{v:18000,d:3},{v:19500,d:3},{v:21000,d:3},{v:23000,d:3},{v:26000,d:3},{v:33000,d:3.5},{v:40000,d:4} ]
