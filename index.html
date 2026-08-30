@@ -16351,7 +16351,10 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
          иначе как через черновик+подтверждение, а подтверждение само
          обновляет _orig — то есть EDITED для custom-предметов больше
          физически не может произойти, и проверку можно было убрать. */
-      if (window._edIsCustomItem && window._edIsCustomItem(_baseRawId)) {
+      var cardVariant = (item.category === 'elements' && typeof item.id === 'string' && item.id.indexOf(':') !== -1)
+        ? item.id.split(':')[0]
+        : (item.category === 'elements' ? 'regular' : undefined);
+      if (window._edIsCustomItem && window._edIsCustomItem(_baseRawId, cardVariant)) {
         var _belowAdd = variantBadge !== '';
         editedBadge = '<div class="vl-added-badge'
           + (_belowAdd ? ' vl-added-badge--below' : '')
@@ -16504,7 +16507,10 @@ body:has(#fb-modal.visible) #fb-list .fb-sticker-rendered { display: none !impor
     /* Кастомные (созданные через DT) предметы — лайк недоступен: их id и
        место в списке нестабильны (черновик/повторное создание), поэтому
        лайкнутая карточка могла бы навсегда зависнуть открытой. */
-    var _isCustomForLike = window._edIsCustomItem && window._edIsCustomItem(item.baseId || item.id);
+    var _likeCardVariant = (item.category === 'elements' && typeof item.id === 'string' && item.id.indexOf(':') !== -1)
+      ? item.id.split(':')[0]
+      : (item.category === 'elements' ? 'regular' : undefined);
+    var _isCustomForLike = window._edIsCustomItem && window._edIsCustomItem(item.baseId || item.id, _likeCardVariant);
     var _likeBtnHTML = _isCustomForLike ? '' : (
       '<button class="vl-like-btn'+_likeClass+'" title="'+_likeLabel+'" aria-label="'+_likeLabel+'"'
       +     ' onclick="event.stopPropagation();vlToggleLike(\''+item.id+'\')">'
@@ -20350,15 +20356,25 @@ function toggleEasterTheme() {
        предмета — один правильный (с реальным id), другой "призрачный" с
        custom_-идентификатором. См. историю бага "двойная запись Astra". */
     if (it.isCustom) return null;
-    if (typeof window._edIsCustomItem === 'function' && window._edIsCustomItem(baseId)) return null;
-
-
-    /* Определяем вариант карточки */
+    /* Определяем вариант карточки ЗАРАНЕЕ — нужен для правильной проверки
+       _edIsCustomItem ниже: baseId один на ВСЕ вариации elements
+       (Phantom/Corrupted Phantom/Mutated Phantom делят baseId "phantom"),
+       поэтому без variant кастомный Mutated Phantom ложно "накрывал бы"
+       официальные Phantom/Corrupted Phantom своим совпадением по baseId —
+       их Code Snippets возвращал бы null (якобы "это кастомный предмет,
+       печатать нечего"), хотя на самом деле кастомна только Mutated-вариация.
+       Для cat !== 'elements' (gear и др.) variant в записи _edCustomItems
+       всегда null/'regular' — передаём undefined, чтобы сохранить старое
+       поведение (проверка только по baseId). */
     var variant = 'regular';
     if (it.id && it.id.indexOf(':') !== -1) {
       /* Формат "variantId:baseId" для elements, "corrupted:baseId" для gear */
       variant = it.id.split(':')[0];
     }
+    var _edIsCustomVariantArg = (cat === 'elements') ? variant : undefined;
+    if (typeof window._edIsCustomItem === 'function' && window._edIsCustomItem(baseId, _edIsCustomVariantArg)) return null;
+
+
 
     /* ── Load Database ──
        Если загружена кастомная база, «оригиналом» для diff'а становится
@@ -26096,8 +26112,8 @@ function toggleEasterTheme() {
   function _pri() {
     return window._dbLoadMarks ? (window._dbLdPristine || null) : null;
   }
-  function _isCustom(id) {
-    try { return !!(window._edIsCustomItem && window._edIsCustomItem(id)); } catch(e) { return false; }
+  function _isCustom(id, variant) {
+    try { return !!(window._edIsCustomItem && window._edIsCustomItem(id, variant)); } catch(e) { return false; }
   }
 
   /* ── Форматтеры: 1:1 с _dtBuildSnippets ── */
@@ -26163,7 +26179,7 @@ function toggleEasterTheme() {
 
   window._dbLdOrigFor = function(cat, baseId, variant) {
     var pri = _pri();
-    if (!pri || _isCustom(baseId)) return null;
+    if (!pri || _isCustom(baseId, cat === 'elements' ? (variant || 'regular') : undefined)) return null;
     var loc = _find(pri.db, baseId);
     /* Предмет добавлен загруженной базой — оригинала нет, значит изменено
        вообще всё и должен печататься полный код записи. */
@@ -26203,13 +26219,17 @@ function toggleEasterTheme() {
     if (!pri || !item) return true;
     var rawId  = String(item.id || '');
     var baseId = String(item.baseId || rawId).replace('corrupted:', '');
-    if (_isCustom(baseId)) return true;
 
     var variant = null;
     if (rawId.indexOf(':') !== -1) {
       var pfx = rawId.split(':')[0];
       if (pfx !== 'corrupted') variant = pfx;
     }
+    /* variant вычислен ДО проверки _isCustom — иначе кастомная Mutated-
+       вариация ложно "накрывала" бы официальные Phantom/Corrupted Phantom
+       (тот же baseId "phantom"), и EDITED-бейдж для них никогда бы не
+       снимался/не проставлялся корректно после Load Database. */
+    if (_isCustom(baseId, variant || 'regular')) return true;
 
     var loc = _find(pri.db, baseId);
     if (!loc) return true;                 /* добавленный предмет */
@@ -26259,13 +26279,20 @@ function toggleEasterTheme() {
     if (!pri) return [];
     var out = [];
     var only = onlyBaseId ? String(onlyBaseId).replace('corrupted:', '') : null;
-    function skip(id) { return _isCustom(id) || (only && id !== only); }
+    /* baseId один на ВСЕ вариации elements (Phantom/Corrupted Phantom/
+       Mutated Phantom делят baseId "phantom", см. _edInjectRecord) —
+       без variant кастомная Mutated-вариация ложно "накрывала" официальные
+       Phantom/Corrupted Phantom своим совпадением по baseId, и diff молча
+       пропускал их изменения (см. историю бага: Print All/Code Snippets/
+       Download .js не видели изменённый Corrupted Phantom, хотя Value
+       Changes видел — тот модуль не использует _edIsCustomItem вовсе). */
+    function skip(id, variant) { return _isCustom(id, variant) || (only && id !== only); }
 
     /* elements + плоские категории */
     ['elements'].concat(CATS_FLAT).forEach(function(cat){
       var o = _byId(pri.db[cat]);
       (window.VL_DB[cat] || []).forEach(function(it){
-        if (!it || !it.id || it.isCustom || skip(it.id)) return;
+        if (!it || !it.id || it.isCustom || skip(it.id, cat === 'elements' ? 'regular' : undefined)) return;
         var a = o[it.id];
         var eff = _effItem(it, it.id);
         if (!a) { out.push({ kind: cat === 'elements' ? 'element' : 'flat', cat: cat, item: eff, added: true }); return; }
@@ -26308,7 +26335,7 @@ function toggleEasterTheme() {
       var omap = (pri.vdb && pri.vdb[variant]) || {};
       Object.keys(nmap).forEach(function(id){
         var b = nmap[id];
-        if (!b || b.isCustom || skip(id) || _isCustom(id)) return;
+        if (!b || b.isCustom || skip(id, variant) || _isCustom(id, variant)) return;
         var a = omap[id];
         var beff = _effItem(b, variant + ':' + id);
         if (a && _same(a.value, beff.value) && _same(a.demand, beff.demand) && _same(a.status, beff.status)) return;
@@ -27383,10 +27410,24 @@ function toggleEasterTheme() {
   var REQUIRED_W = 1024, REQUIRED_H = 1024;
 
   window._edCustomItems = window._edCustomItems || [];  // финализированные (Create нажат)
-  window._edIsCustomItem = function(baseId) {
+  /* baseId — id базового предмета (elements: entryId = id элемента, ОДИН
+     на все вариации сразу — regular/corrupted/mutated/... используют один
+     и тот же elemId, см. _edInjectRecord). Поэтому одного baseId
+     НЕДОСТАТОЧНО, чтобы отличить "этот элемент ЦЕЛИКОМ кастомный" от
+     "у этого элемента есть ОДНА кастомная вариация" — Corrupted Phantom и
+     обычный Phantom официальные, но раньше матчились наравне с реально
+     кастомным Mutated Phantom только потому что все трое делят
+     baseId:"phantom". variant — variant ИМЕННО ТОЙ карточки, которую сейчас
+     проверяем ('mutated' и т.п. для non-regular вариаций elements); без
+     него функция обязана вести себя как раньше (просто по baseId), иначе
+     сломается gear/cosmetic/etc, где вариаций нет вовсе. */
+  window._edIsCustomItem = function(baseId, variant) {
     if (!window._edCustomItems) return false;
     return window._edCustomItems.some(function(r){
-      return r.id === baseId || r._realBaseId === baseId;
+      if (r.id !== baseId && r._realBaseId !== baseId) return false;
+      if (variant === undefined || variant === null) return true;
+      var rVariant = r.variant || 'regular';
+      return rVariant === variant;
     });
   };
   /* true — предмет всё ещё равен своим исходным (на момент Create) значениям → ADDED.
