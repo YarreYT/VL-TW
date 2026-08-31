@@ -16,7 +16,7 @@
 /* ── Курс золота: 1 TP = ED_GOLD_RATE Gold ──
    Используется в vlFmtGold() и в панели TP Rate.
    Чтобы изменить курс — меняй только это число. */
-window.ED_GOLD_RATE = 250000;
+window.ED_GOLD_RATE = 450000;
 
 
 /* ══════════════════════════════════════════════
@@ -102,7 +102,7 @@ window.VL_DB = {
     { id:'terrablade_le', name:"Terrablade LE", rarity:'secret', imgId:'terrablade', subtype:'weapon', status:'lowering' },
     { id:'pool_noodle', name:"Pool Noodle", rarity:'legendary', imgId:'poolnoodle', subtype:'weapon', status:null },
     { id:'terrablade', name:"Terrablade", rarity:'mythic', imgId:'terrablade', subtype:'weapon', status:null },
-    { id:'hydromaxx_lr', name:"HydroMaxx LR", rarity:'secret', imgId:'hydromaxxlr', subtype:'weapon', status:null },
+    { id:'hydromaxx_lr', name:"HydroMaxx LR", rarity:'secret', imgId:'hydromaxxlr', subtype:'weapon', status:'lowering' },
     { id:'hydromaxx_cqb', name:"HydroMaxx CQB", rarity:'mythic', imgId:'hydromaxxcqb', subtype:'weapon', status:null },
     { id:'gubby_launcher', name:"Gubby Launcher", rarity:'secret', imgId:'gubbylauncher', subtype:'weapon', status:'rare' },
     /* ── New Armor ── */
@@ -759,7 +759,7 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:900,d:2},{v:950,d:2},{v:1000,d:2},{v:1050,d:2},{v:1100,d:2},{v:1150,d:2},{v:1200,d:2},{v:1250,d:2},{v:1300,d:2},{v:1500,d:2},{v:2000,d:2.5} ]
   },
   hydromaxx_lr: {
-    corrupted: [ {v:17000,d:3},{v:18000,d:3},{v:19000,d:3},{v:20000,d:3},{v:21000,d:3},{v:22000,d:3},{v:23000,d:3},{v:24000,d:3},{v:26000,d:3},{v:30000,d:3.25},{v:40000,d:3.5} ]
+    corrupted: [ {v:5500,d:2.5},{v:7000,d:2.75},{v:8500,d:2.75},{v:10000,d:3},{v:11000,d:3},{v:12500,d:3},{v:14000,d:3.25},{v:15500,d:3.25},{v:17000,d:3.5},{v:18500,d:3.5},{v:20000,d:3.5} ]
   },
   hydromaxx_cqb: {
     corrupted: [ {v:800,d:1.5},{v:850,d:1.5},{v:900,d:1.5},{v:950,d:1.5},{v:1000,d:1.5},{v:1050,d:1.5},{v:1100,d:1.5},{v:1150,d:1.5},{v:1200,d:1.5},{v:1300,d:1.5},{v:1500,d:2} ]
@@ -819,7 +819,7 @@ window.VL_GEAR_ROLLS = {
     corrupted: [ {v:4500,d:3},{v:4700,d:3},{v:5000,d:3},{v:5200,d:3},{v:5500,d:3},{v:5700,d:3},{v:6000,d:3},{v:6500,d:3},{v:7000,d:3},{v:9000,d:3},{v:12000,d:3.5} ]
   },
   hydromaxx_mini: {
-    corrupted: [ {v:20000,d:4},{v:25000,d:4.25},{v:30000,d:4.25},{v:35000,d:4.5},{v:40000,d:4.5},{v:47750,d:4.75},{v:55000,d:4.75},{v:60000,d:4.75},{v:67500,d:4.75},{v:75000,d:5},{v:80000,d:5} ]
+    corrupted: [ {v:40000,d:4},{v:42500,d:4.25},{v:45000,d:4.25},{v:47500,d:4.5},{v:50000,d:4.5},{v:52500,d:4.75},{v:55000,d:4.75},{v:60000,d:4.75},{v:67500,d:4.75},{v:75000,d:5},{v:80000,d:5} ]
   },
   hydromaxx_lrxl: {
     corrupted: [ {v:13500,d:3},{v:14750,d:3},{v:15500,d:3},{v:16250,d:3},{v:17500,d:3},{v:18500,d:3},{v:19250,d:3},{v:21000,d:3},{v:22000,d:3},{v:23500,d:3.5},{v:25000,d:4} ]
