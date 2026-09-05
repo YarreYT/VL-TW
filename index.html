@@ -20837,6 +20837,18 @@ function toggleEasterTheme() {
       if (!vObj || typeof vObj !== 'object') {
         return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_json', 'Could not parse this block') };
       }
+      /* ── Та же санитизация, что и для обычного db-блока ниже ── */
+      if (vObj.value !== undefined && vObj.value !== null) {
+        vObj.value = String(vObj.value).slice(0, 15);
+      }
+      if (vObj.demand !== undefined && vObj.demand !== null) {
+        var _vDNum = parseFloat(vObj.demand);
+        vObj.demand = isNaN(_vDNum) ? 0 : Math.round(Math.max(0, Math.min(5, _vDNum)) * 100) / 100;
+      }
+      var _vValidStatuses = ['rising', 'lowering', 'hyped', 'inflated', 'unstable', 'rare', 'inprocess'];
+      if (vObj.status !== undefined && vObj.status !== null && _vValidStatuses.indexOf(vObj.status) === -1) {
+        vObj.status = null;
+      }
       var vBaseId = vMatch[1];
       var vVariant = target.variant;
       var elEntry = (window.VL_DB.elements || []).filter(function(e) { return e.id === vBaseId; })[0];
@@ -20924,6 +20936,27 @@ function toggleEasterTheme() {
     catch (e) { return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_json', 'Could not parse this block') }; }
     if (!obj || typeof obj !== 'object' || !obj.id) {
       return { ok: false, line: block.codeStartLine, msg: _dtIcLangErr('dt_input_err_bad_json', 'Could not parse this block') };
+    }
+    /* ── Санитизация полей из вставленного кода — та же логика, что и у
+       обычной формы редактирования (maxlength=15 на value, диапазон 0..5 на
+       demand, замкнутый список для status/rarity), но обход формы через
+       "Input Copied Code"/"Load Database" раньше пропускал эти проверки
+       напрямую в obj, ломая оформление карточек. */
+    if (obj.value !== undefined && obj.value !== null) {
+      obj.value = String(obj.value).slice(0, 15);
+    }
+    if (obj.demand !== undefined && obj.demand !== null) {
+      var _dNum = parseFloat(obj.demand);
+      if (isNaN(_dNum)) { obj.demand = 0; }
+      else { obj.demand = Math.round(Math.max(0, Math.min(5, _dNum)) * 100) / 100; }
+    }
+    var _validStatuses = ['rising', 'lowering', 'hyped', 'inflated', 'unstable', 'rare', 'inprocess'];
+    if (obj.status !== undefined && obj.status !== null && _validStatuses.indexOf(obj.status) === -1) {
+      obj.status = null;
+    }
+    var _validRarities = ['common', 'uncommon', 'rare', 'epic', 'legendary', 'mythic', 'ascended', 'secret', 'exclusive'];
+    if (obj.rarity !== undefined && obj.rarity !== null && _validRarities.indexOf(obj.rarity) === -1) {
+      obj.rarity = null;
     }
     var cat = target.cat;
     var list = window.VL_DB[cat];
@@ -21626,12 +21659,15 @@ function toggleEasterTheme() {
     if (typeof dtRender === 'function') dtRender(dtCat);
     _dtSyncPrintAllBtn();
 
-    /* Настоящие новые предметы — по одному в очередь на картинку. Если у
-       предмета уже есть подходящее изображение на сайте (совпал imgId),
-       _icHandleNewItem добавит его сразу, без вопроса. */
+    /* Настоящие новые предметы — накапливаем в очередь пакетом, а не по
+       одному: _icShowNext (внутри _icFlushNewItemQueue) сам разберётся,
+       кому картинка уже не нужна (совпал существующий файл на сайте), и
+       покажет ОДНУ модалку списком для всех, кому картинка всё же нужна —
+       вместо того чтобы спрашивать про каждый предмет отдельным окном. */
     _icNewItems.forEach(function(ni) {
       if (typeof window._icHandleNewItem === 'function') window._icHandleNewItem(ni.cat, ni.obj, ni.rolls);
     });
+    if (typeof window._icFlushNewItemQueue === 'function') window._icFlushNewItemQueue();
 
     /* Страховка: если какой-то (NEW)-блок оказался no-op'ом (свой кастом,
        уже существующий предмет), его _icCommit не выполнится никогда —
@@ -22660,11 +22696,18 @@ function toggleEasterTheme() {
     var parts = raw.split('.');
     if (parts.length > 2) raw = parts[0] + '.' + parts.slice(1).join('');
     if (parts.length > 1 && parts[1].length > 2) raw = parts[0] + '.' + parts[1].slice(0, 2);
-    if (inp.value !== raw) inp.value = raw;
     var d = raw.length ? parseFloat(raw) : 0;
     if (isNaN(d)) d = 0;
-    d = Math.max(0, Math.min(5, d));
-    _dtRollApplyDemand(cardId, rollNum, d);
+    var clamped = Math.max(0, Math.min(5, d));
+    /* ── Тот же баг, что и в dtDemInput (основной demand-инпут карточки):
+       raw здесь не ограничен по длине целой части вообще (dtDemInput хотя
+       бы обрезает её до 1 символа) — можно было ввести "99", "9.99" и т.д.,
+       которое проходило в inp.value как есть, а зажатым (0..5) было только
+       то, что уходило в _dtRollApplyDemand. Из-за этого поле продолжало
+       показывать недопустимое число, даже когда реальный demand ролла уже
+       был корректно зажат. */
+    inp.value = (d > 5) ? String(clamped) : raw;
+    _dtRollApplyDemand(cardId, rollNum, clamped);
   };
 
   window.dtRollDemStepEditor = function(cardId, rollNum, dir) {
@@ -24327,11 +24370,28 @@ function toggleEasterTheme() {
     if (parts[0].length > 1) raw = parts[0].slice(0,1) + (parts.length > 1 ? '.' + parts[1] : '');
     /* Дробная часть max 2 символа */
     if (parts.length > 1 && parts[1].length > 2) raw = parts[0] + '.' + parts[1].slice(0,2);
-    inp.value = raw;
     /* Пустое поле (стёрли всё) — трактуем как 0, а не игнорируем: parseFloat('')
        даёт NaN, и без явной обработки старое значение осталось бы нетронутым. */
     var v = raw.length ? parseFloat(raw) : 0;
-    if (!isNaN(v)) _dtApplyDemand(cid, Math.max(0, Math.min(5, v)));
+    var clamped = isNaN(v) ? 0 : Math.max(0, Math.min(5, v));
+    /* ── Зажимаем и отображаемое значение, а не только то, что уходит в
+       стейт: раньше raw (1 цифра 0-9, опционально с точкой и до 2 знаков
+       после — т.е. до 9.99) писалось в inp.value КАК ЕСТЬ, а зажатым было
+       только то, что передавалось в _dtApplyDemand. Значение в стейте
+       (item.demand) оставалось верным (0..5), но поле продолжало
+       показывать введённые "6".."9"/"9.99" — обходя диапазон визуально,
+       вводя в заблуждение при чтении/копировании значения из карточки. */
+    if (isNaN(v)) {
+      inp.value = raw;
+    } else if (v > 5) {
+      /* Пользователь превысил лимит — сразу подрезаем видимое значение
+         до зажатого, не дожидаясь blur, иначе поле продолжает показывать
+         недопустимое число, пока не потеряет фокус. */
+      inp.value = String(clamped);
+    } else {
+      inp.value = raw;
+    }
+    if (!isNaN(v)) _dtApplyDemand(cid, clamped);
   };
 
   /* ── Demand step buttons ── */
@@ -25041,38 +25101,36 @@ function toggleEasterTheme() {
   </div>
 </div>
 
-<!-- ── Input Copied Code: неизвестный НОВЫЙ предмет — запрос изображения ──
-     Срабатывает, когда вставленный код содержит (NEW)-блок, который НЕ
-     принадлежит кастомному предмету этого браузера (т.е. чужой/незнакомый
-     новый предмет). Аналогично Load Database: временно, до перезагрузки. -->
-<div id="dt-ic-newitem-modal" role="dialog" aria-modal="true" aria-label="New item image">
-  <div class="dt-cm-backdrop" onclick="dtIcNewItemSkip()"></div>
+<!-- ── Input Copied Code: неизвестные НОВЫЕ предметы — запрос изображений ──
+     Срабатывает, когда вставленный код содержит (NEW)-блок(и), которые НЕ
+     принадлежат кастомному предмету этого браузера (т.е. чужой/незнакомый
+     новый предмет). Аналогично Load Database: временно, до перезагрузки,
+     и все предметы показываются СПИСКОМ сразу (а не по одному), с теми же
+     галочками/крестиками у каждой строки. -->
+<div id="dt-ic-newitem-modal" role="dialog" aria-modal="true" aria-label="New items found">
+  <div class="dt-cm-backdrop" onclick="dtIcNewItemSkipAll()"></div>
   <div class="dt-cm-panel">
     <div class="dt-cm-header">
-      <span class="dt-cm-title" data-i18n="dt_ic_newitem_title">New item found</span>
-      <button class="dt-cm-close" onclick="dtIcNewItemSkip()" title="Close">✕</button>
+      <span class="dt-cm-title" data-i18n="dt_ic_newitem_title">New items found</span>
+      <button class="dt-cm-close" onclick="dtIcNewItemSkipAll()" title="Close">✕</button>
     </div>
     <div class="dt-ic-body dt-ld-split">
       <div class="dt-ld-col-text">
-        <div class="dt-ic-hint" data-i18n="dt_ic_newitem_hint">This pasted code references an item that isn't in your database yet. Attach its 1024×1024 .webp image to add it temporarily — it will disappear on reload.</div>
-        <div class="dt-ld-q"><span id="dt-ic-ni-name">—</span></div>
-        <div class="dt-ld-img-list">
-          <div class="dt-ld-img-row" id="dt-ic-ni-row">
-            <span id="dt-ic-ni-imgid">—</span>
-          </div>
-        </div>
+        <div class="dt-ic-hint" data-i18n="dt_ic_newitem_hint">Attach a 1024×1024 .webp for every imgId below (file name must equal imgId). Items left without an image will not be added.</div>
+        <div class="dt-ld-q"><span data-i18n="dt_load_db_step2_title">These added items need an image</span></div>
+        <div class="dt-ld-img-list" id="dt-ic-ni-list"></div>
       </div>
       <label class="dt-ld-drop" id="dt-ic-ni-drop">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-11 10"/></svg>
-        <span class="dt-ld-drop-name" id="dt-ic-ni-file-name" data-i18n="dt_load_db_pick_imgs">Choose image</span>
-        <span class="dt-ld-drop-sub">.webp · 1024×1024</span>
-        <input type="file" accept="image/webp" id="dt-ic-ni-file" onchange="dtIcNewItemPickImage(this)">
+        <span class="dt-ld-drop-name" id="dt-ic-ni-file-name" data-i18n="dt_load_db_pick_imgs">Choose images</span>
+        <span class="dt-ld-drop-sub">.webp · 1024×1024 · file name = imgId</span>
+        <input type="file" accept="image/webp" multiple id="dt-ic-ni-file" onchange="dtIcNewItemPickImages(this)">
       </label>
     </div>
     <div class="dt-cm-footer">
       <div class="dt-ic-footer-row">
-        <button class="dt-ic-cancel" onclick="dtIcNewItemSkip()" data-i18n="dt_ic_newitem_skip">Skip this item</button>
-        <button class="dt-ic-apply" id="dt-ic-ni-confirm" disabled onclick="dtIcNewItemConfirm()" data-i18n="dt_load_db_continue">Add</button>
+        <button class="dt-ic-cancel" onclick="dtIcNewItemSkipAll()" data-i18n="dt_ic_newitem_skip_all">Skip all</button>
+        <button class="dt-ic-apply" id="dt-ic-ni-confirm" onclick="dtIcNewItemConfirmAll()" data-i18n="dt_load_db_continue">Add</button>
       </div>
     </div>
   </div>
@@ -25093,9 +25151,14 @@ function toggleEasterTheme() {
    если картинка для этого imgId уже была приложена раньше в этой же
    сессии (Load Database или предыдущий такой же paste). */
 (function(){
-  var _icQueue = [];      /* [{cat,obj,rolls,imgId}] — предметы, ожидающие картинку */
-  var _icCurrent = null;
+  var _icQueue = [];      /* [{cat,obj,rolls,imgId}] — предметы этого пакета, ожидающие картинку */
   var _icSessionImgs = {}; /* imgId → dataURL, приложенные в рамках этой сессии через это окно */
+  var _icBatchQueue = [];  /* предметы, которым точно нужна картинка — то, что реально уйдёт в модалку списком */
+
+  function _icLang(key, fallback) {
+    try { if (typeof window.t === 'function') { var v = window.t(key); if (v && v !== key) return v; } } catch(e) {}
+    return fallback;
+  }
 
   /* ── Слаг имени: тот же алгоритм, что используется при экспорте кастомных
      предметов (_edSlugify → _edComputeExportIds). Нужен, чтобы узнать «свой»
@@ -25256,11 +25319,21 @@ function toggleEasterTheme() {
           id: obj.id, cat: cat, isCustom: true, variant: (cat === 'elements') ? 'regular' : null,
           name: obj.name, rarity: obj.rarity, demand: obj.demand, value: obj.value, status: obj.status || null,
           subtype: obj.subtype, imgData: imgDataUrl || null,
-          /* Если картинка не грузилась (файл уже существует на сайте под
-             этим же именем — см. _icProbeImage) — сохраняем именно тот
-             imgId в imgFileName, чтобы экспорт/снипет продолжил
-             ссылаться на переиспользуемый арт, а не на export-id предмета. */
-          imgFileName: imgDataUrl ? null : imgId,
+          /* imgId ЗДЕСЬ всегда пришёл из явно указанного поля imgId вставленного
+             кода (см. imgId = obj.imgId || obj.baseId || obj.id чуть выше) — в
+             отличие от обычного Create-флоу (UI-форма), где imgFileName:null
+             специально означает "имени нет, используй export-id при экспорте".
+             У Input Copied Code это ВСЕГДА настоящее имя файла, указанное
+             автором кода, независимо от того, лежала ли картинка уже на сайте
+             (переиспользование арта) или пользователь только что загрузил её
+             руками через модалку "New item found" — в обоих случаях снипет при
+             повторном экспорте обязан сослаться на этот ЖЕ imgId, а не на
+             export-id (сгенерированный из имени предмета). Раньше здесь стояло
+             imgDataUrl ? null : imgId — из-за чего ручная загрузка (обычный,
+             самый частый случай, когда файла ещё нет на сайте) стирала
+             оригинальный imgId и заменяла его на export-id, ломая imgId у
+             предметов вроде "Twin Towers" (imgId:'IMG_2937' → 'twin_towers'). */
+          imgFileName: imgId,
           /* imgId — восстанавливается на baseEntry при каждом _edInjectRecord
              (иначе после reload baseEntry создаётся заново вообще без него —
              см. _edInjectRecord). Нужен даже когда файл лежит в СВОЕЙ же
@@ -25350,7 +25423,9 @@ function toggleEasterTheme() {
   function _icCloseModal() {
     var modal = document.getElementById('dt-ic-newitem-modal');
     if (modal) modal.classList.remove('visible');
-    _icCurrent = null;
+    _icBatchQueue = [];
+    var list = document.getElementById('dt-ic-ni-list');
+    if (list) list.innerHTML = '';
   }
 
   /* ── Есть ли на сайте реальный файл images/<cat>/<imgId>.webp ──
@@ -25427,109 +25502,155 @@ function toggleEasterTheme() {
     return false;
   }
 
+  /* ── Разбираем всю очередь _icQueue разом: часть предметов может забрать
+     уже существующий на сайте файл (переиспользование арта) — их коммитим
+     сразу без вопроса. Остальные собираем в один список и показываем ОДНОЙ
+     модалкой (аналог Load Database, шаг 2), а не по одному предмету за раз. */
   function _icShowNext() {
-    if (!_icQueue.length) { _icCloseModal(); return; }
-    var peek = _icQueue[0];
-    /* Файл уже лежит на сайте → вопрос не задаём, предмет заберёт картинку
-       по обычному пути images/<cat>/<imgId>.webp. */
-    /* Переиспользование арта считается законным только если в ОФИЦИАЛЬНОЙ
-       базе (VL_DB из items_data2.js) реально есть предмет с таким же imgId.
-       Иначе — это собственная картинка нового предмета, и её надо спросить,
-       даже если файл с таким именем случайно нашёлся на сайте. */
-    if (!_icImgIdUsedByExistingItem(peek.imgId, peek.obj)) { _icShowNextModal(); return; }
-    _icProbeImage(peek.cat, peek.imgId, function(exists) {
-      if (exists && _icQueue[0] === peek) {
-        _icQueue.shift();
-        _icCommit(peek.cat, peek.obj, peek.rolls, null);
-        _icShowNext();
+    if (!_icQueue.length) return;
+    var batch = _icQueue.slice();
+    _icQueue = [];
+    var remaining = batch.length;
+    var needImage = [];
+    function checkOne(item) {
+      if (!_icImgIdUsedByExistingItem(item.imgId, item.obj)) {
+        needImage.push(item);
+        done();
         return;
       }
-      _icShowNextModal();
-    });
+      _icProbeImage(item.cat, item.imgId, function(exists) {
+        if (exists) {
+          _icCommit(item.cat, item.obj, item.rolls, null);
+        } else {
+          needImage.push(item);
+        }
+        done();
+      });
+    }
+    function done() {
+      remaining--;
+      if (remaining === 0) _icShowBatchModal(needImage);
+    }
+    batch.forEach(checkOne);
   }
 
-  function _icShowNextModal() {
-    if (!_icQueue.length) { _icCloseModal(); return; }
-    _icCurrent = _icQueue.shift();
+  function _icShowBatchModal(items) {
+    /* Ничего не осталось без картинки (все переиспользовали существующий
+       арт) — модалку показывать незачем. */
+    if (!items.length) return;
+    /* Уже приложена в этой же сессии (Load Database или предыдущий такой же
+       paste) — коммитим сразу, не показывая строку в списке. */
+    var stillNeeded = [];
+    items.forEach(function(it) {
+      var known = (window._dbLoadImg && window._dbLoadImg[it.imgId]) || _icSessionImgs[it.imgId] || null;
+      if (known) { _icCommit(it.cat, it.obj, it.rolls, known); return; }
+      stillNeeded.push(it);
+    });
+    if (!stillNeeded.length) return;
+
+    /* Добавляем к уже открытому списку, а не заменяем — второй paste в той
+       же сессии, пока модалка ещё висит, не должен терять первый пакет. */
+    _icBatchQueue = _icBatchQueue.concat(stillNeeded);
+    _icRenderBatchList();
     var modal = document.getElementById('dt-ic-newitem-modal');
-    var nameEl = document.getElementById('dt-ic-ni-name');
-    var imgEl = document.getElementById('dt-ic-ni-imgid');
-    var fi = document.getElementById('dt-ic-ni-file');
-    var ok = document.getElementById('dt-ic-ni-confirm');
-    if (nameEl) nameEl.textContent = _icCurrent.obj.name || _icCurrent.obj.id;
-    if (imgEl) imgEl.textContent = _icCurrent.imgId + '.webp';
-    if (fi) fi.value = '';
-    var fnEl = document.getElementById('dt-ic-ni-file-name');
-    if (fnEl) fnEl.textContent = _icCurrent.imgId + '.webp';
-    if (ok) ok.disabled = true;
     if (modal) modal.classList.add('visible');
   }
 
+  function _icRenderBatchList() {
+    var list = document.getElementById('dt-ic-ni-list');
+    if (!list) return;
+    list.innerHTML = '';
+    _icBatchQueue.forEach(function(it) {
+      var row = document.createElement('div');
+      row.className = 'dt-ld-img-row' + (_icSessionImgs[it.imgId] ? ' ok' : '');
+      row.setAttribute('data-imgid', it.imgId);
+      var main = document.createElement('span');
+      main.textContent = (it.obj.name || it.obj.id) + ' → imgId: ' + it.imgId + '.webp';
+      var note = document.createElement('span');
+      note.className = 'dt-ld-row-note';
+      main.appendChild(note);
+      row.appendChild(main);
+      list.appendChild(row);
+    });
+  }
+
+  /* Отмечаем строку предмета: ✓ — верное изображение приложено, ✕ — неверное.
+     Тот же паттерн, что и _ldMarkNeedRow в модуле Load Database. */
+  function _icMarkBatchRow(imgId, ok, note) {
+    var list = document.getElementById('dt-ic-ni-list');
+    if (!list) return;
+    Array.prototype.slice.call(list.children).forEach(function(row) {
+      if (row.getAttribute('data-imgid') !== imgId) return;
+      row.className = 'dt-ld-img-row ' + (ok ? 'ok' : 'bad');
+      var noteEl = row.querySelector('.dt-ld-row-note');
+      if (noteEl) noteEl.textContent = ok ? '' : (note || '');
+    });
+  }
+
   /* ── Точка входа: вызывается из dtInputCodeApply для каждого настоящего
-     нового предмета (обнаруженного, не принадлежащего этому браузеру). ── */
+     нового предмета (обнаруженного, не принадлежащего этому браузеру).
+     Все предметы одного пакета накапливаются в _icQueue и разбираются ЗА
+     ОДИН РАЗ в _icShowNext (см. ниже) — то же поведение, что у Load
+     Database, вместо старого "по одному предмету за раз". */
   window._icHandleNewItem = function(cat, obj, rollsCorrupted) {
     /* Свой собственный кастомный предмет — полный no-op (см. _icIsKnownLocally). */
     if (_icIsKnownLocally(cat, obj)) return;
 
     var imgId = obj.imgId || obj.baseId || obj.id;
-    /* Картинка уже приложена В ЭТОЙ СЕССИИ (Load Database или предыдущий
-       такой же paste) — второй раз не спрашиваем.
-       Раньше здесь была ещё одна ветка: если imgId совпадал с imgId любого
-       уже существующего предмета сайта — вопрос не задавался вовсе. Но у
-       нового предмета своя собственная картинка, и «совпал imgId» вовсе не
-       значит, что файл для него есть: предмет добавлялся молча и рисовался
-       пустым квадратом. Теперь для любого настоящего нового предмета
-       спрашиваем изображение — ровно как Load Database. */
-    var known = (window._dbLoadImg && window._dbLoadImg[imgId]) || _icSessionImgs[imgId] || null;
-    if (known) { _icCommit(cat, obj, rollsCorrupted, known); return; }
-
     _icQueue.push({ cat: cat, obj: obj, rolls: rollsCorrupted, imgId: imgId });
-    if (!_icCurrent) _icShowNext();
   };
 
-  window.dtIcNewItemPickImage = function(input) {
-    var f = input.files && input.files[0];
-    if (!f || !_icCurrent) return;
-    var nameEl = document.getElementById('dt-ic-ni-file-name');
-    var ok = document.getElementById('dt-ic-ni-confirm');
-    if (ok) ok.disabled = true;
-    function fail(msg) {
-      input.value = '';
-      if (nameEl) nameEl.textContent = _icCurrent ? (_icCurrent.imgId + '.webp') : '';
-      try { if (typeof window.showSiteError === 'function') window.showSiteError(msg); } catch(_) {}
-    }
-    if (f.type !== 'image/webp') { fail('.webp'); return; }
-    var reader = new FileReader();
-    reader.onload = function() {
-      var dataUrl = reader.result;
-      var img = new Image();
-      img.onload = function() {
-        /* Те же требования, что и у Load Database: ровно 1024×1024 .webp. */
-        if (img.naturalWidth !== 1024 || img.naturalHeight !== 1024) {
-          fail(img.naturalWidth + '×' + img.naturalHeight + ' → 1024×1024');
-          return;
-        }
-        _icSessionImgs[_icCurrent.imgId] = dataUrl;
-        if (nameEl) nameEl.textContent = f.name;
-        if (ok) ok.disabled = false;
+  /* dtInputCodeApply вызывает _icHandleNewItem для каждого нового предмета
+     СИНХРОННО в одном forEach — эта функция дергается сразу следом, чтобы
+     разобрать накопившуюся очередь одним пакетом. */
+  window._icFlushNewItemQueue = function() { _icShowNext(); };
+
+  window.dtIcNewItemPickImages = function(input) {
+    var files = Array.prototype.slice.call(input.files || []);
+    if (!files.length) return;
+    files.forEach(function(f) {
+      var imgId = f.name.replace(/\.[^/.]+$/, '');
+      if (f.type !== 'image/webp') {
+        _icMarkBatchRow(imgId, false, _icLang('err_cust_webp_only', 'Only .webp images are allowed'));
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function() {
+        var dataUrl = reader.result;
+        var img = new Image();
+        img.onload = function() {
+          if (img.naturalWidth !== 1024 || img.naturalHeight !== 1024) {
+            _icMarkBatchRow(imgId, false, img.naturalWidth + '×' + img.naturalHeight + ' → 1024×1024');
+            return;
+          }
+          _icSessionImgs[imgId] = dataUrl;
+          _icMarkBatchRow(imgId, true, '');
+        };
+        img.onerror = function() {
+          _icMarkBatchRow(imgId, false, _icLang('err_cust_img_read_fail', 'Could not read the image'));
+        };
+        img.src = dataUrl;
       };
-      img.onerror = function() { fail('.webp'); };
-      img.src = dataUrl;
-    };
-    reader.onerror = function() { fail('.webp'); };
-    reader.readAsDataURL(f);
+      reader.onerror = function() {
+        _icMarkBatchRow(imgId, false, _icLang('err_cust_img_read_fail', 'Could not read the image'));
+      };
+      reader.readAsDataURL(f);
+    });
+    input.value = '';
   };
 
-  window.dtIcNewItemConfirm = function() {
-    if (!_icCurrent) return;
-    var img = _icSessionImgs[_icCurrent.imgId] || null;
-    if (!img) return; /* кнопка и так задизейблена без картинки, но подстрахуемся */
-    _icCommit(_icCurrent.cat, _icCurrent.obj, _icCurrent.rolls, img);
-    _icShowNext();
+  window.dtIcNewItemConfirmAll = function() {
+    /* Предметы без приложенной картинки просто пропускаются (крестик/точка
+       в списке), ровно как в Load Database — без картинки не добавляются. */
+    _icBatchQueue.forEach(function(it) {
+      var img = _icSessionImgs[it.imgId];
+      if (img) _icCommit(it.cat, it.obj, it.rolls, img);
+    });
+    _icCloseModal();
   };
 
-  window.dtIcNewItemSkip = function() {
-    _icShowNext();
+  window.dtIcNewItemSkipAll = function() {
+    _icCloseModal();
   };
 })();
 </script>
@@ -25658,6 +25779,25 @@ function toggleEasterTheme() {
           errs.push('VL_DB.' + cat + ' → ' + it.id + ' — ' + _lang('dt_load_db_err_no_name', 'item has no name'));
         } else if (!it.rarity || (window.RARITY_CFG && !window.RARITY_CFG[it.rarity])) {
           errs.push('VL_DB.' + cat + ' → ' + it.id + ' — ' + _lang('dt_load_db_err_bad_rarity', 'unknown rarity') + ': ' + it.rarity);
+        }
+        /* ── Санитизация value/demand/status — обход формы через "Load
+           Database" раньше грузил эти поля как есть, что позволяло value
+           длиннее 15 символов и demand вне диапазона 0..5 (см. аналогичную
+           санитизацию в _dtIcValidateBlock для "Input Copied Code"). Rarity
+           намеренно НЕ трогаем здесь — неизвестная редкость уже отклоняется
+           как ошибка загрузки чуть выше. */
+        if (it && typeof it === 'object') {
+          if (it.value !== undefined && it.value !== null) {
+            it.value = String(it.value).slice(0, 15);
+          }
+          if (it.demand !== undefined && it.demand !== null) {
+            var _ldDNum = parseFloat(it.demand);
+            it.demand = isNaN(_ldDNum) ? 0 : Math.round(Math.max(0, Math.min(5, _ldDNum)) * 100) / 100;
+          }
+          var _ldValidStatuses = ['rising', 'lowering', 'hyped', 'inflated', 'unstable', 'rare', 'inprocess'];
+          if (it.status !== undefined && it.status !== null && _ldValidStatuses.indexOf(it.status) === -1) {
+            it.status = null;
+          }
         }
       });
     });
